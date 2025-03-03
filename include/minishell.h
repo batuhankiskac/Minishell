@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/03 21:45:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/03 22:01:13 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,11 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }				t_env;
+
+/*
+** Builtins
+*/
+int	builtin_pwd(void);
+int	builtin_echo(int argc, char *argv[]);
 
 #endif
