@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 14:47:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/04 17:39:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,15 @@ typedef struct s_env
 /*
 ** Builtins
 */
-int	builtin_pwd(void);
-int	builtin_echo(int argc, char *argv[]);
+int		builtin_pwd(void);
+int		builtin_echo(int argc, char *argv[]);
 
 /*
 ** Environment
 */
 t_env	*env_init(char *envp[]);
 void	free_env(t_env *env);
+void	free_env_array(char *env_array[]);
+char	**env_list_to_array(t_env *env);
 
 #endif

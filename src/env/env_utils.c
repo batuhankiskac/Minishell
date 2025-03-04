@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:46:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 14:49:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/04 17:34:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,14 @@ void	free_env(t_env *env)
 		free(env);
 		env = tmp;
 	}
+}
+
+void	free_env_array(char *env_array[])
+{
+	int	i;
+
+	i = -1;
+	while (env_array[++i])
+		free(env_array[i]);
+	free(env_array);
 }
