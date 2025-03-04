@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:35:19 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/03 21:57:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/04 14:35:39 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,13 @@
  */
 int	builtin_pwd(void)
 {
-	char	*cwd;
+	char	cwd[PATH_MAX];
 
-	cwd = getcwd(cwd, sizeof(cwd));
-	if (!cwd)
+	if (!getcwd(cwd, sizeof(cwd)))
 	{
 		perror("pwd error");
 		return (ERROR);
 	}
 	printf("%s\n", cwd);
-	free(cwd);
 	return (SUCCESS);
 }
