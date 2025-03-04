@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 14:38:27 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/04 14:47:49 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ int	builtin_echo(int argc, char *argv[]);
 ** Environment
 */
 t_env	*env_init(char *envp[]);
+void	free_env(t_env *env);
 
 #endif
