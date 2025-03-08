@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:22:51 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 17:38:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 18:53:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,7 @@ t_env	*env_init(char *envp[])
 		equal_sign = ft_strchr(envp[i], '=');
 		if (!equal_sign)
 			continue ;
-		new_node = (t_env *)malloc(sizeof(t_env));
-		if (!new_node)
-			return (NULL);
+		new_node = (t_env *)safe_malloc(sizeof(t_env));
 		new_node->key = ft_substr(envp[i], 0, equal_sign - envp[i]);
 		new_node->value = ft_strdup(equal_sign + 1);
 		if (!new_node->key || !new_node->value)

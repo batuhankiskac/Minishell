@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 18:39:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 18:53:05 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,9 @@ void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
 
+/*
+** Utils
+*/
+void	*safe_malloc(size_t size);
 
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_to_str.c                                       :+:      :+:    :+:   */
+/*   env_to_array.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:24:53 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 13:21:45 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 18:54:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ char	**env_list_to_array(t_env *env)
 	int		len;
 
 	i = 0;
-	env_array = (char **)malloc(sizeof(char *) * (env_count(env) + 1));
-	if (!env_array)
-		return (NULL);
+	env_array = (char **)safe_malloc(sizeof(char *) * (env_count(env) + 1));
 	while (env)
 	{
 		len = ft_strlen(env->key) + ft_strlen(env->value) + 2;

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:28:16 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 13:44:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 19:00:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_env_char(char c)
 
 int	is_valid_env(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ft_isdigit(str[i]))
