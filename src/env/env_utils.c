@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:46:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 17:34:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 18:39:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,15 @@ void	free_env_array(char *env_array[])
 	while (env_array[++i])
 		free(env_array[i]);
 	free(env_array);
+}
+
+t_env	*find_env(char *key, t_env *env)
+{
+	while (env)
+	{
+		if (!ft_strcmp(key, env->key))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
 }
