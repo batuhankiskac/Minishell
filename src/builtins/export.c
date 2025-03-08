@@ -6,12 +6,28 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:07:50 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 18:25:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 22:00:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+ * parse_export_arg - Parses a single export argument.
+ *
+ * This helper function splits an export argument into key and value parts.
+ * It first validates the identifier, then splits it at '=' if present.
+ * Allocates memory for key and value, returning ERROR if allocation fails.
+ *
+ * Parameters:
+ *   arg   - The export argument string.
+ *   key   - Address to store the pointer for the exported key.
+ *   value - Address to store the pointer for the exported value.
+ *
+ * Returns:
+ *   0     - On success.
+ *   ERROR - On failure.
+ */
 static int	parse_export_arg(char *arg, char **key, char **value)
 {
 	char	*equal_sign;
@@ -38,6 +54,24 @@ static int	parse_export_arg(char *arg, char **key, char **value)
 	return (0);
 }
 
+/*
+ * builtin_export - Executes the export builtin command.
+ *
+ * This function processes command-line arguments for
+ * exporting environment variables.
+ * If no argument is provided, it prints the sorted environment list.
+ * Otherwise, it validates each argument, updates the environment accordingly,
+ * and prints an error message if an invalid identifier is found.
+ *
+ * Parameters:
+ *   argc - The count of command-line arguments.
+ *   argv - An array of strings representing command-line arguments.
+ *   env  - A pointer to the linked list of environment variables.
+ *
+ * Returns:
+ *   0     - Upon successful execution.
+ *   ERROR - Upon encountering an error.
+ */
 int	builtin_export(int argc, char *argv[], t_env **env)
 {
 	int		i;
