@@ -6,17 +6,21 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:28:16 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 19:00:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 19:13:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/* Checks if a character is valid in env keys.
+   Valid characters are alphanumerics and underscore. */
 int	is_env_char(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
 
+/* Determines if the env string is in KEY=VALUE format.
+   Returns 1 if valid, otherwise returns 0. */
 int	is_valid_env(char *str)
 {
 	int	i;
@@ -35,6 +39,8 @@ int	is_valid_env(char *str)
 	return (1);
 }
 
+/* Calculates the length of the VALUE part.
+   It counts the characters after the '=' sign. */
 int	env_value_len(char *str)
 {
 	int	len;
@@ -49,6 +55,8 @@ int	env_value_len(char *str)
 	return (len);
 }
 
+/* Returns a duplicate of the VALUE part.
+   If the '=' sign is missing, returns NULL. */
 char	*env_value(char *env)
 {
 	int		i;
@@ -63,6 +71,8 @@ char	*env_value(char *env)
 	return (value);
 }
 
+/* Gets the duplicate of the VALUE for a given key.
+   Walks the env list; returns NULL if not found. */
 char	*get_env_value(char *key, t_env *env)
 {
 	while (env)
