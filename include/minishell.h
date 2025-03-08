@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 17:39:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 14:05:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # define ERROR -1
-# define SUCCESS 0
 # define PATH_MAX 4096
 
 # include "libft.h"
@@ -47,8 +46,15 @@ int		builtin_echo(int argc, char *argv[]);
 ** Environment
 */
 t_env	*env_init(char *envp[]);
+int		env_value_len(char *str);
+int		is_valid_env(char *str);
+int		is_env_char(char c);
+char	**env_list_to_array(t_env *env);
+char	*env_value(char *env);
+char	*get_env_value(char *key, t_env *env);
 void	free_env(t_env *env);
 void	free_env_array(char *env_array[]);
-char	**env_list_to_array(t_env *env);
+void	print_sorted_env(t_env *env);
+void	sort_env(char **env_array);
 
 #endif

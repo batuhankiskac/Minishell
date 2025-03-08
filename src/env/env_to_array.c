@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_to_array.c                                     :+:      :+:    :+:   */
+/*   env_to_str.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:24:53 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/04 17:39:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 13:21:45 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,8 @@ char	**env_list_to_array(t_env *env)
 		ft_strcpy(str, env->key);
 		ft_strlcat(str, "=", len);
 		ft_strlcat(str, env->value, len);
-		env_array[i] = str;
+		env_array[i++] = str;
 		env = env->next;
-		i++;
 	}
 	env_array[i] = NULL;
 	return (env_array);

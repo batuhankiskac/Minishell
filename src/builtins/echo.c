@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 21:49:35 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/03 22:00:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 13:31:34 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  *   argv - An array of strings representing the command-line arguments.
  *
  * Returns:
- *   SUCCESS - Upon successful execution.
+ *   0 - Upon successful execution.
  */
 int	builtin_echo(int argc, char *argv[])
 {
@@ -48,5 +48,5 @@ int	builtin_echo(int argc, char *argv[])
 	}
 	if (nl_flag)
 		printf("\n");
-	return (SUCCESS);
+	return (0);
 }
