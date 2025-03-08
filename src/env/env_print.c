@@ -6,12 +6,16 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:52:58 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 14:04:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:58:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+* Computes and returns the number of strings in the given array.
+* The function stops counting when a NULL pointer is found.
+*/
 static int	str_array_len(char **array)
 {
 	int	len;
@@ -22,6 +26,10 @@ static int	str_array_len(char **array)
 	return (len);
 }
 
+/*
+* Sorts the 'env_array' using a simple bubble-sort algorithm.
+* The array is reordered in lexicographic ascending order.
+*/
 void	sort_env(char **env_array)
 {
 	int		i;
@@ -46,6 +54,11 @@ void	sort_env(char **env_array)
 	}
 }
 
+/*
+* Converts the environment linked list 'env' to a string array,
+* sorts the array alphabetically, and prints each element with the
+* prefix "declare -x" to standard output.
+*/
 void	print_sorted_env(t_env *env)
 {
 	char	**env_array;
@@ -57,10 +70,6 @@ void	print_sorted_env(t_env *env)
 	sort_env(env_array);
 	i = -1;
 	while (env_array[++i])
-	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(env_array[i], 1);
-		ft_putchar_fd('\n', 1);
-	}
+		printf("declare -x %s\n", env_array[i]);
 	free_env_array(env_array);
 }

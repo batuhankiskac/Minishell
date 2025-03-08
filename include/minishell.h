@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 19:07:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:37:34 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include "libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-# include <stdbool.h>
 # include <limits.h>
 # include <signal.h>
 # include <fcntl.h>
@@ -35,6 +34,11 @@ typedef struct s_env
 	char			*value;
 	struct s_env	*next;
 }				t_env;
+
+typedef struct s_shell
+{
+	t_env	*env;
+}				t_shell;
 
 /*
 ** Builtins

@@ -6,12 +6,22 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:24:53 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 18:54:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/08 21:57:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+* Traverses the environment variables linked list
+* to count the total number of nodes.
+*
+* This function iterates through the linked list of environment
+* variables and counts each node to
+* determine the total number of environment variables.
+*
+* Return int The total count of environment variable nodes.
+*/
 static int	env_count(t_env *env)
 {
 	int		count;
@@ -27,6 +37,15 @@ static int	env_count(t_env *env)
 	return (count);
 }
 
+/*
+* Convert the env linked list into a NULL-terminated array.
+*
+* For each node, create a string in the format "key=value"
+* and store it in the array.
+*
+* Return a pointer to the allocated array, or NULL
+* if an allocation error occurred.
+*/
 char	**env_list_to_array(t_env *env)
 {
 	char	**env_array;
