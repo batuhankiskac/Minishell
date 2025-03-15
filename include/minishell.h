@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 15:38:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/15 16:53:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define ERROR -1
 # define PATH_MAX 4096
 
-# include "libft.h"
+# include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <limits.h>

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:25:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 16:17:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/15 16:55:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	builtin_unset(int argc, char **args, t_env **env)
 			delete_env(args[i], env);
 		else
 		{
-			ft_putstr("unset: not a valid identifier: ", 2);
+			ft_putstr_fd("unset: not a valid identifier: ", 2);
 			ft_putendl_fd(args[i], 2);
 			return (ERROR);
 		}
