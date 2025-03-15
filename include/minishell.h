@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 21:37:34 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/15 12:58:19 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int		builtin_echo(int argc, char *argv[]);
 int		builtin_env(t_env *env);
 int		builtin_export(int argc, char *argv[], t_env **env);
 int		builtin_pwd(void);
+int		builtin_unset(int argc, char **args, t_env **env);
+int		builtin_exit(int argc, char **args, t_env **env);
 
 /*
 ** Environment
