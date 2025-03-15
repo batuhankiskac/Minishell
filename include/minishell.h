@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 12:58:19 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/15 15:11:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ typedef struct s_shell
 /*
 ** Builtins
 */
-int		builtin_echo(int argc, char *argv[]);
+int		builtin_echo(int argc, char **args);
 int		builtin_env(t_env *env);
-int		builtin_export(int argc, char *argv[], t_env **env);
+int		builtin_export(int argc, char **args, t_env **env);
 int		builtin_pwd(void);
 int		builtin_unset(int argc, char **args, t_env **env);
 int		builtin_exit(int argc, char **args, t_env **env);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 14:07:50 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 22:00:48 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/03/15 15:12:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	parse_export_arg(char *arg, char **key, char **value)
  *   0     - Upon successful execution.
  *   ERROR - Upon encountering an error.
  */
-int	builtin_export(int argc, char *argv[], t_env **env)
+int	builtin_export(int argc, char **args, t_env **env)
 {
 	int		i;
 	char	*key;
@@ -83,10 +83,10 @@ int	builtin_export(int argc, char *argv[], t_env **env)
 		return (print_sorted_env(*env), 0);
 	while (++i < argc)
 	{
-		if (parse_export_arg(argv[i], &key, &value) == ERROR)
+		if (parse_export_arg(args[i], &key, &value) == ERROR)
 		{
 			ft_putstr("export: not a valid identifier: ", 2);
-			ft_putendl_fd(argv[i], 2);
+			ft_putendl_fd(args[i], 2);
 			return (ERROR);
 		}
 		else
