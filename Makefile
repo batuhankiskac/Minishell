@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/03/15 16:53:25 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/03/15 17:14:26 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRCS = src/main.c \
 	   src/builtins/export.c \
 	   src/builtins/pwd.c \
 	   src/builtins/unset.c \
+	   src/signal/signal.c \
 	   src/utils/utils.c
 
 OBJS = $(SRCS:.c=.o)
