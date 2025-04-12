@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:18:22 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 18:58:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:08:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	is_builtin(char *cmd)
 {
-	if (ft_strcmp(cmd, "echo" == 0)
-		|| ft_strcmp(cmd, "cd" == 0)
-		|| ft_strcmp(cmd, "pwd" == 0)
-		|| ft_strcmp(cmd, "export" == 0)
-		|| ft_strcmp(cmd, "unset" == 0)
-		|| ft_strcmp(cmd, "env" == 0)
+	if (ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "cd") == 0
+		|| ft_strcmp(cmd, "pwd") == 0
+		|| ft_strcmp(cmd, "export") == 0
+		|| ft_strcmp(cmd, "unset") == 0
+		|| ft_strcmp(cmd, "env") == 0
 		|| ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);

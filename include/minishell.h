@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 17:07:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:26:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell);
 int		exec_external(t_shell *shell);
 char	*find_path(char *cmd, char *envp[]);
+char	*get_env(char *name, char *envp[]);
 
 /*
 ** Utils

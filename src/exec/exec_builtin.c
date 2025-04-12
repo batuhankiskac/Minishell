@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:16:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 19:01:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:07:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	exec_builtin(t_shell *shell)
 		return (builtin_unset(shell->command->argc,
 				shell->command->args, &shell->env));
 	else if (ft_strcmp(shell->command->cmd, "env") == 0)
-		return (builtin_env(&shell->env));
+		return (builtin_env(shell->env));
 	else if (ft_strcmp(shell->command->cmd, "exit") == 0)
 		return (builtin_exit(shell->command->argc,
 				shell->command->args, &shell->env));
