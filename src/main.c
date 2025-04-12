@@ -6,13 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:26:43 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/29 20:43:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:03:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// env bölümünü test etmek için gptye yazdırdım silinebilir
 int	main(int argc, char **argv, char **envp)
 {
 	t_env	*env;
