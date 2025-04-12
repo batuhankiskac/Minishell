@@ -6,11 +6,21 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:25:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 16:55:48 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 20:04:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+static void	free_env_node(t_env *node)
+{
+	if (node)
+	{
+		free(node->key);
+		free(node->value);
+		free(node);
+	}
+}
 
 /*
 * delete_env - Deletes an environment variable from the linked list.
@@ -37,7 +47,7 @@ static void	delete_env(char *key, t_env **env)
 				*env = current->next;
 			else
 				prev->next = current->next;
-			free_env(current);
+			free_env_node(current);
 			return ;
 		}
 		prev = current;
@@ -67,7 +77,7 @@ int	builtin_unset(int argc, char **args, t_env **env)
 		return (0);
 	while (++i < argc)
 	{
-		if (is_valid_env(args[i]))
+		if (is_valid_identifier(args[i]))
 			delete_env(args[i], env);
 		else
 		{
