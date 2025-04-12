@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 15:05:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:10:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,16 @@ typedef struct s_env
 	struct s_env	*next;
 }				t_env;
 
+typedef struct s_command
+{
+	char	*cmd;
+	char	**args;
+}				t_command;
+
 typedef struct s_shell
 {
-	t_env	*env;
+	t_env		*env;
+	t_command	*cmd;
 }				t_shell;
 
 /*
