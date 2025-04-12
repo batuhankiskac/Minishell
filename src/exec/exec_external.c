@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:43:58 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 20:43:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 20:55:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,9 @@ void	child_exec(t_shell *shell, char **env_array)
 	if (execve(path, shell->command->args, env_array) == -1)
 	{
 		perror("minishell: execve");
-		ft_free_all(env_array);
 		free(path);
 		exit(EXIT_FAILURE);
 	}
-	free(path);
-	ft_free_all(env_array);
 	exit(EXIT_SUCCESS);
 }
 
