@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 16:10:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:20:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_command
 typedef struct s_shell
 {
 	t_env		*env;
-	t_command	*cmd;
+	t_command	*command;
 }				t_shell;
 
 /*
@@ -87,6 +87,12 @@ void	free_env_array(char *env_array[]);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
+
+/*
+** Execute
+*/
+int		is_builtin(char *cmd);
+int		exec_command(t_shell *shell);
 
 /*
 ** Utils
