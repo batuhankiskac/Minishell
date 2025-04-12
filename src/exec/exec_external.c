@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:43:58 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 16:59:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 17:07:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	child_exec(t_shell *shell, char **env_array)
 {
 	char	*path;
 
-	path =
+	path = find_path(shell->command->cmd, env_array);
 }
 
 int	exec_external(t_shell *shell)

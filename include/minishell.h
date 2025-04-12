@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 16:56:46 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 17:07:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-# include <limits.h>
 # include <signal.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -92,7 +91,9 @@ void	update_env(char *key, char *value, t_env **env);
 ** Execute
 */
 int		is_builtin(char *cmd);
-int		exec_command(t_shell *shell);
+int		exec_builtin(t_shell *shell);
+int		exec_external(t_shell *shell);
+char	*find_path(char *cmd, char *envp[]);
 
 /*
 ** Utils

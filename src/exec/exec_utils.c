@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:53:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 17:00:44 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 17:03:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,15 @@
 
 char	*get_env(char *name, char *envp[])
 {
-	int		i;
-	int		j;
-	char	*sub;
+	int	i;
+	int	len;
 
 	i = 0;
+	len = ft_strlen(name);
 	while (envp[i])
 	{
-		j = 0;
-		while (envp[i][j] && envp[i][j] != '=')
-			j++;
-		sub = ft_substr(envp[i], 0, j);
-		if (ft_strcmp(sub, name) == 0)
-		{
-			free(sub);
-			return (envp[i] + j + 1);
-		}
-		free(sub);
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+			return (envp[i] + len + 1);
 		i++;
 	}
 	return (NULL);
