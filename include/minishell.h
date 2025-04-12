@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/29 20:42:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 15:05:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,6 @@ void	free_env_array(char *env_array[]);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
-
-/*
-** Execute (Pipex projesini direkt attım şu an sadece belki temel olur diye)
-*/
-int		open_file(const char *filename, int flags, int mode);
-char	*ft_getenv(char *name, char *envp[]);
-char	*find_path(char *cmd, char *envp[]);
-void	ft_free_all(char **str);
-void	execute_cmd(char *cmd, char *envp[]);
-void	show_error(char *str);
 
 /*
 ** Utils
