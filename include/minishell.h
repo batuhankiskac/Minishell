@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 16:24:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:56:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ char	**env_list_to_array(t_env *env);
 char	*env_value(char *env);
 char	*get_env_value(char *key, t_env *env);
 void	free_env(t_env *env);
-void	free_env_array(char *env_array[]);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
@@ -99,5 +98,6 @@ int		exec_command(t_shell *shell);
 ** Utils
 */
 void	*safe_malloc(size_t size);
+void	ft_free_all(char **arr);
 
 #endif

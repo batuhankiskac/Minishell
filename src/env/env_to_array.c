@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:24:53 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 16:54:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:57:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**env_list_to_array(t_env *env)
 		len = ft_strlen(env->key) + ft_strlen(env->value) + 2;
 		str = (char *)malloc(sizeof(char) * len);
 		if (!str)
-			return (free_env_array(env_array), NULL);
+			return (ft_free_all(env_array), NULL);
 		ft_strlcpy(str, env->key, len);
 		ft_strlcat(str, "=", len);
 		ft_strlcat(str, env->value, len);

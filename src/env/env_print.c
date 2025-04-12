@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 13:52:58 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/08 21:58:27 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/12 16:57:13 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,5 @@ void	print_sorted_env(t_env *env)
 	i = -1;
 	while (env_array[++i])
 		printf("declare -x %s\n", env_array[i]);
-	free_env_array(env_array);
+	ft_free_all(env_array);
 }
