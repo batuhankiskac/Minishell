@@ -6,12 +6,26 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:53:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 21:53:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 15:16:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+ * get_env - Retrieves the value of an environment variable from the envp array.
+ *
+ * This function searches for an environment variable in the envp array
+ * and returns its value if found. The variable name is expected to be
+ * in the format "NAME=VALUE".
+ *
+ * Parameters:
+ *   char *name - The name of the environment variable to search for.
+ *   char **envp - The array of environment variables.
+ *
+ * Returns:
+ *   A pointer to the value of the environment variable, or NULL if not found.
+ */
 char	*get_env(char *name, char *envp[])
 {
 	int	i;
@@ -28,6 +42,23 @@ char	*get_env(char *name, char *envp[])
 	return (NULL);
 }
 
+/*
+ * find_path - Searches for the full path of a command
+ * in the PATH environment variable.
+ *
+ * This function splits the PATH environment variable into its components
+ * and checks each component to see if the command exists and is executable.
+ * If found, it returns the full path to the command; otherwise, it returns
+ * the original command string.
+ *
+ * Parameters:
+ *   char *cmd - The command to search for.
+ *   char **envp - The array of environment variables.
+ *
+ * Returns:
+ *   A pointer to the full path of the command if found, or the original
+ *   command string if not found.
+ */
 char	*find_path(char *cmd, char *envp[])
 {
 	int		i;

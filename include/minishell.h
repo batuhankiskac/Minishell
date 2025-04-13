@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 13:31:19 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 15:17:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*command;
-	int		exit_status;
+	int			exit_status;
 }				t_shell;
 
 /*
