@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 20:04:46 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 13:31:19 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,21 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+typedef enum e_redir_type
+{
+	REDIR_NONE = 0,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC
+}			t_redir_type;
+
+typedef struct s_redir
+{
+	t_redir_type	type;
+	char			*file;
+	struct s_redir	*next;
+}					t_redir;
 
 /*
 * t_env - Structure for representing an environment variable in Minishell.
@@ -52,12 +67,14 @@ typedef struct s_command
 	char	*cmd;
 	char	**args;
 	int		argc;
+	t_redir	*redir;
 }				t_command;
 
 typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*command;
+	int		exit_status;
 }				t_shell;
 
 /*
@@ -79,6 +96,7 @@ t_env	*find_env(char *key, t_env *env);
 int		env_value_len(char *str);
 int		is_valid_env(char *str);
 int		is_env_char(char c);
+int		is_valid_identifier(char *str);
 char	**env_list_to_array(t_env *env);
 char	*env_value(char *env);
 char	*get_env_value(char *key, t_env *env);
@@ -86,7 +104,6 @@ void	free_env(t_env *env);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
-int		is_valid_identifier(char *str);
 
 /*
 ** Execute
