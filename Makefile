@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/04/13 19:13:39 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/04/13 19:15:11 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -ggdb3 -lreadline
+CFLAGS = -Wall -Wextra -Werror -ggdb3
 
 LIBFT_DIR = ./libft
 
@@ -47,7 +47,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -lreadline
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
