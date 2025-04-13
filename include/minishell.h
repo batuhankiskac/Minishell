@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 16:34:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 18:48:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,12 @@ void	update_env(char *key, char *value, t_env **env);
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell);
 int		exec_external(t_shell *shell);
-char	*find_path(char *cmd, char *envp[]);
-char	*get_env(char *name, char *envp[]);
 int		open_file(char *filename, int flags, int mode, char *type);
 int		dup_fd(int old_fd, int new_fd, char *type);
+int		setup_redir(t_shell *shell);
+int		handle_heredoc_redir(t_redir *redir);
+char	*find_path(char *cmd, char *envp[]);
+char	*get_env(char *name, char *envp[]);
 
 /*
 ** Utils

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 15:23:41 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 16:53:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 18:47:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	setup_redir(t_shell *shell)
 		else if (redir->type == REDIR_APPEND)
 			ret = handle_append_redir(redir);
 		else if (redir->type == REDIR_HEREDOC)
-			printf("heredoc redirection not implemented\n");
+			ret = handle_heredoc_redir(redir);
 		else
 			ret = 0;
 		if (ret == ERROR)
