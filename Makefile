@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/04/13 19:03:39 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/04/13 19:13:39 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -ggdb3
+CFLAGS = -Wall -Wextra -Werror -ggdb3 -lreadline
 
 LIBFT_DIR = ./libft
 
