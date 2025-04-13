@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:53:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 15:16:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 15:37:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,66 @@ char	*find_path(char *cmd, char *envp[])
 	ft_free_all(allpath);
 	ft_free_all(s_cmd);
 	return (cmd);
+}
+
+/*
+ * open_file - Opens a file with the specified flags and mode.
+ *
+ * This function attempts to open a file with the given flags and mode.
+ * If the file cannot be opened, it prints an error message to stderr
+ * and returns ERROR.
+ *
+ * Parameters:
+ *   char *filename - The name of the file to open.
+ *   int flags - The flags to use when opening the file.
+ *   int mode - The mode to use when creating the file (if applicable).
+ *   char *type - A string indicating the type of operation (for error messages).
+ *
+ * Returns:
+ *   The file descriptor if successful, or ERROR if an error occurs.
+ */
+int	open_file(char *filename, int flags, int mode, char *type)
+{
+	int	fd;
+
+	fd = open(filename, flags, mode);
+	if (fd == -1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(type, 2);
+		ft_putstr_fd(": ", 2);
+		perror(filename);
+		return (ERROR);
+	}
+	return (fd);
+}
+
+/*
+ * dup_fd - Duplicates a file descriptor to a new file descriptor.
+ *
+ * This function duplicates the old file descriptor to the new file descriptor
+ * using dup2. If an error occurs, it prints an error message to stderr,
+ * closes the old file descriptor, and returns ERROR.
+ *
+ * Parameters:
+ *   int old_fd - The old file descriptor to duplicate.
+ *   int new_fd - The new file descriptor to duplicate to.
+ *   char *type - A string indicating the type of operation (for error messages).
+ *
+ * Returns:
+ *   0 if successful, or ERROR if an error occurs.
+ */
+int	dup_fd(int old_fd, int new_fd, char *type)
+{
+	if (dup2(old_fd, new_fd) == -1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(type, 2);
+		ft_putstr_fd(": ", 2);
+		perror("dup2");
+		close(old_fd);
+		return (ERROR);
+	}
+	close(old_fd);
+	return (0);
 }
