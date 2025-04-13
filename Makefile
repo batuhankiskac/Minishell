@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/04/12 20:25:34 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/04/13 15:43:26 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS = src/main.c \
 	   src/builtins/unset.c \
 	   src/exec/exec_builtin.c \
 	   src/exec/exec_external.c \
+	   src/exec/exec_redirections.c \
 	   src/exec/exec_utils.c \
 	   src/exec/is_builtin.c \
 	   src/utils/utils.c

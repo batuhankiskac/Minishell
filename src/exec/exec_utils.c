@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:53:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 15:39:35 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/13 16:40:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,9 @@ int	open_file(char *filename, int flags, int mode, char *type)
 	fd = open(filename, flags, mode);
 	if (fd == -1)
 	{
-		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("minishell: open ", 2);
 		ft_putstr_fd(type, 2);
-		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(" file", 2);
 		perror(filename);
 		return (ERROR);
 	}
@@ -139,10 +139,8 @@ int	dup_fd(int old_fd, int new_fd, char *type)
 {
 	if (dup2(old_fd, new_fd) == -1)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(type, 2);
-		ft_putstr_fd(": ", 2);
-		perror("dup2");
+		ft_putstr_fd("minishell: dup2 ", 2);
+		perror(type);
 		close(old_fd);
 		return (ERROR);
 	}
