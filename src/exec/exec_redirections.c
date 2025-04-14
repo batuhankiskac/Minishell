@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_rediractions.c                                :+:      :+:    :+:   */
+/*   exec_redirections.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 15:23:41 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 18:47:21 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/14 23:16:22 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int handle_input_redir(t_redir *redir)
+// < input redirection
+static int	handle_input_redir(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open_file(redir->file, O_RDONLY, 0, "input");
 	if (fd == ERROR)
@@ -24,9 +25,10 @@ static int handle_input_redir(t_redir *redir)
 	return (0);
 }
 
-static int handle_output_redir(t_redir *redir)
+// > output redirection
+static int	handle_output_redir(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644, "output");
 	if (fd == ERROR)
@@ -36,9 +38,10 @@ static int handle_output_redir(t_redir *redir)
 	return (0);
 }
 
-static int handle_append_redir(t_redir *redir)
+// >> append redirection
+static int	handle_append_redir(t_redir *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644, "append");
 	if (fd == ERROR)
@@ -48,6 +51,19 @@ static int handle_append_redir(t_redir *redir)
 	return (0);
 }
 
+/*
+* setup_redir - Sets up redirections for the command.
+*
+* This function iterates through the redirection list in the shell
+* structure and handles each type of redirection (input, output,
+* append, heredoc) by calling the appropriate handler function.
+*
+* Parameters:
+*   t_shell *shell - A pointer to the shell structure containing
+*                   the command and redirection information.
+* Returns:
+*   0 on success, ERROR on failure.
+*/
 int	setup_redir(t_shell *shell)
 {
 	t_redir	*redir;

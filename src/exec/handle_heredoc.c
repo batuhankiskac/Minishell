@@ -6,19 +6,33 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:11:52 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/13 18:55:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/14 23:16:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+* handle_heredoc_redir - Handles heredoc redirection.
+*
+* This function creates a pipe and reads lines from the user
+* until the specified delimiter is encountered. The lines are
+* written to the pipe, which is then used as input for the command.
+*
+* Parameters:
+*   t_redir *redir - A pointer to the redirection structure
+* containing the heredoc delimiter.
+*
+* Returns:
+*   0 on success, ERROR on failure.
+*/
 int	handle_heredoc_redir(t_redir *redir)
 {
 	int		pipe_fd[2];
 	char	*line;
 
 	if (pipe(pipe_fd) == -1)
-		return (perror("minishell: pipe"),ERROR);
+		return (perror("minishell: pipe"), ERROR);
 	while (1)
 	{
 		line = readline("> ");
