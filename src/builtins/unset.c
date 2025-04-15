@@ -6,12 +6,15 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:25:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/12 20:04:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/15 16:13:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+/*
+* free_env_node - Frees a single environment variable node.
+*/
 static void	free_env_node(t_env *node)
 {
 	if (node)

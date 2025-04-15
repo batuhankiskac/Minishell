@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/14 23:15:05 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/15 16:50:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ typedef struct s_command
 	char	**args;
 	int		argc;
 	t_redir	*redir;
+	struct s_command	*next;
 }				t_command;
 
 typedef struct s_shell
