@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/16 09:44:45 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/16 09:51:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	struct s_env	*next;
-}				t_env;
+}					t_env;
 
 /*
 * t_command - Structure for representing a command in Minishell.
@@ -106,12 +106,12 @@ typedef struct s_env
 */
 typedef struct s_command
 {
-	char	*cmd;
-	char	**args;
-	int		argc;
-	t_redir	*redir;
+	char				*cmd;
+	char				**args;
+	int					argc;
+	t_redir				*redir;
 	struct s_command	*next;
-}				t_command;
+}						t_command;
 
 typedef struct s_shell
 {

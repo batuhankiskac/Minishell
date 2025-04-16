@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/04/15 21:11:12 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/04/16 09:56:34 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,6 @@ LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS = src/main.c \
-	   src/env/env_init.c \
-	   src/env/env_print.c \
-	   src/env/env_to_array.c \
-	   src/env/env_update.c \
-	   src/env/env_utils.c \
-	   src/env/env_value.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
 	   src/builtins/env.c \
@@ -34,6 +28,12 @@ SRCS = src/main.c \
 	   src/builtins/export.c \
 	   src/builtins/pwd.c \
 	   src/builtins/unset.c \
+	   src/env/env_init.c \
+	   src/env/env_print.c \
+	   src/env/env_to_array.c \
+	   src/env/env_update.c \
+	   src/env/env_utils.c \
+	   src/env/env_value.c \
 	   src/exec/exec_builtin.c \
 	   src/exec/exec_external.c \
 	   src/exec/exec_redirections.c \
@@ -64,6 +64,6 @@ fclean: clean
 
 re: fclean all
 
-main : all clean
+main: all clean
 
 .PHONY: all clean fclean re main
