@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 19:54:31 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/16 09:43:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/17 18:36:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	setup_pipe_for_cmd(t_command *cmd, int pipe_fd[2])
 	return (0);
 }
 
-static void	update_parent_pipe()
+static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
 {
 	
 }
