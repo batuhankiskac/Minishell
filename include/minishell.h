@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 14:34:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/19 20:27:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/19 21:58:39 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,10 +160,10 @@ int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_redir *redir);
 int		execute_pipe(t_shell *shell);
 int		execute_pipe(t_shell *shell);
-int		close_pipe_fd(int prev_fd, int pipe_fd[2]);
 char	*find_path(char *cmd, char *envp[]);
 char	*get_env(char *name, char *envp[]);
 void	run_command(t_shell *shell);
+void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 
 /*
 ** Utils
