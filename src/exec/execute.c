@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 19:54:31 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/19 19:10:27 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/19 20:33:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,8 @@ static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
 		return (ERROR);
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("minishell: fork");
-		return (ERROR);
-	}
+		return (close_pipe_fd(*prev_fd, pipe_fd),
+			perror("minishell: fork"), ERROR);
 	if (pid == 0)
 	{
 		if (cmd->next != NULL)
@@ -107,7 +105,11 @@ int	execute_pipe(t_shell *shell)
 	{
 		ret = handle_pipe_iteration(shell, cmd, &prev_fd);
 		if (ret == ERROR)
+		{
+			if (prev_fd != -1)
+				close(prev_fd);
 			return (ERROR);
+		}
 		cmd = cmd->next;
 	}
 	while (wait(&status) > 0)
