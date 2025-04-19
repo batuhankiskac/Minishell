@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 19:54:31 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/17 18:36:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/19 19:10:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,15 @@ static int	setup_pipe_for_cmd(t_command *cmd, int pipe_fd[2])
 
 static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
 {
-	
+	if (*prev_fd != -1)
+		close(*prev_fd);
+	if (cmd->next)
+	{
+		*prev_fd = pipe_fd[0];
+		close(pipe_fd[1]);
+	}
+	else
+		*prev_fd = -1;
 }
 
 static void	execute_pipe_child(t_shell *shell, int prev_fd, int pipe_write_fd)
@@ -59,32 +67,50 @@ static void	execute_pipe_child(t_shell *shell, int prev_fd, int pipe_write_fd)
 	exit(ret);
 }
 
+static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+	int		pipe_write_fd;
+
+	if (setup_pipe_for_cmd(cmd, pipe_fd) == ERROR)
+		return (ERROR);
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("minishell: fork");
+		return (ERROR);
+	}
+	if (pid == 0)
+	{
+		if (cmd->next != NULL)
+			pipe_write_fd = pipe_fd[1];
+		else
+			pipe_write_fd = -1;
+		execute_pipe_child(shell, *prev_fd, pipe_write_fd);
+	}
+	else
+		update_parent_pipe(prev_fd, pipe_fd, cmd);
+	return (0);
+}
+
 int	execute_pipe(t_shell *shell)
 {
 	t_command	*cmd;
-	pid_t		pid;
-	int			pipe_fd[2];
 	int			prev_fd;
 	int			status;
+	int			ret;
 
-	cmd = shell->command->cmd;
 	prev_fd = -1;
+	cmd = shell->command;
 	while (cmd)
 	{
-		if (setup_pipe_for_cmd(cmd, pipe_fd) == ERROR)
+		ret = handle_pipe_iteration(shell, cmd, &prev_fd);
+		if (ret == ERROR)
 			return (ERROR);
-		pid = fork();
-		if (pid < 0)
-			return (perror("minishell: fork"), ERROR);
-		else if (pid == 0)
-		{
-			if (cmd->next)
-				execute_pipe_child(shell, prev_fd, pipe_fd[1]);
-			else
-				execute_pipe_child(shell, prev_fd, -1);
-		}
-		else
-			update_parent_pipe();
 		cmd = cmd->next;
 	}
+	while (wait(&status) > 0)
+		;
+	return (WEXITSTATUS(status));
 }
