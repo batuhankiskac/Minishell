@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:53:36 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/15 21:03:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/20 15:02:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,4 +146,23 @@ int	dup_fd(int old_fd, int new_fd, char *type)
 	}
 	close(old_fd);
 	return (0);
+}
+
+/*
+* close_pipe_fd - close file descriptors for pipes and previous fd
+*
+* Closes the previous file descriptor and both ends of the pipe.
+*
+* Parameters:
+*   int prev_fd       - previous file descriptor to close
+*   int pipe_fd[2]    - array containing pipe file descriptors
+*/
+void	close_pipe_fd(int prev_fd, int pipe_fd[2])
+{
+	if (prev_fd != -1)
+		close(prev_fd);
+	if (pipe_fd[0] != -1)
+		close(pipe_fd[0]);
+	if (pipe_fd[1] != -1)
+		close(pipe_fd[1]);
 }
