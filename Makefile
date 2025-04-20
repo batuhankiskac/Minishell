@@ -6,7 +6,7 @@
 #    By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/15 16:27:35 by bkiskac           #+#    #+#              #
-#    Updated: 2025/04/20 15:04:03 by bkiskac          ###   ########.fr        #
+#    Updated: 2025/04/20 17:52:49 by bkiskac          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRCS = src/main.c \
 	   src/exec/execute.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/is_builtin.c \
+	   src/singals/singals.c \
 	   src/utils/utils.c
 
 OBJS = $(SRCS:.c=.o)
