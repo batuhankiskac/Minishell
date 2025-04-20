@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:26:43 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/19 21:57:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/04/20 21:20:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,18 @@ int	main(int argc, char **argv, char **envp)
 
 	/* Automated test suite */
 	printf("\n=== Starting automated tests ===\n");
+
+	/* Test signal handling */
+	printf(">>> Test signal handling:\n");
+	init_signals();
+	printf("Raising SIGINT (simulate Ctrl-C)...\n");
+	raise(SIGINT);
+	printf("Continued after SIGINT handler\n");
+	printf("Raising SIGQUIT (should be ignored)...\n");
+	raise(SIGQUIT);
+	printf("Continued after SIGQUIT\n");
+	reset_signals();
+	printf("Signals reset to default\n");
 
 	/* Test echo builtin */
 	{

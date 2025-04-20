@@ -166,6 +166,12 @@ void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 
 /*
+** Signals
+*/
+void	init_signals(void);
+void	reset_signals(void);
+
+/*
 ** Utils
 */
 void	*safe_malloc(size_t size);
