@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:05:53 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:06:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:29:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,20 @@ char	**ft_arrdup(char **arr)
 	return (rtn);
 }
 
-void free_arr(char **arr)
+void	free_arr(char **arr)
 {
-    int i = 0;
-    if (!arr)
-        return;
-    while (arr[i])
-        free(arr[i++]);
-    free(arr);
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 }
 
-int equal_sign(char *str)
+int	equal_sign(char *str)
 {
-    (void)str;
-    return (0);
+	(void)str;
+	return (0);
 }

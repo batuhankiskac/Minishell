@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:18 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:19 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:22:34 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ typedef struct s_global
 	int	in_heredoc;
 }	t_global;
 
-extern t_global g_global;
+extern t_global	g_global;
 
 typedef enum s_tokens
 {

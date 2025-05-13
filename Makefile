@@ -57,9 +57,9 @@ SRCS = src/main.c \
 	   src/parser/parser.c \
 	   src/parser_utils/minishell_loop.c \
 	   src/parser_utils/parse_envp.c \
-	   src/parser_utils/t_lexer_clear_utils.c \
+	   src/parser_utils/t_lexer_clear_utils_1.c \
 	   src/parser_utils/t_lexer_utils.c \
-	   src/parser_utils/t_simple_cmds_utils.c \
+	   src/parser_utils/t_simple_cmds_utils_2.c \
 	   src/parser_utils/utils.c
 
 OBJS = $(SRCS:.c=.o)

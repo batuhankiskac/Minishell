@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:06:25 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:06:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:28:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	init_minishell(t_tools *tools, char **envp)
 
 void	signal_handlers(void)
 {
-	signal(SIGINT, sigint_handler);     // ctrl-C
-	signal(SIGQUIT, SIG_IGN);           // ctrl-backslash
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -32,31 +32,23 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-
 	init_minishell(&tools, envp);
 	signal_handlers();
-
 	while (1)
 	{
 		line = readline("minishell> ");
 		if (!line)
-        write(1, "exit\n", 5);
 		{
-			break;
+			write(1, "exit\n", 5);
+			break ;
 		}
 		if (*line)
 			add_history(line);
-
-		if (ft_strncmp(line, "exit", 4) == 0 && (line[4] == '\0' || line[4] == ' '))
+		if (!ft_strncmp(line, "exit", 4) && (!line[4] || line[4] == ' '))
 		{
 			free(line);
-			break;
+			break ;
 		}
-
-		// lexer(&tools, line);
-		// parser(&tools);
-		// executor(&tools);
-
 		free(line);
 	}
 	return (0);

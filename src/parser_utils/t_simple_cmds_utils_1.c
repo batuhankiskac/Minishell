@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   t_simple_cmds_utils.c                              :+:      :+:    :+:   */
+/*   t_simple_cmds_utils_1.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:06:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:06:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:30:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../include/minishell.h"
 #include "../../include/utils.h"
 
 t_simple_cmds	*ft_simple_cmdsnew(char **str,
@@ -96,47 +97,3 @@ t_simple_cmds	*ft_simple_cmdsfirst(t_simple_cmds *map)
 }
 
 
-int dummy_builtin(t_tools *tools, t_simple_cmds *simple_cmd)
-{
-    (void)tools;
-    (void)simple_cmd;
-    return (0);
-}
-
-int (*builtin_arr(char *str))(t_tools *tools, t_simple_cmds *simple_cmd)
-{
-    (void)str;
-    return (&dummy_builtin);
-}
-
-
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "../../include/minishell.h"
-
-void single_cmd(t_simple_cmds *cmds, t_tools *tools)
-{
-    pid_t pid;
-
-    if (!cmds || !cmds->str || !cmds->str[0])
-        return;
-
-    pid = fork();
-    if (pid == 0)
-    {
-        execve(cmds->str[0], cmds->str, tools->envp);
-        perror("execve");
-        exit(EXIT_FAILURE);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, NULL, 0);
-    }
-    else
-    {
-        perror("fork");
-    }
-}

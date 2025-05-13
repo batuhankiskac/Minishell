@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:22:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@
 # include "error.h"
 # include "lexer.h"
 
-typedef struct s_tools t_tools;
-typedef struct s_simple_cmds t_simple_cmds;
-typedef struct s_lexer t_lexer;
-typedef enum s_tokens t_tokens;
+typedef struct s_tools			t_tools;
+typedef struct s_simple_cmds	t_simple_cmds;
+typedef struct s_lexer			t_lexer;
+typedef enum s_tokens			t_tokens;
 
 typedef enum e_redir_type
 {

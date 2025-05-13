@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:23 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:22:57 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ int				add_node(char *str, t_tokens token, t_lexer **lexer_list);
 t_tokens		check_token(int c);
 int				handle_token(char *str, int i, t_lexer **lexer_list);
 
-int equal_sign(char *str);
+int				equal_sign(char *str);
 #endif
