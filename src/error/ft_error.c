@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/parser.h"
+#include "minishell.h"
 
 int	ft_error(int error, t_tools *tools)
 {

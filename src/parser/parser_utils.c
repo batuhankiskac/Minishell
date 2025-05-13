@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 t_parser_tools	init_parser_tools(t_lexer *lexer_list, t_tools *tools)
 {

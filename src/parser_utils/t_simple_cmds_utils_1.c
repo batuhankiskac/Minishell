@@ -6,12 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:06:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 21:30:38 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:31:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/utils.h"
+#include "minishell.h"
+#include "minishell.h"
 
 t_simple_cmds	*ft_simple_cmdsnew(char **str,
 	int num_redirections, t_lexer *redirections)
@@ -95,5 +95,3 @@ t_simple_cmds	*ft_simple_cmdsfirst(t_simple_cmds *map)
 	}
 	return (map);
 }
-
-

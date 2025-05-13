@@ -6,23 +6,19 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:06:25 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 21:28:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:21:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
+
+t_global	g_global; // Definition of g_global
 
 void	init_minishell(t_tools *tools, char **envp)
 {
 	parse_envp(tools);
 	find_pwd(tools);
 	tools->envp = envp;
-}
-
-void	signal_handlers(void)
-{
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -33,7 +29,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_minishell(&tools, envp);
-	signal_handlers();
+	init_signals();
 	while (1)
 	{
 		line = readline("minishell> ");

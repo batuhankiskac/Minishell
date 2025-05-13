@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/utils.h"
+#include "minishell.h"
 
 t_lexer	*ft_lexernew(char *str, int token)
 {

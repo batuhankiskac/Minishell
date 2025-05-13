@@ -6,12 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:52:21 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/20 21:22:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:21:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define _POSIX_C_SOURCE 200809L
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static void	sigint_handler(int sig)
 {
@@ -37,4 +37,11 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+void	sigquit_handler(int sig)
+{
+	(void)sig;
+	// SIGQUIT is usually ignored or prints a message.
+	// ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 }

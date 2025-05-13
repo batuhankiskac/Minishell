@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/utils.h"
-#include "../../include/lexer.h"
+#include "minishell.h"
+#include "minishell.h"
 
 t_tokens	check_token(int c)
 {

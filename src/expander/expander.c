@@ -6,12 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:41 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:57:13 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/utils.h"
+#include "minishell.h"
 
 int	loop_if_dollar_sign(t_tools *tools, char *str, char **tmp, int j)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/lexer.h"
+#include "minishell.h"
 
 int	handle_quotes(int i, char *str, char del)
 {

@@ -6,15 +6,14 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:54:03 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/03/15 13:04:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:21:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Fonksiyon proje bitiminde tekrar yazılacak. Şu an sadece env ile alakalı yerleri freeleyip çıkıyor.
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Fonksiyon proje bitiminde tekrar yazilacak.
+// Su an sadece env ile alakali yerleri freeleyip cikiyor.
 
 static int	is_numeric(char *str)
 {

@@ -6,12 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 21:30:21 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 21:30:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:31:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/utils.h"
+#include "minishell.h"
+#include "minishell.h"
 
 int	dummy_builtin(t_tools *tools, t_simple_cmds *simple_cmd)
 {
@@ -32,7 +32,6 @@ void	single_cmd(t_simple_cmds *cmds, t_tools *tools)
 
 	if (!cmds || !cmds->str || !cmds->str[0])
 		return ;
-
 	pid = fork();
 	if (pid == 0)
 	{

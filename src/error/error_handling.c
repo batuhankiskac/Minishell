@@ -6,11 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 22:10:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 void	parser_error(int error, t_tools *tools, t_lexer *lexer_list)
 {

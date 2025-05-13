@@ -6,12 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:44 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 20:04:45 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/13 21:57:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-#include "../../include/builtins.h"
+#include "minishell.h"
 
 size_t	dollar_sign(char *str)
 {
