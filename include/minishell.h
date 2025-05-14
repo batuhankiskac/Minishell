@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 22:11:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:46:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,23 @@ typedef enum e_redir_type
 	REDIR_HEREDOC
 }			t_redir_type;
 
+typedef enum e_token_type
+{
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_REDIR_APPEND,
+	TOKEN_HEREDOC
+}	t_token_type;
+
+typedef struct s_token
+{
+	t_token_type		type;
+	char				*str;
+	struct s_token		*next;
+}						t_token;
+
 typedef struct s_redir
 {
 	t_redir_type	type;
@@ -64,6 +81,8 @@ typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*command;
+	t_token		*tokens;
+	char		*line;
 	int			exit_status;
 }				t_shell;
 
@@ -110,6 +129,15 @@ char	*find_path(char *cmd, char *envp[]);
 char	*get_env(char *name, char *envp[]);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
+
+/*
+** Lexer
+*/
+int		skip_spaces(const char *str, int start);
+int		check_token(char c);
+int		handle_token(const char *str, int pos, t_token **tokens);
+int		read_words(int pos, const char *str, t_token **tokens);
+int		token_reader(t_shell *shell);
 
 /*
 ** Signals
