@@ -6,15 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 23:48:51 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/15 00:26:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-# define ERROR -1
-# define PATH_MAX 4096
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -26,7 +23,9 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdbool.h>
+
+# define ERROR -1
+# define PATH_MAX 4096
 
 typedef enum e_redir_type
 {
@@ -133,6 +132,12 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 /*
 ** Expander
 */
+int		expand_on_args(t_command *cmd, t_env *env, int exit_status);
+int		expand_on_redirs(t_command *cmd, t_env *env, int exit_status);
+int		expander(t_shell *shell);
+char	*append_variable(char *res, const char *s, int *i, t_env *env, int exit_status);
+char	*append_literal(char *res, const char *s, int start, int end);
+char	*expand_string(const char *s, t_env *env, int exit_status);
 
 /*
 ** Lexer
@@ -155,6 +160,9 @@ int		parse_commands(t_shell *shell);
 */
 void	init_signals(void);
 void	reset_signals(void);
+int		set_signal_flag(int sig);
+int		get_signal_flag(void);
+void	reset_signal_flag(void);
 
 /*
 ** Utils

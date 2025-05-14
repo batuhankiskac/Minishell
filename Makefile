@@ -42,6 +42,12 @@ SRCS = src/main.c \
 	   src/exec/execute.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/is_builtin.c \
+	   src/expander/expander.c \
+	   src/expander/expander_utils_1.c \
+	   src/expander/expander_utils_2.c \
+	   src/expander/expand_on_args.c \
+	   src/expander/expand_on_redirs.c \
+	   src/lexer/check_token.c \
 	   src/signals/signals.c \
 	   src/utils/utils.c
 
