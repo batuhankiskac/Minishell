@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 23:27:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:48:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ int		env_value_len(char *str);
 int		is_valid_env(char *str);
 int		is_env_char(char c);
 int		is_valid_identifier(char *str);
-char	**env_list_to_array(t_env *env);
 char	*env_value(char *env);
 char	*get_env_value(char *key, t_env *env);
+char	**env_list_to_array(t_env *env);
 void	free_env(t_env *env);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
@@ -131,6 +131,10 @@ void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 
 /*
+** Expander
+*/
+
+/*
 ** Lexer
 */
 int		skip_spaces(const char *str, int start);
@@ -146,13 +150,11 @@ int		parse_redirections(t_shell *shell);
 int		build_command_list(t_shell *shell);
 int		parse_commands(t_shell *shell);
 
-
 /*
 ** Signals
 */
 void	init_signals(void);
 void	reset_signals(void);
-void	sigquit_handler(int sig);
 
 /*
 ** Utils

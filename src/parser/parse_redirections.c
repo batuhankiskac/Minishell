@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:22:37 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 23:22:38 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:50:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 		type = REDIR_OUT;
 	else if (tt == TOKEN_REDIR_APPEND)
 		type = REDIR_APPEND;
-	r = safe_malloc(sizeof *r);
+	r = safe_malloc(sizeof(*r));
 	r->type = type;
 	r->file = ft_strdup(file);
 	r->next = NULL;

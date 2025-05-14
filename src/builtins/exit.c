@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 12:54:03 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/13 22:21:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:49:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static void	free_all_resources(t_env **env)
  * If the argument is not a valid integer, an error message is printed.
  *
  * Parameters:
- *   args - A pointer to an array of strings containing the command-line arguments.
+ *   args - A pointer to an array of strings
+ * containing the command-line arguments.
  *
  * Returns:
  *   0 - Upon successful execution.

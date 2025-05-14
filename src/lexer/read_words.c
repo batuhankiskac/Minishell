@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 22:44:42 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 22:44:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:49:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  */
 int	read_words(int pos, const char *str, t_token **tokens)
 {
-	int	start;
+	int		start;
 	char	quote;
 	char	*word;
 

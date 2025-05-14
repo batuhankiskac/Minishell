@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 23:04:24 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 23:09:58 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:50:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ static t_command	*new_cmd(void)
 {
 	t_command	*c;
 
-	c = safe_malloc(sizeof *c);
-	c->cmd   = NULL;
-	c->args  = NULL;
-	c->argc  = 0;
+	c = safe_malloc(sizeof(*c));
+	c->cmd = NULL;
+	c->args = NULL;
+	c->argc = 0;
 	c->redir = NULL;
-	c->next  = NULL;
+	c->next = NULL;
 	return (c);
 }
 

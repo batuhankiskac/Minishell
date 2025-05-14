@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 22:45:09 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/14 22:45:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/14 23:49:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	token_reader(t_shell *shell)
 		skipped = skip_spaces(shell->line, pos);
 		pos += skipped;
 		if (!shell->line[pos])
-			break;
+			break ;
 		if (check_token(shell->line[pos]))
 			pos += handle_token(shell->line, pos, &shell->tokens);
 		else
