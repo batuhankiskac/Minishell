@@ -43,25 +43,7 @@ SRCS = src/main.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/is_builtin.c \
 	   src/signals/signals.c \
-	   src/utils/utils.c \
-	   src/expander/expander.c \
-	   src/expander/expanders_utils.c \
-	   src/expander/expanders_utils2.c \
-	   src/error/error_handling.c \
-	   src/error/ft_error.c \
-	   src/lexer/handle_quotes.c \
-	   src/lexer/handle_token.c \
-	   src/lexer/token_reader.c \
-	   src/parser/handle_redirections.c \
-	   src/parser/parser_utils.c \
-	   src/parser/parser.c \
-	   src/parser_utils/minishell_loop.c \
-	   src/parser_utils/parse_envp.c \
-	   src/parser_utils/t_lexer_clear_utils.c \
-	   src/parser_utils/t_lexer_utils.c \
-	   src/parser_utils/t_simple_cmds_utils_1.c \
-	   src/parser_utils/t_simple_cmds_utils_2.c \
-	   src/parser_utils/utils.c
+	   src/utils/utils.c
 
 OBJS = $(SRCS:.c=.o)
 
