@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 20:04:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/15 00:26:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/15 08:44:05 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int		check_token(char c);
 int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
 int		token_reader(t_shell *shell);
+int		token_add(t_token **tokens, const char *word, int len);
 
 /*
 ** Parser

@@ -14,7 +14,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I include
+CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline
 
 LIBFT_DIR = ./libft
 
@@ -48,7 +48,16 @@ SRCS = src/main.c \
 	   src/expander/expand_on_args.c \
 	   src/expander/expand_on_redirs.c \
 	   src/lexer/check_token.c \
-	   src/signals/signals.c \
+	   src/lexer/handle_token.c \
+	   src/lexer/read_words.c \
+	   src/lexer/skip_spaces.c \
+	   src/lexer/token_add.c \
+	   src/lexer/token_reader.c \
+	   src/parser/build_command_list.c \
+	   src/parser/parse_commands.c \
+	   src/parser/parse_redirections.c \
+	   src/signals/signal_flag.c \
+	   src/signals/signal_handlers.c \
 	   src/utils/utils.c
 
 OBJS = $(SRCS:.c=.o)

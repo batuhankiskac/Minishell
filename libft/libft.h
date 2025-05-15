@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 12:03:39 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/04/22 21:31:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/15 08:48:05 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		ft_isascii(int c);
 int		ft_isalpha(int c);
 int		ft_isprint(int c);
 int		ft_toupper(int c);
+int		ft_isspace(int c);
 int		ft_tolower(int c);
 int		ft_atoi(const char *str);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
