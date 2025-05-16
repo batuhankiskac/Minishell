@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:56:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:28:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int		builtin_env(t_env *env);
 int		builtin_export(int argc, char **args, t_env **env);
 int		builtin_pwd(void);
 int		builtin_unset(int argc, char **args, t_env **env);
-int		builtin_exit(int argc, char **args, t_env **env);
+int		builtin_exit(t_shell *shell);
 int		builtin_cd(int argc, char **args, t_env **env);
 
 /*
@@ -136,7 +136,8 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 int		expand_on_args(t_command *cmd, t_env *env, int exit_status);
 int		expand_on_redirs(t_command *cmd, t_env *env, int exit_status);
 int		expander(t_shell *shell);
-char	*append_variable(char *res, const char *s, int *i, t_env *env, int exit_status);
+char	*append_variable(char *res, const char *s,
+			int *i, t_env *env, int exit_status);
 char	*append_literal(char *res, const char *s, int start, int end);
 char	*expand_string(const char *s, t_env *env, int exit_status);
 
@@ -151,6 +152,7 @@ int		token_reader(t_shell *shell);
 int		tokenize_line(char *line, t_shell *shell);
 void	clear_command_list(t_command *cmd);
 void	token_add(t_token **tokens, const char *word, int len);
+void	clear_token_list(t_token **tokens_head);
 
 /*
 ** Parser
@@ -173,6 +175,6 @@ void	reset_signal_flag(void);
 */
 void	*safe_malloc(size_t size);
 void	ft_free_all(char **arr);
-void    free_redirections(t_redir *r);
+void	free_redirections(t_redir *r);
 
 #endif

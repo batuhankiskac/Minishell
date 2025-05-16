@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:22:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:29:45 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,3 @@ void	*ft_calloc(size_t n, size_t size)
 	ft_bzero(ptr, n * size);
 	return (ptr);
 }
-

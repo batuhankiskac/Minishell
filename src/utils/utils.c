@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:31:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:36:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_free_all(char **arr)
 
 void	free_redirections(t_redir *r)
 {
-	t_redir *next;
+	t_redir	*next;
 
 	while (r)
 	{

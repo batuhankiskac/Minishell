@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:33:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	free_env(t_env *env)
 {
 	t_env	*tmp;
+
 	while (env)
 	{
 		tmp = env->next;
@@ -39,6 +40,7 @@ t_env	*find_env(char *key, t_env *env)
 int	is_valid_identifier(char *str)
 {
 	int	i;
+
 	if (!str || !*str)
 		return (0);
 	i = 0;
@@ -52,4 +54,3 @@ int	is_valid_identifier(char *str)
 	}
 	return (1);
 }
-

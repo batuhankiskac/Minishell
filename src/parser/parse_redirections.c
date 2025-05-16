@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:31:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:26:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 {
 	t_redir			*r;
 	t_redir_type	type;
-	
+
 	type = REDIR_HEREDOC;
 	if (tt == TOKEN_REDIR_IN)
 		type = REDIR_IN;
@@ -39,7 +39,6 @@ static int	parse_cmd_redirs(t_command *c, t_token **t)
 	last = NULL;
 	while (*t && (*t)->type != TOKEN_PIPE)
 	{
-		// redirection token followed by filename
 		if ((*t)->type >= TOKEN_REDIR_IN && (*t)->type <= TOKEN_HEREDOC)
 		{
 			if (!(*t)->next || (*t)->next->type != TOKEN_WORD)
@@ -52,7 +51,6 @@ static int	parse_cmd_redirs(t_command *c, t_token **t)
 			else
 				last->next = node;
 			last = node;
-			// advance past operator and filename
 			*t = (*t)->next->next;
 			continue;
 		}

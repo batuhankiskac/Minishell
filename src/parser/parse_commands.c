@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:31:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:26:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	populate_args(t_token **t_ptr, t_command *cmd)
 {
 	int		i;
 	t_token	*t;
-	
+
 	t = *t_ptr;
 	i = 0;
 	while (t && t->type != TOKEN_PIPE)
@@ -61,13 +61,10 @@ int	parse_commands(t_shell *shell)
 	t_token		*t;
 	t_command	*cmd;
 
-	// validate no leading, trailing, or consecutive pipes
 	if (!shell->tokens)
 		return (1);
-	// no pipe at start
 	if (shell->tokens->type == TOKEN_PIPE)
 		return (0);
-	// check consecutive or trailing pipes
 	{
 		t_token *tmp = shell->tokens;
 		while (tmp)
@@ -80,13 +77,11 @@ int	parse_commands(t_shell *shell)
 			tmp = tmp->next;
 		}
 	}
-
 	t = shell->tokens;
 	cmd = shell->command;
 	while (cmd && t)
 	{
 		int count = 0;
-		// count and ensure at least one WORD for this command
 		count = count_words_until_pipe(t);
 		if (count == 0)
 			return (0);
@@ -94,11 +89,10 @@ int	parse_commands(t_shell *shell)
 			return (0);
 		populate_args(&t, cmd);
 		set_command_name(cmd);
-		// Ensure cmd is set, even if no args (e.g. for builtins like `pwd`)
 		if (!cmd->cmd && cmd->argc > 0)
 			cmd->cmd = cmd->args[0];
-		else if (!cmd->cmd && count > 0) // if args[0] was somehow null but count was >0
-			cmd->cmd = ""; // Avoid NULL cmd if it's an external command to prevent crash
+		else if (!cmd->cmd && count > 0)
+			cmd->cmd = "";
 
 		if (t && t->type == TOKEN_PIPE)
 			t = t->next;

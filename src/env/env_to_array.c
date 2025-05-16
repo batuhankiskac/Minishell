@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:34 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:38:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	env_count(t_env *env)
 {
 	int		count;
 	t_env	*current;
+
 	count = 0;
 	current = env;
 	while (current)
@@ -32,6 +33,7 @@ char	**env_list_to_array(t_env *env)
 	char	*str;
 	int		i;
 	int		len;
+
 	i = 0;
 	env_array = (char **)safe_malloc(sizeof(char *) * (env_count(env) + 1));
 	while (env)
@@ -49,4 +51,3 @@ char	**env_list_to_array(t_env *env)
 	env_array[i] = NULL;
 	return (env_array);
 }
-

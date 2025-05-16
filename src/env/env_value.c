@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:35:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	is_env_char(char c)
 int	is_valid_env(char *str)
 {
 	int	i;
+
 	i = 0;
 	if (ft_isdigit(str[i]))
 		return (0);
@@ -38,6 +39,7 @@ int	env_value_len(char *str)
 {
 	int	len;
 	int	i;
+
 	len = 0;
 	i = 0;
 	while (str[i] && str[i] != '=')
@@ -51,6 +53,7 @@ char	*env_value(char *env)
 {
 	int		i;
 	char	*value;
+
 	i = 0;
 	while (env[i] && env[i] != '=')
 		i++;
@@ -70,4 +73,3 @@ char	*get_env_value(char *key, t_env *env)
 	}
 	return (NULL);
 }
-

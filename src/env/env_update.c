@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:39:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	update_existing_env(char *value, t_env *node)
 {
 	char	*new_value;
+
 	new_value = ft_strdup(value);
 	if (!new_value)
 		return ;
@@ -25,6 +26,7 @@ static void	update_existing_env(char *value, t_env *node)
 void	update_env(char *key, char *value, t_env **env)
 {
 	t_env	*node;
+
 	node = find_env(key, *env);
 	if (node)
 	{
@@ -44,4 +46,3 @@ void	update_env(char *key, char *value, t_env **env)
 		exit(EXIT_FAILURE);
 	}
 }
-

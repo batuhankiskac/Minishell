@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:29:44 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:41:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*append_literal(char *res, const char *s, int start, int end)
 {
 	char	*substr;
 	char	*new_res;
-	
+
 	if (start >= end)
 		return (res);
 	substr = ft_substr(s, start, end - start);
@@ -113,4 +113,3 @@ char	*expand_string(const char *s, t_env *env, int exit_status)
 	}
 	return (res);
 }
-

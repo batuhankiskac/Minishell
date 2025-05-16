@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:37:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	str_array_len(char **array)
 {
 	int	len;
+
 	len = 0;
 	while (array[len])
 		len++;
@@ -27,6 +28,7 @@ void	sort_env(char **env_array)
 	int		j;
 	int		len;
 	char	*temp;
+
 	i = -1;
 	len = str_array_len(env_array);
 	while (++i < len)
@@ -48,6 +50,7 @@ void	print_sorted_env(t_env *env)
 {
 	char	**env_array;
 	int		i;
+
 	env_array = env_list_to_array(env);
 	if (!env_array)
 		return ;
@@ -57,4 +60,3 @@ void	print_sorted_env(t_env *env)
 		printf("declare -x %s\n", env_array[i]);
 	ft_free_all(env_array);
 }
-

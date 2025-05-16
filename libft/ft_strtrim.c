@@ -31,7 +31,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	size_t	start;
 	size_t	end;
 	char	*res;
-	
+
 	start = 0;
 	if (s1 == NULL || set == NULL)
 		return (NULL);
@@ -46,4 +46,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	ft_strlcpy(res, s1 + start, end - start + 1);
 	return (res);
 }
-

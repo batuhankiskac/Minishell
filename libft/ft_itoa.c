@@ -35,7 +35,7 @@ char	*ft_itoa(int n)
 	long	nmb;
 	int		sign;
 	int		len;
-	
+
 	nmb = n;
 	sign = 1;
 	if (nmb < 0)
@@ -55,4 +55,3 @@ char	*ft_itoa(int n)
 		str[0] = '-';
 	return (str);
 }
-

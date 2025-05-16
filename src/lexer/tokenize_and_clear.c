@@ -44,3 +44,21 @@ void	clear_command_list(t_command *cmd)
 		cmd = next;
 	}
 }
+
+void	clear_token_list(t_token **tokens_head)
+{
+	t_token	*current;
+	t_token	*next;
+
+	if (!tokens_head || !*tokens_head)
+		return ;
+	current = *tokens_head;
+	while (current != NULL)
+	{
+		next = current->next;
+		free(current->str);
+		free(current);
+		current = next;
+	}
+	*tokens_head = NULL;
+}

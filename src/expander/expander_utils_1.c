@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:29:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 20:29:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*append_variable(char *res, const char *s,
 {
 	char	*val;
 	char	*new_res;
-	
+
 	if (s[*i + 1] == '?')
 		val = handle_exit_status_expansion(i, exit_status);
 	else if (is_env_char(s[*i + 1]))
@@ -72,4 +72,3 @@ char	*append_variable(char *res, const char *s,
 		return (NULL);
 	return (new_res);
 }
-
