@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline
+CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline -g
 
 LIBFT_DIR = ./libft
 
