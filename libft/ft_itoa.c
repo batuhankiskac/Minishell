@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+
 static int	ft_get_num_len(int n, int sign)
 {
 	int	len;

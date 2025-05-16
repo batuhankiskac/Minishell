@@ -6,11 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/15 14:27:02 by nkahrima         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:32:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 static char	*get_target(int argc, char **args, t_env **env)
 {
 	char	*target;

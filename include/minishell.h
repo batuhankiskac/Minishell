@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omkuzu <omkuzu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/15 15:29:48 by omkuzu           ###   ########.fr       */
+/*   Updated: 2025/05/16 17:26:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,9 @@ typedef struct s_shell
 	int			exit_status;
 }				t_shell;
 
+/*
+** Builtins
+*/
 int		builtin_echo(int argc, char **args);
 int		builtin_env(t_env *env);
 int		builtin_export(int argc, char **args, t_env **env);
@@ -92,6 +95,10 @@ int		builtin_pwd(void);
 int		builtin_unset(int argc, char **args, t_env **env);
 int		builtin_exit(int argc, char **args, t_env **env);
 int		builtin_cd(int argc, char **args, t_env **env);
+
+/*
+** Environment
+*/
 t_env	*env_init(char *envp[]);
 t_env	*find_env(char *key, t_env *env);
 int		env_value_len(char *str);
@@ -105,6 +112,10 @@ void	free_env(t_env *env);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
 void	update_env(char *key, char *value, t_env **env);
+
+/*
+** Execution
+*/
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell);
 int		exec_external(t_shell *shell);
@@ -117,26 +128,47 @@ char	*find_path(char *cmd, char *envp[]);
 char	*get_env(char *name, char *envp[]);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
+
+/*
+** Expander
+*/
 int		expand_on_args(t_command *cmd, t_env *env, int exit_status);
 int		expand_on_redirs(t_command *cmd, t_env *env, int exit_status);
 int		expander(t_shell *shell);
 char	*append_variable(char *res, const char *s, int *i, t_env *env, int exit_status);
 char	*append_literal(char *res, const char *s, int start, int end);
 char	*expand_string(const char *s, t_env *env, int exit_status);
+
+/*
+** Lexer
+*/
 int		skip_spaces(const char *str, int start);
 int		check_token(char c);
 int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
 int		token_reader(t_shell *shell);
 void	token_add(t_token **tokens, const char *word, int len);
+
+/*
+** Parser
+*/
 int		parse_redirections(t_shell *shell);
 int		build_command_list(t_shell *shell);
 int		parse_commands(t_shell *shell);
+
+/*
+** Signal Handling
+*/
 int		get_signal_flag(void);
 void	init_signals(void);
 void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
+
+/*
+** Utils
+*/
 void	*safe_malloc(size_t size);
 void	ft_free_all(char **arr);
+
 #endif
