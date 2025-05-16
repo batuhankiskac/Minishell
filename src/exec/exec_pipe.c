@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:39:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 22:18:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,38 +40,10 @@ static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
 		*prev_fd = -1;
 }
 
-static void	execute_pipe_child(t_shell *shell, int prev_fd, int pipe_write_fd)
-{
-	int	ret;
-
-	if (prev_fd != -1)
-	{
-		if (dup2(prev_fd, STDIN_FILENO) == -1)
-		{
-			perror("minishell: dup2 prev_fd");
-			exit(EXIT_FAILURE);
-		}
-		close(prev_fd);
-	}
-	if (pipe_write_fd != -1)
-	{
-		if (dup_fd(pipe_write_fd, STDOUT_FILENO, "pipe") == ERROR)
-			exit(EXIT_FAILURE);
-	}
-	if (setup_redir(shell) == ERROR)
-		exit(EXIT_FAILURE);
-	if (is_builtin(shell->command->cmd))
-		ret = exec_builtin(shell);
-	else
-		ret = exec_external(shell);
-	exit(ret);
-}
-
 static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
-	int		pipe_write_fd;
 
 	if (setup_pipe_for_cmd(cmd, pipe_fd) == ERROR)
 		return (ERROR);
@@ -80,20 +52,7 @@ static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
 		return (close_pipe_fd(*prev_fd, pipe_fd),
 			perror("minishell: fork"), ERROR);
 	if (pid == 0)
-	{
-		shell->command = cmd;
-		if (cmd->next != NULL)
-		{
-			pipe_write_fd = pipe_fd[1];
-			if (pipe_fd[0] != -1)
-				close(pipe_fd[0]);
-		}
-		else
-		{
-			pipe_write_fd = -1;
-		}
-		execute_pipe_child(shell, *prev_fd, pipe_write_fd);
-	}
+		pipe_child_process(shell, cmd, *prev_fd, pipe_fd);
 	else
 		update_parent_pipe(prev_fd, pipe_fd, cmd);
 	return (0);

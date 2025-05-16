@@ -28,6 +28,7 @@ SRCS = src/main/main.c \
 	   src/exec/exec_builtin.c \
 	   src/exec/exec_external.c \
 	   src/exec/exec_pipe.c \
+	   src/exec/pipe_child.c \
 	   src/exec/exec_redirections.c \
 	   src/exec/exec_utils.c \
 	   src/exec/execute.c \

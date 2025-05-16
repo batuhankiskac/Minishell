@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 by GitHub Copilot          ###   ########.fr       */
+/*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
+/*   Updated: 2025/05/16 22:04:54 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,23 @@ static int	is_numeric(char *str)
 	return (has_digits);
 }
 
-int	builtin_exit(t_shell *shell)
+static void	handle_exit_numeric_error(const char *arg_val, int *status_code)
 {
-	int		status_code;
+	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+	if (arg_val)
+		ft_putstr_fd((char *)arg_val, STDERR_FILENO);
+	else
+		ft_putstr_fd("argument", STDERR_FILENO);
+	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+	*status_code = 2;
+}
+
+static void	determine_exit_status_and_print_errors(t_shell *shell,
+		int *status_code)
+{
 	char	**args;
 	int		argc;
 
-	if (!shell)
-		exit(255);
-	status_code = shell->exit_status;
 	args = NULL;
 	argc = 0;
 	if (shell->command)
@@ -56,25 +64,19 @@ int	builtin_exit(t_shell *shell)
 	if (argc > 2)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		status_code = 1;
+		*status_code = 1;
 	}
 	else if (argc == 2)
 	{
 		if (args && args[1] && is_numeric(args[1]))
-		{
-			status_code = ft_atoi(args[1]);
-		}
+			*status_code = ft_atoi(args[1]);
 		else
-		{
-			ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-			if (args && args[1])
-				ft_putstr_fd(args[1], STDERR_FILENO);
-			else
-				ft_putstr_fd("INVALID_ARG", STDERR_FILENO);
-			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			status_code = 2;
-		}
+			handle_exit_numeric_error(args[1], status_code);
 	}
+}
+
+static void	free_shell_resources_for_exit(t_shell *shell)
+{
 	if (shell->line)
 	{
 		free(shell->line);
@@ -89,6 +91,17 @@ int	builtin_exit(t_shell *shell)
 		free_env(shell->env);
 		shell->env = NULL;
 	}
+}
+
+int	builtin_exit(t_shell *shell)
+{
+	int	status_code;
+
+	if (!shell)
+		exit(255);
+	status_code = shell->exit_status;
+	determine_exit_status_and_print_errors(shell, &status_code);
+	free_shell_resources_for_exit(shell);
 	rl_clear_history();
 	exit(status_code & 0xFF);
 	return (status_code);
