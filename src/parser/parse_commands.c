@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:31:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	count_words_until_pipe(t_token *t)
 {
 	int	count;
+
 	count = 0;
 	while (t && t->type != TOKEN_PIPE)
 	{
@@ -36,6 +37,7 @@ static void	populate_args(t_token **t_ptr, t_command *cmd)
 {
 	int		i;
 	t_token	*t;
+	
 	t = *t_ptr;
 	i = 0;
 	while (t && t->type != TOKEN_PIPE)

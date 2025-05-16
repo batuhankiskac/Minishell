@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:23:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:28:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	handle_input_redir(t_redir *redir)
 {
 	int	fd;
+
 	fd = open_file(redir->file, O_RDONLY, 0, "input");
 	if (fd == ERROR)
 		return (ERROR);
@@ -26,6 +27,7 @@ static int	handle_input_redir(t_redir *redir)
 static int	handle_output_redir(t_redir *redir)
 {
 	int	fd;
+
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644, "output");
 	if (fd == ERROR)
 		return (ERROR);
@@ -37,6 +39,7 @@ static int	handle_output_redir(t_redir *redir)
 static int	handle_append_redir(t_redir *redir)
 {
 	int	fd;
+
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644, "append");
 	if (fd == ERROR)
 		return (ERROR);
@@ -49,6 +52,7 @@ int	setup_redir(t_shell *shell)
 {
 	t_redir	*redir;
 	int		ret;
+	
 	redir = shell->command->redir;
 	while (redir)
 	{

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:33:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:26:42 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	is_numeric(char *str)
 {
 	int	i;
+
 	i = 0;
 	if (str[i] == '-' || str[i] == '+')
 		i++;
@@ -37,6 +38,7 @@ static void	free_all_resources(t_env **env)
 int	builtin_exit(int argc, char **args, t_env **env)
 {
 	int	status;
+	
 	if (argc == 1)
 	{
 		free_all_resources(env);

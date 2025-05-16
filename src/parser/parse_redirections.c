@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:31:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 {
 	t_redir			*r;
 	t_redir_type	type;
+	
 	type = REDIR_HEREDOC;
 	if (tt == TOKEN_REDIR_IN)
 		type = REDIR_IN;

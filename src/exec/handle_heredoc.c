@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:18:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:28:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	handle_heredoc_redir(t_redir *redir)
 {
 	int		pipe_fd[2];
 	char	*line;
+	
 	if (pipe(pipe_fd) == -1)
 		return (perror("minishell: pipe"), ERROR);
 	while (1)

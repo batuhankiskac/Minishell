@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:19:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:27:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
 static void	execute_pipe_child(t_shell *shell, int prev_fd, int pipe_write_fd)
 {
 	int	ret;
+
 	if (prev_fd != -1)
 	{
 		if (dup2(prev_fd, STDIN_FILENO) == -1)
@@ -74,16 +75,13 @@ static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
 
 	if (setup_pipe_for_cmd(cmd, pipe_fd) == ERROR)
 		return (ERROR);
-
 	pid = fork();
 	if (pid < 0)
 		return (close_pipe_fd(*prev_fd, pipe_fd),
 			perror("minishell: fork"), ERROR);
-
 	if (pid == 0)
 	{
 		shell->command = cmd;
-
 		if (cmd->next != NULL)
 		{
 			pipe_write_fd = pipe_fd[1];
@@ -94,7 +92,6 @@ static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
 		{
 			pipe_write_fd = -1;
 		}
-
 		execute_pipe_child(shell, *prev_fd, pipe_write_fd);
 	}
 	else
@@ -108,6 +105,7 @@ int	execute_pipe(t_shell *shell)
 	int			prev_fd;
 	int			status;
 	int			ret;
+	
 	prev_fd = -1;
 	cmd = shell->command;
 	while (cmd)

@@ -15,6 +15,7 @@
 static int	ft_get_num_len(int n, int sign)
 {
 	int	len;
+
 	len = 0;
 	if (n == 0)
 		len = 1;
@@ -34,6 +35,7 @@ char	*ft_itoa(int n)
 	long	nmb;
 	int		sign;
 	int		len;
+	
 	nmb = n;
 	sign = 1;
 	if (nmb < 0)

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:47 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:26:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static char	*get_target(int argc, char **args, t_env **env)
 {
 	char	*target;
+
 	if (argc < 2)
 	{
 		target = get_env_value("HOME", *env);
@@ -53,6 +54,7 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	char	old_pwd[PATH_MAX];
 	char	new_pwd[PATH_MAX];
 	char	*target;
+	
 	if (!getcwd(old_pwd, PATH_MAX))
 		return (perror("getcwd error"), ERROR);
 	target = get_target(argc, args, env);

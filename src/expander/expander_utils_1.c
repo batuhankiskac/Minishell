@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:18:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:29:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static char	*handle_env_variable_expansion(const char *s, int *i, t_env *env)
 	int		j;
 	char	*key;
 	char	*val;
+
 	j = *i + 1;
 	while (is_env_char(s[j]))
 		j++;
@@ -52,6 +53,7 @@ char	*append_variable(char *res, const char *s,
 {
 	char	*val;
 	char	*new_res;
+	
 	if (s[*i + 1] == '?')
 		val = handle_exit_status_expansion(i, exit_status);
 	else if (is_env_char(s[*i + 1]))

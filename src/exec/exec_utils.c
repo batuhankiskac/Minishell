@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:15:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:28:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*get_env(char *name, char *envp[])
 {
 	int	i;
 	int	len;
+	
 	i = 0;
 	len = ft_strlen(name);
 	while (envp[i])
@@ -35,7 +36,7 @@ char	*find_path(char *cmd, char *envp[])
 	char	*path_part;
 	char	**s_cmd;
 
-	if (!cmd || !*cmd) // Handle empty command
+	if (!cmd || !*cmd)
 		return (NULL);
 	s_cmd = ft_split(cmd, ' ');
 	if (!s_cmd || !s_cmd[0])
@@ -43,7 +44,6 @@ char	*find_path(char *cmd, char *envp[])
 		ft_free_all(s_cmd);
 		return (NULL);
 	}
-	// Check if cmd is an absolute or relative path
 	if (ft_strchr(s_cmd[0], '/'))
 	{
 		if (access(s_cmd[0], F_OK | X_OK) == 0)
@@ -55,14 +55,13 @@ char	*find_path(char *cmd, char *envp[])
 		else
 		{
 			ft_free_all(s_cmd);
-			return (NULL); // Path specified but not accessible/executable
+			return (NULL);
 		}
 	}
 	allpath = ft_split(get_env("PATH", envp), ':');
 	if (!allpath)
 	{
 		ft_free_all(s_cmd);
-		// If PATH is not set, try to execute directly if it's accessible in cwd
 		if (access(s_cmd[0], F_OK | X_OK) == 0)
 		{
 			char *cmd_path = ft_strdup(s_cmd[0]);
@@ -88,15 +87,13 @@ char	*find_path(char *cmd, char *envp[])
 	}
 	ft_free_all(allpath);
 	ft_free_all(s_cmd);
-	// Last resort: check if the command is directly accessible in CWD (e.g. ./a.out)
-	// This case is already handled by the ft_strchr check if cmd starts with ./
-	// If it's a bare command like "a.out", and not in PATH, it should fail here.
-	return (NULL); // Command not found in PATH
+	return (NULL);
 }
 
 int	open_file(char *filename, int flags, int mode, char *type)
 {
 	int	fd;
+
 	fd = open(filename, flags, mode);
 	if (fd == -1)
 	{

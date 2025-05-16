@@ -15,6 +15,7 @@
 static int	ft_is_in_set(char c, char const *set)
 {
 	int	i;
+
 	i = 0;
 	while (set[i])
 	{
@@ -30,6 +31,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	size_t	start;
 	size_t	end;
 	char	*res;
+	
 	start = 0;
 	if (s1 == NULL || set == NULL)
 		return (NULL);

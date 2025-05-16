@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:33:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:30:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static t_token	*skip_pipe_tokens(t_token *t)
 static t_command	*new_cmd(void)
 {
 	t_command	*c;
+
 	c = safe_malloc(sizeof(*c));
 	c->cmd = NULL;
 	c->args = NULL;
@@ -38,6 +39,7 @@ int	build_command_list(t_shell *shell)
 	t_token		*t;
 	t_command	*head;
 	t_command	*tail;
+	
 	head = NULL;
 	tail = NULL;
 	t = shell->tokens;

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:23:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:30:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	token_reader(t_shell *shell)
 {
 	int	pos;
 	int	skipped;
+	
 	pos = 0;
 	shell->tokens = NULL;
 	while (shell->line[pos])

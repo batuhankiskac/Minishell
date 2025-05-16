@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:30:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	token_add(t_token **tokens, const char *word, int len)
 
 	new = safe_malloc(sizeof(t_token));
 	new->str = ft_strndup(word, len);
-	// determine token type
 	if (len == 1 && word[0] == '|')
 		new->type = TOKEN_PIPE;
 	else if (len == 1 && word[0] == '<')

@@ -17,6 +17,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*res;
 	int		i;
 	int		j;
+	
 	i = -1;
 	j = 0;
 	if (!s1)

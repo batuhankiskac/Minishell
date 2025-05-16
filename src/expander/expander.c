@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:18:27 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:29:49 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	expander(t_shell *shell)
 {
 	t_command	*cmd;
+
 	cmd = shell->command;
 	while (cmd)
 	{

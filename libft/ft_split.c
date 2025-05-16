@@ -15,6 +15,7 @@
 static int	ft_count_words(char const *s, char c)
 {
 	int	count;
+
 	count = 0;
 	while (*s)
 	{
@@ -35,6 +36,7 @@ static int	ft_count_words(char const *s, char c)
 static int	ft_word_len(char const *s, char c)
 {
 	int	len;
+
 	len = 0;
 	while (*s && *s != c)
 	{
@@ -57,6 +59,7 @@ char	**ft_split(char const *s, char c)
 	char	**res;
 	int		i;
 	int		len;
+	
 	i = 0;
 	res = (char **)malloc((ft_count_words(s, c) + 1) * sizeof(char *));
 	if (res == NULL)

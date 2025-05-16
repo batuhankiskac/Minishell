@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:33:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:27:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	delete_env(char *key, t_env **env)
 {
 	t_env	*current;
 	t_env	*prev;
+
 	current = *env;
 	prev = NULL;
 	while (current)
@@ -47,6 +48,7 @@ static void	delete_env(char *key, t_env **env)
 int	builtin_unset(int argc, char **args, t_env **env)
 {
 	int	i;
+	
 	i = 0;
 	if (argc < 2)
 		return (0);

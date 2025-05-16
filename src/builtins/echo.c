@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:51 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:26:34 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	builtin_echo(int argc, char **args)
 {
 	int	i;
 	int	nl_flag;
+	
 	i = 1;
 	nl_flag = 1;
 	if (argc > 1 && !ft_strncmp(args[1], "-n", 2))

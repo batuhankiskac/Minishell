@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:26:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:22:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	ft_bzero(void *s, size_t len)
 {
 	size_t			i;
 	unsigned char	*p;
+
 	i = 0;
 	p = (unsigned char *)s;
 	while (i < len)

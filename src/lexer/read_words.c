@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 19:30:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,7 @@ int	read_words(int pos, const char *str, t_token **tokens)
 		while (str[pos] && str[pos] != quote)
 			pos++;
 		if (str[pos] != quote)
-		{
-			// unterminated quote
 			return (ERROR);
-		}
-		// skip closing quote
 		pos++;
 	}
 	else
