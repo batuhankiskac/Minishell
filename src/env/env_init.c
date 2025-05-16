@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:23:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ t_env	*env_init(char *envp[])
 	t_env	*new_node;
 	char	*equal_sign;
 	int		i;
+
 	env = NULL;
 	new_node = NULL;
 	i = -1;
@@ -36,4 +37,3 @@ t_env	*env_init(char *envp[])
 	}
 	return (env);
 }
-
