@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:39:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,3 @@ int	handle_token(const char *str, int pos, t_token **tokens)
 	token_add(tokens, str + pos, len);
 	return (len);
 }
-

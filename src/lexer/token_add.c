@@ -6,40 +6,44 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:30:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:40:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	token_add(t_token **tokens, const char *word, int len)
+static t_token_type	determine_token_type(const char *word, int len)
 {
-	t_token	*new;
-	t_token	*cur;
-
-	new = safe_malloc(sizeof(t_token));
-	new->str = ft_strndup(word, len);
 	if (len == 1 && word[0] == '|')
-		new->type = TOKEN_PIPE;
+		return (TOKEN_PIPE);
 	else if (len == 1 && word[0] == '<')
-		new->type = TOKEN_REDIR_IN;
+		return (TOKEN_REDIR_IN);
 	else if (len == 1 && word[0] == '>')
-		new->type = TOKEN_REDIR_OUT;
+		return (TOKEN_REDIR_OUT);
 	else if (len == 2 && word[0] == '>' && word[1] == '>')
-		new->type = TOKEN_REDIR_APPEND;
+		return (TOKEN_REDIR_APPEND);
 	else if (len == 2 && word[0] == '<' && word[1] == '<')
-		new->type = TOKEN_HEREDOC;
+		return (TOKEN_HEREDOC);
 	else
-		new->type = TOKEN_WORD;
-	new->next = NULL;
-	if (*tokens == NULL)
-	{
-		*tokens = new;
-		return ;
-	}
-	cur = *tokens;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = new;
+		return (TOKEN_WORD);
 }
 
+void	token_add(t_token **tokens, const char *word, int len)
+{
+	t_token	*new_token;
+	t_token	*current;
+
+	new_token = safe_malloc(sizeof(t_token));
+	new_token->str = ft_strndup(word, len);
+	new_token->type = determine_token_type(word, len);
+	new_token->next = NULL;
+	if (*tokens == NULL)
+	{
+		*tokens = new_token;
+		return ;
+	}
+	current = *tokens;
+	while (current->next)
+		current = current->next;
+	current->next = new_token;
+}

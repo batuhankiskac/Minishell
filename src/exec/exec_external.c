@@ -6,13 +6,13 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:15:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:37:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_exec(t_shell *shell, char **env_array)
+static void	execute_child_process(t_shell *shell, char **env_array)
 {
 	char	*path;
 
@@ -39,20 +39,13 @@ void	child_exec(t_shell *shell, char **env_array)
 	exit(EXIT_SUCCESS);
 }
 
-int	exec_external(t_shell *shell)
+static int	validate_command(t_shell *shell, char **env_array)
 {
-	int		status;
-	char	**env_array;
-	pid_t	pid;
-
-	env_array = env_list_to_array(shell->env);
-	if (!env_array)
-		return (perror("minishell: env_list_to_array"), ERROR);
 	if (!shell->command || !shell->command->cmd || !shell->command->args)
 	{
 		ft_putendl_fd("minishell: command not found", STDERR_FILENO);
 		ft_free_all(env_array);
-		return (127); // Command not found exit status
+		return (127);
 	}
 	if (shell->command->cmd[0] == '\0')
 	{
@@ -60,14 +53,29 @@ int	exec_external(t_shell *shell)
 		ft_free_all(env_array);
 		return (127);
 	}
+	return (0);
+}
+
+int	exec_external(t_shell *shell)
+{
+	int		status;
+	char	**env_array;
+	pid_t	pid;
+	int		validation_result;
+
+	env_array = env_list_to_array(shell->env);
+	if (!env_array)
+		return (perror("minishell: env_list_to_array"), ERROR);
+	validation_result = validate_command(shell, env_array);
+	if (validation_result != 0)
+		return (validation_result);
 	pid = fork();
 	if (pid < 0)
 		return (perror("minishell: fork"), ft_free_all(env_array), ERROR);
 	if (pid == 0)
-		child_exec(shell, env_array);
+		execute_child_process(shell, env_array);
 	else
 		waitpid(pid, &status, 0);
 	ft_free_all(env_array);
 	return (WEXITSTATUS(status));
 }
-

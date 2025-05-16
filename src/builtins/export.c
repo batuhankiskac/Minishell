@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:26:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:32:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	builtin_export(int argc, char **args, t_env **env)
 	int		i;
 	char	*key;
 	char	*value;
-	
+
 	i = 0;
 	if (argc == 1)
 		return (print_sorted_env(*env), 0);
@@ -64,4 +64,3 @@ int	builtin_export(int argc, char **args, t_env **env)
 	}
 	return (0);
 }
-

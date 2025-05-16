@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:27:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:59:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,16 @@ int		parse_redirections(t_shell *shell);
 int		build_command_list(t_shell *shell);
 int		parse_commands(t_shell *shell);
 int		handle_command_parsing_error(char *raw_line_ptr, t_shell *shell);
+int		process_command_block(t_command *cmd, t_token **t_ptr);
 void	cleanup_current_loop_iteration(char *raw_line_ptr, t_shell *shell);
+
+/*
+** Parser Helpers */
+int		count_words_until_pipe(t_token *t);
+int		init_command_args(t_command *cmd, int count);
+void	populate_args(t_token **t_ptr, t_command *cmd);
+void	set_command_name(t_command *cmd);
+int		validate_pipe_sequence(t_token *tokens);
 
 /*
 ** Signal Handling

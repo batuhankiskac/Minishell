@@ -10,7 +10,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 LDLIBS = -lreadline
 
-SRCS = src/main.c \
+SRCS = src/main/main.c \
+	   src/main/loop_error_handling.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
 	   src/builtins/env.c \
@@ -46,6 +47,9 @@ SRCS = src/main.c \
 	   src/lexer/tokenize_and_clear.c \
 	   src/parser/build_command_list.c \
 	   src/parser/parse_commands.c \
+	   src/parser/parse_commands_block.c \
+	   src/parser/parse_commands_utils.c \
+	   src/parser/parse_commands_validation.c \
 	   src/parser/parse_redirections.c \
 	   src/signals/signal_flag.c \
 	   src/signals/signal_handlers.c \

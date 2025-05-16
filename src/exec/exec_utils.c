@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:28:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:39:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_env(char *name, char *envp[])
 {
 	int	i;
 	int	len;
-	
+
 	i = 0;
 	len = ft_strlen(name);
 	while (envp[i])
@@ -128,4 +128,3 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2])
 	if (pipe_fd[1] != -1)
 		close(pipe_fd[1]);
 }
-

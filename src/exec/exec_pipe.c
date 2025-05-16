@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 19:27:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:39:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	execute_pipe(t_shell *shell)
 	int			prev_fd;
 	int			status;
 	int			ret;
-	
+
 	prev_fd = -1;
 	cmd = shell->command;
 	while (cmd)
@@ -123,4 +123,3 @@ int	execute_pipe(t_shell *shell)
 		;
 	return (WEXITSTATUS(status));
 }
-

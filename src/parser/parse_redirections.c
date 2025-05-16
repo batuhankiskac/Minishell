@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 20:26:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 21:43:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	parse_cmd_redirs(t_command *c, t_token **t)
 				last->next = node;
 			last = node;
 			*t = (*t)->next->next;
-			continue;
+			continue ;
 		}
 		*t = (*t)->next;
 	}
@@ -76,4 +76,3 @@ int	parse_redirections(t_shell *shell)
 	}
 	return (1);
 }
-
