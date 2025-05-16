@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:18:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 18:52:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*expand_text_chunk(char *res, const char *s, int *i)
 {
 	int	j;
 	j = *i;
-	while (s[j] && s[j] != '$')
+	while (s[j] && s[j] != '$' && s[j] != '\'' && s[j] != '"')
 		j++;
 	res = append_literal(res, s, *i, j);
 	*i = j;
@@ -57,16 +57,51 @@ char	*expand_string(const char *s, t_env *env, int exit_status)
 	t_shell	shell_context;
 	shell_context.env = env;
 	shell_context.exit_status = exit_status;
-	shell_context.command = NULL;
-	shell_context.tokens = NULL;
-	shell_context.line = NULL;
 	res = ft_strdup("");
 	if (!res)
 		return (NULL);
 	i = 0;
 	while (s && s[i])
 	{
-		if (s[i] == '$')
+		if (s[i] == '\'')
+		{
+			int j = i + 1;
+			while (s[j] && s[j] != '\'')
+				j++;
+			res = append_literal(res, s, i + 1, j);
+			i = (s[j] ? j + 1 : j);
+		}
+		else if (s[i] == '"')
+		{
+			int j = i + 1;
+			while (s[j] && s[j] != '"')
+				j++;
+			{
+				char *inner = ft_substr(s, i + 1, j - (i + 1));
+				char *exp_inner;
+				char *tmp;
+				if (!inner)
+				{
+					free(res);
+					return (NULL);
+				}
+				exp_inner = expand_string(inner, env, exit_status);
+				free(inner);
+				if (!exp_inner)
+				{
+					free(res);
+					return (NULL);
+				}
+				tmp = ft_strjoin(res, exp_inner);
+				free(res);
+				free(exp_inner);
+				if (!tmp)
+					return (NULL);
+				res = tmp;
+			}
+			i = (s[j] ? j + 1 : j);
+		}
+		else if (s[i] == '$')
 			res = expand_dollar_chunk(res, s, &i, &shell_context);
 		else
 			res = expand_text_chunk(res, s, &i);

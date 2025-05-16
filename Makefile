@@ -43,6 +43,7 @@ SRCS = src/main.c \
 	   src/lexer/skip_spaces.c \
 	   src/lexer/token_add.c \
 	   src/lexer/token_reader.c \
+	   src/lexer/tokenize_and_clear.c \
 	   src/parser/build_command_list.c \
 	   src/parser/parse_commands.c \
 	   src/parser/parse_redirections.c \

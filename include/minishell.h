@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 17:26:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 18:56:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -147,6 +148,8 @@ int		check_token(char c);
 int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
 int		token_reader(t_shell *shell);
+int		tokenize_line(char *line, t_shell *shell);
+void	clear_command_list(t_command *cmd);
 void	token_add(t_token **tokens, const char *word, int len);
 
 /*
@@ -170,5 +173,6 @@ void	reset_signal_flag(void);
 */
 void	*safe_malloc(size_t size);
 void	ft_free_all(char **arr);
+void    free_redirections(t_redir *r);
 
 #endif
