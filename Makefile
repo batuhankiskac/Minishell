@@ -32,6 +32,7 @@ SRCS = src/main/main.c \
 	   src/exec/exec_redirections.c \
 	   src/exec/exec_utils.c \
 	   src/exec/execute.c \
+	   src/exec/find_path.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/is_builtin.c \
 	   src/expander/expander.c \

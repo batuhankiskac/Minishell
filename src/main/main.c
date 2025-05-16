@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:29:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/16 22:33:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ static void	handle_eof(t_shell *shell)
 	rl_clear_history();
 }
 
-static void
-	execute_commands(t_shell *shell)
+static void	execute_commands(t_shell *shell)
 {
 	if (shell->command->next == NULL
 		&& is_builtin(shell->command->cmd))
