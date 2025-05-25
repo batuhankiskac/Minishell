@@ -14,12 +14,8 @@
 
 static void	handle_eof(t_shell *shell)
 {
+	(void)shell;
 	write(STDOUT_FILENO, "exit\n", 5);
-	free(shell->line);
-	clear_token_list(&shell->tokens);
-	clear_command_list(shell->command);
-	free_env(shell->env);
-	rl_clear_history();
 }
 
 static void	execute_commands(t_shell *shell)
