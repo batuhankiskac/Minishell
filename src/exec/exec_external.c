@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:37:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/28 15:06:57 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	exec_external(t_shell *shell)
 	pid_t	pid;
 	int		validation_result;
 
+	status = 0;
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
 		return (perror("minishell: env_list_to_array"), ERROR);
