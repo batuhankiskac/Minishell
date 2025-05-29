@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 20:39:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/29 19:04:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,16 @@ static void	update_existing_env(char *value, t_env *node)
 {
 	char	*new_value;
 
-	new_value = ft_strdup(value);
-	if (!new_value)
-		return ;
+	if (value)
+	{
+		new_value = ft_strdup(value);
+		if (!new_value)
+			return ;
+	}
+	else
+	{
+		new_value = NULL;
+	}
 	free(node->value);
 	node->value = new_value;
 }
@@ -35,10 +42,13 @@ void	update_env(char *key, char *value, t_env **env)
 	}
 	node = safe_malloc(sizeof(t_env));
 	node->key = ft_strdup(key);
-	node->value = ft_strdup(value);
+	if (value)
+		node->value = ft_strdup(value);
+	else
+		node->value = NULL;
 	node->next = *env;
 	*env = node;
-	if (!node->key || !node->value)
+	if (!node->key || (value && !node->value))
 	{
 		free(node->key);
 		free(node->value);

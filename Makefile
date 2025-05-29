@@ -83,7 +83,5 @@ fclean: clean
 
 re: fclean all
 
-main: all clean
-
-.PHONY: all clean fclean re main
+.PHONY: all clean fclean re
 .SILENT: all clean fclean re

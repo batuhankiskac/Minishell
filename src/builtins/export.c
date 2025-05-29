@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:32:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/29 19:04:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,53 +14,71 @@
 
 static int	parse_export_arg(char *arg, char **key, char **value)
 {
-	char	*equal_sign;
+	char	*equal;
+	char	*keystr;
 
-	if (!is_valid_env(arg))
-		return (ERROR);
-	equal_sign = ft_strchr(arg, '=');
-	if (equal_sign)
+	equal = ft_strchr(arg, '=');
+	if (equal)
 	{
-		*key = ft_substr(arg, 0, equal_sign - arg);
-		*value = ft_strdup(equal_sign + 1);
+		keystr = ft_substr(arg, 0, equal - arg);
+		if (!keystr || !is_valid_identifier(keystr))
+			return (free(keystr), ERROR);
+		*value = ft_strdup(equal + 1);
+		if (!*value)
+			return (free(keystr), ERROR);
 	}
 	else
 	{
-		*key = ft_strdup(arg);
-		*value = ft_strdup("");
+		if (!is_valid_identifier(arg))
+			return (ERROR);
+		keystr = ft_strdup(arg);
+		if (!keystr)
+			return (ERROR);
+		*value = NULL;
 	}
-	if (!(*key) || !(*value))
+	*key = keystr;
+	return (0);
+}
+
+static int	process_export_arg(char *arg, t_env **env)
+{
+	char	*key;
+	char	*value;
+
+	if (parse_export_arg(arg, &key, &value) == ERROR)
 	{
-		free(*key);
-		free(*value);
-		return (ERROR);
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+		return (1);
 	}
+	if (value == NULL)
+	{
+		if (!find_env(key, *env))
+			update_env(key, NULL, env);
+	}
+	else
+	{
+		update_env(key, value, env);
+		free(value);
+	}
+	free(key);
 	return (0);
 }
 
 int	builtin_export(int argc, char **args, t_env **env)
 {
 	int		i;
-	char	*key;
-	char	*value;
+	int		ret;
 
-	i = 0;
 	if (argc == 1)
 		return (print_sorted_env(*env), 0);
+	i = 0;
+	ret = 0;
 	while (++i < argc)
 	{
-		if (parse_export_arg(args[i], &key, &value) == ERROR)
-		{
-			ft_putstr_fd("export: not a valid identifier: ", 2);
-			ft_putendl_fd(args[i], 2);
-			return (ERROR);
-		}
-		else
-		{
-			update_env(key, value, env);
-			free(key);
-			free(value);
-		}
+		if (process_export_arg(args[i], env) != 0)
+			ret = 1;
 	}
-	return (0);
+	return (ret);
 }

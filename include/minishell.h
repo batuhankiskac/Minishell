@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/29 17:54:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/29 18:36:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ int		builtin_cd(int argc, char **args, t_env **env);
 t_env	*env_init(char *envp[]);
 t_env	*find_env(char *key, t_env *env);
 int		env_value_len(char *str);
-int		is_valid_env(char *str);
 int		is_env_char(char c);
 int		is_valid_identifier(char *str);
 char	*env_value(char *env);
