@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 22:35:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/29 17:54:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <readline/history.h>
 
 # define ERROR -1
-# define PATH_MAX 4096
 
 typedef enum e_redir_type
 {

@@ -59,24 +59,31 @@ SRCS = src/main/main.c \
 
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
+%.o: %.c
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -lreadline
+	@echo "Linking $(NAME)..."
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(LDLIBS)
 
 $(LIBFT):
-	$(MAKE) -C $(LIBFT_DIR)
+	@echo "Building libft..."
+	@$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	rm -f $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@echo "Cleaning objects..."
+	@rm -f $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "Removing executable..."
+	@rm -f $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
 main: all clean
 
 .PHONY: all clean fclean re main
+.SILENT: all clean fclean re
