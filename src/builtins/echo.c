@@ -6,12 +6,23 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/29 18:15:21 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 14:57:19 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Implements the built-in echo command.
+ *
+ * This function prints arguments to the standard output.
+ * It handles the '-n' flag to suppress the newline character at the end.
+ * It iterates through the arguments, printing each one separated by a space.
+ *
+ * @param argc The number of arguments passed to the echo command.
+ * @param args The array of arguments passed to the echo command.
+ * @return Always returns 0.
+ */
 int	builtin_echo(int argc, char **args)
 {
 	int	i;

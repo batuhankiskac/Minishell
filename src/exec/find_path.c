@@ -6,12 +6,28 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 22:30:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:03:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Splits a command string into an array of arguments.
+ *
+ * This utility function takes a command string (`cmd`) and splits it into
+ * an array of strings using space (' ') as the delimiter. This is typically
+ * used to separate the command from its arguments, though `find_path` primarily
+ * uses the first element (the command itself).
+ * It handles cases where `cmd` is `NULL` or empty, returning `NULL`.
+ * If `ft_split` returns `NULL` or an empty array, it also ensures proper
+ * cleanup and returns `NULL`.
+ *
+ * @param cmd The command string to be split (e.g., "ls -l").
+ * @return A null-terminated array of strings (char **) representing the
+ *         split command and arguments. Returns `NULL` on error or if `cmd`
+ *         is invalid.
+ */
 static char	**split_cmd(char *cmd)
 {
 	char	**s_cmd;
@@ -24,6 +40,25 @@ static char	**split_cmd(char *cmd)
 	return (s_cmd);
 }
 
+/**
+ * @brief Searches for an executable command within a list of directory paths.
+ *
+ * This function iterates through each path in the `allpath` array. For each
+ * path, it constructs a full potential executable path by joining the directory
+ * path, a '/', and the command name (`s_cmd_arg[0]`). It then checks if this
+ * constructed path exists and is executable using `access(exec, F_OK | X_OK)`.
+ * If an executable is found, it frees `allpath` and `s_cmd_arg` and returns
+ * the found executable path (`exec`). If no executable is found after checking
+ * all paths, it frees `exec` (last attempted path) and returns `NULL`.
+ *
+ * @param allpath A null-terminated array of strings, where each string is a
+ *                directory path from the PATH environment variable.
+ * @param s_cmd_arg A null-terminated array of strings, where `s_cmd_arg[0]`
+ *                  is the command name to search for.
+ * @return A dynamically allocated string containing the full path to the
+ *         executable if found. Returns `NULL` if the command is not found
+ *         in any of the provided paths or if an error occurs.
+ */
 static char	*process_path_search_loop(char **allpath, char **s_cmd_arg)
 {
 	char	*exec;
@@ -43,6 +78,25 @@ static char	*process_path_search_loop(char **allpath, char **s_cmd_arg)
 	return (NULL);
 }
 
+/**
+ * @brief Searches for a command in directories specified by a PATH string.
+ *
+ * This function takes the command arguments (`s_cmd_arg`) and a colon-separated
+ * string of paths (`path_list_str`, typically from the PATH environment
+ * variable). It first splits `path_list_str` into an array of individual paths.
+ * If `path_list_str` is `NULL` or `ft_split` fails (e.g., `path_list_str` is empty
+ * or memory allocation fails), it checks if the command itself (`s_cmd_arg[0]`) is a
+ * directly accessible executable. If so, it duplicates `s_cmd_arg[0]` and returns it.
+ * Otherwise, it calls `process_path_search_loop` to search through the split paths.
+ * It ensures `s_cmd_arg` and the array of paths are freed before returning.
+ *
+ * @param s_cmd_arg A null-terminated array of strings, where `s_cmd_arg[0]`
+ *                  is the command name.
+ * @param path_list_str A colon-separated string of directory paths (e.g.,
+ *                      "/bin:/usr/bin").
+ * @return A dynamically allocated string containing the full path to the
+ *         executable if found. Returns `NULL` if not found or on error.
+ */
 static char	*search_env_paths(char **s_cmd_arg, char *path_list_str)
 {
 	char	**allpath_arr;
@@ -64,6 +118,28 @@ static char	*search_env_paths(char **s_cmd_arg, char *path_list_str)
 	return (ft_free_all(allpath_arr), ft_free_all(s_cmd_arg), NULL);
 }
 
+/**
+ * @brief Finds the full path of an executable command.
+ *
+ * This function determines the absolute or relative path of an executable command.
+ * It first splits the input `cmd` string (which might include arguments) using
+ * `split_cmd`. If the command name (`s_cmd_arr[0]`) contains a '/', it's
+ * treated as a direct path (absolute or relative). The function then checks
+ * its accessibility using `access()`. If accessible, the command name is
+ * duplicated and returned. Otherwise, `NULL` is returned.
+ *
+ * If the command name does not contain a '/', the function retrieves the PATH
+ * environment variable using `get_env()`. It then calls `search_env_paths()`
+ * to look for the command in the directories listed in PATH.
+ * The `s_cmd_arr` is freed before returning the result.
+ *
+ * @param cmd The command string (e.g., "ls", "/bin/ls", "./myprog").
+ * @param envp An array of strings representing the environment variables.
+ * @return A dynamically allocated string containing the full path to the
+ *         executable if found and accessible. Returns `NULL` if the command
+ *         is not found, not executable, or if an error occurs (e.g., memory
+ *         allocation failure, invalid `cmd`).
+ */
 char	*find_path(char *cmd, char *envp[])
 {
 	char	**s_cmd_arr;

@@ -6,12 +6,25 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/29 19:04:28 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 14:57:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Parses a single argument for the export command.
+ *
+ * This function splits an argument string into a key and an optional
+ * value based on the first '=' character. It validates the key as a
+ * valid identifier.
+ *
+ * @param arg The argument string (e.g., "VAR=value" or "VAR").
+ * @param key A pointer to a char pointer to store the extracted key.
+ * @param value A pointer to a char pointer to store the extracted value
+ *              (NULL if no '=' is present).
+ * @return 0 on success, ERROR on failure (e.g., invalid identifier).
+ */
 static int	parse_export_arg(char *arg, char **key, char **value)
 {
 	char	*equal;
@@ -40,6 +53,19 @@ static int	parse_export_arg(char *arg, char **key, char **value)
 	return (0);
 }
 
+/**
+ * @brief Processes a single export argument.
+ *
+ * This function parses an export argument, validates it, and updates
+ * the environment list accordingly. If the argument has a value, it
+ * updates or adds the environment variable. If it has no value, it
+ * adds the variable to the environment with a NULL value if it doesn't
+ * already exist.
+ *
+ * @param arg The argument string (e.g., "VAR=value" or "VAR").
+ * @param env A pointer to the environment list.
+ * @return 0 on success, 1 on failure (e.g., invalid identifier).
+ */
 static int	process_export_arg(char *arg, t_env **env)
 {
 	char	*key;
@@ -66,6 +92,19 @@ static int	process_export_arg(char *arg, t_env **env)
 	return (0);
 }
 
+/**
+ * @brief Implements the built-in export command.
+ *
+ * This function handles the export command. If no arguments are provided,
+ * it prints the sorted environment variables. If arguments are provided,
+ * it processes each argument to add or update environment variables.
+ * It returns a non-zero status code if any argument is invalid.
+ *
+ * @param argc The number of arguments passed to the export command.
+ * @param args The array of arguments passed to the export command.
+ * @param env A pointer to the environment list.
+ * @return 0 on success, 1 on failure.
+ */
 int	builtin_export(int argc, char **args, t_env **env)
 {
 	int		i;
@@ -76,9 +115,7 @@ int	builtin_export(int argc, char **args, t_env **env)
 	i = 0;
 	ret = 0;
 	while (++i < argc)
-	{
 		if (process_export_arg(args[i], env) != 0)
 			ret = 1;
-	}
 	return (ret);
 }

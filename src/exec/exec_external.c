@@ -6,12 +6,24 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/28 15:06:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:00:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Executes a command in the child process.
+ *
+ * This function is called in the child process after a fork. It attempts
+ * to find the command's executable path and execute it using execve.
+ * If the command is not found or execution fails, an error message is
+ * printed, and the child process exits with an appropriate status code.
+ *
+ * @param shell A pointer to the shell structure containing the command
+ *              and its arguments.
+ * @param env_array An array of environment variables for the child process.
+ */
 static void	execute_child_process(t_shell *shell, char **env_array)
 {
 	char	*path;
@@ -39,6 +51,18 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 	exit(EXIT_SUCCESS);
 }
 
+/**
+ * @brief Validates the command structure before execution.
+ *
+ * This function checks if the command structure in the shell is valid.
+ * It ensures that the command and its arguments are not NULL and that
+ * the command string is not empty. If validation fails, an error message
+ * is printed, and an appropriate error code is returned.
+ *
+ * @param shell A pointer to the shell structure containing the command.
+ * @param env_array An array of environment variables for cleanup if needed.
+ * @return 0 if the command is valid, or an error code if validation fails.
+ */
 static int	validate_command(t_shell *shell, char **env_array)
 {
 	if (!shell->command || !shell->command->cmd || !shell->command->args)
@@ -56,6 +80,18 @@ static int	validate_command(t_shell *shell, char **env_array)
 	return (0);
 }
 
+/**
+ * @brief Executes an external command.
+ *
+ * This function handles the execution of external commands by forking
+ * a child process. The child process attempts to execute the command
+ * using execve, while the parent process waits for the child to finish.
+ *
+ * @param shell A pointer to the shell structure containing the command
+ *              and its arguments.
+ * @return The exit status of the executed command, or an error code if
+ *         the execution fails.
+ */
 int	exec_external(t_shell *shell)
 {
 	int		status;

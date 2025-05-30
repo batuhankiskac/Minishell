@@ -6,12 +6,27 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 20:40:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:08:19 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Expands the arguments of a command by replacing variables and
+ * performing other expansions.
+ *
+ * This function iterates through the command's arguments, expanding each one
+ * using the `expand_string` function. It updates the command's `cmd` field
+ * with the first argument after expansion.
+ *
+ * @param cmd A pointer to the command structure containing the arguments to
+ * expand.
+ * @param env A pointer to the environment structure used for variable expansion.
+ * @param exit_status The exit status of the last executed command, used in
+ * expansions.
+ * @return 1 on success, 0 if an error occurs during expansion.
+ */
 int	expand_on_args(t_command *cmd, t_env *env, int exit_status)
 {
 	int		i;

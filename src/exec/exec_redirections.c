@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 22:03:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:02:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,34 @@ static int	handle_append_redir(t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Sets up input and output redirections for a command.
+ *
+ * This function iterates through the list of redirections
+ * (`shell->command->redir`)
+ * associated with the current command. For each redirection, it performs the
+ * necessary actions based on the redirection type (`REDIR_IN`, `REDIR_OUT`,
+ * `REDIR_APPEND`, `REDIR_HEREDOC`).
+ *
+ * - For `REDIR_IN`, it opens the specified file for reading and duplicates its
+ *   file descriptor to `STDIN_FILENO`.
+ * - For `REDIR_OUT`, it opens (or creates/truncates) the specified file for
+ *   writing and duplicates its file descriptor to `STDOUT_FILENO`.
+ * - For `REDIR_APPEND`, it opens (or creates/appends to) the specified file for
+ *   writing and duplicates its file descriptor to `STDOUT_FILENO`.
+ * - For `REDIR_HEREDOC`, it calls `handle_heredoc_redir` to manage the
+ *   here-document input, which typically involves reading lines until a
+ *   delimiter and making that input available on `STDIN_FILENO`.
+ *
+ * If any `open` or `dup2` operation fails, or if `handle_heredoc_redir` fails,
+ * an error message is printed, and the function returns `ERROR`. Otherwise, it
+ * returns 0 after processing all redirections.
+ *
+ * @param shell A pointer to the `t_shell` structure, which contains the
+ *              current command and its associated redirections.
+ * @return Returns 0 on successful setup of all redirections. Returns `ERROR`
+ *         if any redirection operation fails.
+ */
 int	setup_redir(t_shell *shell)
 {
 	t_redir	*redir;
