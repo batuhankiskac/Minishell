@@ -6,12 +6,23 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:41:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:14:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Expands variables and redirections in the command arguments and redirections.
+ *
+ * This function iterates through each command in the shell's command list,
+ * expanding variables in the command arguments and redirections using the
+ * provided environment and exit status.
+ *
+ * @param shell A pointer to the `t_shell` structure containing the command list,
+ *              environment, and exit status.
+ * @return 1 on success, 0 on failure (e.g., if expansion fails).
+ */
 int	expander(t_shell *shell)
 {
 	t_command	*cmd;
