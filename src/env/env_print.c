@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:58:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:27:19 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,50 @@ static int	str_array_len(char **array)
 }
 
 /**
- * @brief Sorts an array of environment strings lexicographically.
+ * @brief Compares two environment strings by their key parts only.
+ *
+ * This function extracts the key portion (before '=') from each environment
+ * string and compares them lexicographically. This ensures that variables
+ * are sorted by key only, matching bash's export behavior.
+ *
+ * @param env1 First environment string ("KEY=VALUE" or "KEY").
+ * @param env2 Second environment string ("KEY=VALUE" or "KEY").
+ * @return < 0 if env1's key < env2's key, 0 if equal, > 0
+ * if env1's key > env2's key.
+ */
+static int	compare_env_keys(const char *env1, const char *env2)
+{
+	const char	*equal1;
+	const char	*equal2;
+	int			len1;
+	int			len2;
+	int			min_len;
+
+	equal1 = ft_strchr(env1, '=');
+	equal2 = ft_strchr(env2, '=');
+	if (equal1)
+		len1 = equal1 - env1;
+	else
+		len1 = ft_strlen(env1);
+	if (equal2)
+		len2 = equal2 - env2;
+	else
+		len2 = ft_strlen(env2);
+	min_len = len1;
+	if (len2 < min_len)
+		min_len = len2;
+	if (ft_strncmp(env1, env2, min_len) == 0)
+		return (len1 - len2);
+	return (ft_strncmp(env1, env2, min_len));
+}
+
+/**
+ * @brief Sorts an array of environment strings lexicographically by key only.
  *
  * This function performs an in-place bubble sort on the `env_array`.
  * Each string in the array is expected to be in the format "KEY=VALUE"
- * or "KEY". The comparison is done using `ft_strcmp`.
+ * or "KEY". The comparison is done only on the key portion (before '=')
+ * to match bash's export command behavior.
  *
  * @param env_array A null-terminated array of strings, where each string
  *                  represents an environment variable.
@@ -55,7 +94,7 @@ void	sort_env(char **env_array)
 		j = i;
 		while (++j < len)
 		{
-			if (ft_strcmp(env_array[i], env_array[j]) > 0)
+			if (compare_env_keys(env_array[i], env_array[j]) > 0)
 			{
 				temp = env_array[i];
 				env_array[i] = env_array[j];
