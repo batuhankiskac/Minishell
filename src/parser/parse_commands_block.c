@@ -6,12 +6,25 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:45:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:54:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:26:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Processes a single command block from the token list.
+ *
+ * This function counts the number of words in the token list until a pipe
+ * token is encountered, initializes the command's argument array, populates
+ * the arguments, and sets the command name. If the token list contains a
+ * pipe token, the pointer is advanced to the next token after the pipe.
+ *
+ * @param cmd A pointer to the command structure to populate.
+ * @param t_ptr A pointer to the token pointer, which is updated as tokens
+ *              are processed.
+ * @return 1 if the command block is successfully processed, 0 otherwise.
+ */
 int	process_command_block(t_command *cmd, t_token **t_ptr)
 {
 	int	count;

@@ -6,12 +6,22 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/16 21:54:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 15:26:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Parses the token list into a linked list of commands.
+ *
+ * This function validates the token list for proper pipe placement,
+ * processes each command block, and populates the command list in the
+ * shell structure.
+ *
+ * @param shell A pointer to the shell structure containing the token list.
+ * @return 1 if the commands are successfully parsed, 0 otherwise.
+ */
 int	parse_commands(t_shell *shell)
 {
 	t_token		*t;
