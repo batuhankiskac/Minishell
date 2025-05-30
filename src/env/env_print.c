@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 20:27:19 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:32:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ static int	str_array_len(char **array)
  * @return < 0 if env1's key < env2's key, 0 if equal, > 0
  * if env1's key > env2's key.
  */
-static int	compare_env_keys(const char *env1, const char *env2)
+static int	compare_env_keys(char *env1, char *env2)
 {
-	const char	*equal1;
-	const char	*equal2;
-	int			len1;
-	int			len2;
-	int			min_len;
+	char	*equal1;
+	char	*equal2;
+	int		len1;
+	int		len2;
+	int		min_len;
 
 	equal1 = ft_strchr(env1, '=');
 	equal2 = ft_strchr(env2, '=');
