@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:03:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:56:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,12 @@ static char	*process_path_search_loop(char **allpath, char **s_cmd_arg)
  * This function takes the command arguments (`s_cmd_arg`) and a colon-separated
  * string of paths (`path_list_str`, typically from the PATH environment
  * variable). It first splits `path_list_str` into an array of individual paths.
- * If `path_list_str` is `NULL` or `ft_split` fails (e.g., `path_list_str` is empty
- * or memory allocation fails), it checks if the command itself (`s_cmd_arg[0]`) is a
- * directly accessible executable. If so, it duplicates `s_cmd_arg[0]` and returns it.
- * Otherwise, it calls `process_path_search_loop` to search through the split paths.
- * It ensures `s_cmd_arg` and the array of paths are freed before returning.
+ * If `path_list_str` is `NULL` or `ft_split` fails (e.g., `path_list_str`
+ * is empty or memory allocation fails), it checks if the command itself
+ * (`s_cmd_arg[0]`) is a directly accessible executable. If so, it duplicates
+ * `s_cmd_arg[0]` and returns it. Otherwise, it calls `process_path_search_loop`
+ * to search through the split paths. It ensures `s_cmd_arg` and the array of
+ * paths are freed before returning.
  *
  * @param s_cmd_arg A null-terminated array of strings, where `s_cmd_arg[0]`
  *                  is the command name.
@@ -121,7 +122,8 @@ static char	*search_env_paths(char **s_cmd_arg, char *path_list_str)
 /**
  * @brief Finds the full path of an executable command.
  *
- * This function determines the absolute or relative path of an executable command.
+ * This function determines the absolute or relative path of an executable
+ * command.
  * It first splits the input `cmd` string (which might include arguments) using
  * `split_cmd`. If the command name (`s_cmd_arr[0]`) contains a '/', it's
  * treated as a direct path (absolute or relative). The function then checks

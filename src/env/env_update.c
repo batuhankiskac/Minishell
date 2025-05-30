@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:58:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:53:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,6 @@ void	update_env(char *key, char *value, t_env **env)
 		free(node->key);
 		free(node->value);
 		free(node);
-		exit(EXIT_FAILURE);
+		return ;
 	}
 }

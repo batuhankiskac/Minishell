@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:58:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/30 20:50:35 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static char	*env_node_to_string(t_env *env_node)
  * @return A dynamically allocated array of strings representing the
  *         environment variables, or NULL if an error occurs.
  */
-
 char	**env_list_to_array(t_env *env)
 {
 	char	**env_array;
