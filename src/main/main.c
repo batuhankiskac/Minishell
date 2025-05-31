@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:21:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:28:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,22 @@ static void	handle_eof(t_shell *shell)
 /**
  * @brief Executes the commands in the shell.
  *
- * This function checks if the command is a built-in command or a pipeline.
- * If it's a built-in command, it executes it directly. If it's a pipeline,
- * it calls the `execute_pipe` function to handle the execution of multiple
- * commands connected by pipes.
+ * This function checks if the command is a single command or a pipeline.
+ * For single commands, it determines if it's a built-in or external command
+ * and calls the appropriate execution function. For pipelines, it calls
+ * the execute_pipe function to handle multiple commands connected by pipes.
  *
  * @param shell A pointer to the `t_shell` structure containing the command.
  */
 static void	execute_commands(t_shell *shell)
 {
-	if (shell->command->next == NULL
-		&& is_builtin(shell->command->cmd))
-		shell->exit_status = exec_builtin(shell);
+	if (shell->command->next == NULL)
+	{
+		if (is_builtin(shell->command->cmd))
+			shell->exit_status = exec_builtin(shell);
+		else
+			shell->exit_status = exec_external(shell);
+	}
 	else
 		shell->exit_status = execute_pipe(shell);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:44:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 14:54:45 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,17 @@ int	builtin_env(t_env *env)
 	while (current)
 	{
 		if (current->key && current->value)
-			printf("%s=%s\n", current->key, current->value);
+		{
+			ft_putstr_fd(current->key, STDOUT_FILENO);
+			ft_putchar_fd('=', STDOUT_FILENO);
+			ft_putendl_fd(current->value, STDOUT_FILENO);
+		}
 		else if (current->key && !current->value)
-			printf("%s=\n", current->key);
+		{
+			ft_putstr_fd(current->key, STDOUT_FILENO);
+			ft_putchar_fd('=', STDOUT_FILENO);
+			ft_putchar_fd('\n', STDOUT_FILENO);
+		}
 		current = current->next;
 	}
 	return (0);

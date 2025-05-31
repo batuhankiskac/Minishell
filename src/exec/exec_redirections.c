@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:02:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:45:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,11 @@ int	setup_redir(t_shell *shell)
 	t_redir	*redir;
 	int		ret;
 
+	if (!shell || !shell->command)
+		return (0);
 	redir = shell->command->redir;
+	if (!redir)
+		return (0);
 	while (redir)
 	{
 		if (redir->type == REDIR_IN)

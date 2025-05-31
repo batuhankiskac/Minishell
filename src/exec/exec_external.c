@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:00:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 15:01:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 {
 	char	*path;
 
+	if (setup_redir(shell) == ERROR)
+	{
+		ft_putendl_fd("minishell: redirection setup failed", STDERR_FILENO);
+		exit(1);
+	}
 	path = find_path(shell->command->cmd, env_array);
 	if (!path)
 	{
