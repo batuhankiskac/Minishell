@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:00:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 16:45:25 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:59:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	count_words_until_pipe(t_token *t)
 	{
 		if (t->type == TOKEN_WORD)
 			count++;
-		// Bu kod bloğu rediraction hatasını çözmek için copilot tarafın eklendi.
+		// Bu kod bloğu rediraction hatasını çözmek için copilot tarafından eklendi.
 		// Tekrardan bakıp kendin sorunu anlayıp düzeltirsen daha iyi olur.
 		else if (t->type >= TOKEN_REDIR_IN && t->type <= TOKEN_HEREDOC)
 		{
@@ -83,7 +83,7 @@ void	populate_args(t_token **t_ptr, t_command *cmd)
 	{
 		if (t->type == TOKEN_WORD)
 			cmd->args[i++] = ft_strdup(t->str);
-		// Bu kod bloğu rediraction hatasını çözmek için copilot tarafın eklendi.
+		// Bu kod bloğu rediraction hatasını çözmek için copilot tarafından eklendi.
 		// Tekrardan bakıp kendin sorunu anlayıp düzeltirsen daha iyi olur.
 		else if (t->type >= TOKEN_REDIR_IN && t->type <= TOKEN_HEREDOC)
 		{
