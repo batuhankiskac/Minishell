@@ -6,33 +6,26 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 15:01:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/05/31 16:56:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Executes a command in the child process.
+ * @brief Executes the command using execve.
  *
- * This function is called in the child process after a fork. It attempts
- * to find the command's executable path and execute it using execve.
- * If the command is not found or execution fails, an error message is
- * printed, and the child process exits with an appropriate status code.
+ * This function finds the command's executable path and executes it using
+ * execve. If the command is not found or execution fails, an error message
+ * is printed and the child process exits with the appropriate status code.
  *
- * @param shell A pointer to the shell structure containing the command
- *              and its arguments.
+ * @param shell A pointer to the shell structure containing the command.
  * @param env_array An array of environment variables for the child process.
  */
-static void	execute_child_process(t_shell *shell, char **env_array)
+static void	execute_command(t_shell *shell, char **env_array)
 {
 	char	*path;
 
-	if (setup_redir(shell) == ERROR)
-	{
-		ft_putendl_fd("minishell: redirection setup failed", STDERR_FILENO);
-		exit(1);
-	}
 	path = find_path(shell->command->cmd, env_array);
 	if (!path)
 	{
@@ -54,6 +47,27 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
 	exit(EXIT_SUCCESS);
+}
+
+/**
+ * @brief Executes a command in the child process.
+ *
+ * This function is called in the child process after a fork. It sets up
+ * redirections and then executes the command. If redirection setup fails,
+ * the child process exits with an error code.
+ *
+ * @param shell A pointer to the shell structure containing the command
+ *              and its arguments.
+ * @param env_array An array of environment variables for the child process.
+ */
+static void	execute_child_process(t_shell *shell, char **env_array)
+{
+	if (setup_redir(shell) == ERROR)
+	{
+		ft_putendl_fd("minishell: redirection setup failed", STDERR_FILENO);
+		exit(1);
+	}
+	execute_command(shell, env_array);
 }
 
 /**
