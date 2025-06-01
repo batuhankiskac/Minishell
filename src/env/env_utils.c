@@ -78,7 +78,7 @@ int	is_valid_identifier(char *str)
 	{
 		if (!is_env_char(str[i]))
 			return (0);
-			i++;
+		i++;
 	}
 	return (1);
 }
