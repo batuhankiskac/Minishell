@@ -72,13 +72,13 @@ int	is_valid_identifier(char *str)
 	if (!str || !*str)
 		return (0);
 	i = 0;
-	if (ft_isdigit(str[i]))
-		return (0);
+	if (!ft_isalpha(str[i]) && str[i] != '_')
+        return (0);
 	while (str[i])
 	{
 		if (!is_env_char(str[i]))
 			return (0);
-		i++;
+			i++;
 	}
 	return (1);
 }
