@@ -59,6 +59,8 @@ SRCS = src/main/main.c \
 
 OBJS = $(SRCS:.c=.o)
 
+all: $(NAME)
+
 %.o: %.c
 	@echo "Compiling $<"
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -82,6 +84,8 @@ fclean: clean
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
+
+main: all clean
 
 .PHONY: all clean fclean re
 .SILENT: all clean fclean re
