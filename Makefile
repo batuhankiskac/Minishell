@@ -11,7 +11,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 LDLIBS = -lreadline
 
 SRCS = src/main/main.c \
-	   src/main/loop_error_handling.c \
+	   src/main/loop_errors.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
 	   src/builtins/env.c \
