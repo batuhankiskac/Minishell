@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:20:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/04 13:40:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
  * @param shell Pointer to the shell structure containing command and tokens.
  * @return 1 to indicate an error occurred.
  */
-int	handle_command_parsing_error(char *raw_line_ptr, t_shell *shell)
+int	handle_parse_error(char *raw_line_ptr, t_shell *shell)
 {
 	free(raw_line_ptr);
 	clear_command_list(shell->command);
@@ -44,7 +44,7 @@ int	handle_command_parsing_error(char *raw_line_ptr, t_shell *shell)
  * @param raw_line_ptr Pointer to the raw line string that needs to be freed.
  * @param shell Pointer to the shell structure containing command and tokens.
  */
-void	cleanup_current_loop_iteration(char *raw_line_ptr, t_shell *shell)
+void	cleanup_loop(char *raw_line_ptr, t_shell *shell)
 {
 	clear_command_list(shell->command);
 	shell->command = NULL;

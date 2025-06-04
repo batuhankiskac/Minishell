@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 16:28:47 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/04 13:40:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	execute_commands(t_shell *shell)
  * @param shell A pointer to the `t_shell` structure containing the shell state.
  * @return Returns 0 on success, or 1 if an error occurs during processing.
  */
-static int	process_single_line(char *raw_line_ptr, t_shell *shell)
+static int	process_line(char *raw_line_ptr, t_shell *shell)
 {
 	if (shell->line)
 		free(shell->line);
@@ -81,12 +81,12 @@ static int	process_single_line(char *raw_line_ptr, t_shell *shell)
 		|| !parse_redirections(shell)
 		|| !expander(shell))
 	{
-		if (handle_command_parsing_error(raw_line_ptr, shell))
+		if (handle_parse_error(raw_line_ptr, shell))
 			return (1);
 	}
 	if (shell->command)
 		execute_commands(shell);
-	cleanup_current_loop_iteration(raw_line_ptr, shell);
+	cleanup_loop(raw_line_ptr, shell);
 	return (0);
 }
 
@@ -99,7 +99,7 @@ static int	process_single_line(char *raw_line_ptr, t_shell *shell)
  *
  * @param shell A pointer to the `t_shell` structure containing the shell state.
  */
-static void	process_input_loop(t_shell *shell)
+static void	input_loop(t_shell *shell)
 {
 	char	*raw_line_ptr;
 
@@ -112,7 +112,7 @@ static void	process_input_loop(t_shell *shell)
 			handle_eof(shell);
 			break ;
 		}
-		if (process_single_line(raw_line_ptr, shell) == 1)
+		if (process_line(raw_line_ptr, shell) == 1)
 			continue ;
 	}
 }
@@ -141,7 +141,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.tokens = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
-	process_input_loop(&shell);
+	input_loop(&shell);
 	reset_signals();
 	free(shell.line);
 	free_env(shell.env);
