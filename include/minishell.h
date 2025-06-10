@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 19:01:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 typedef enum e_redir_type
 {
-	REDIR_NONE = 0,
+	REDIR_NONE,
 	REDIR_IN,
 	REDIR_OUT,
 	REDIR_APPEND,
