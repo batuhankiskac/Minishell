@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:39:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 22:41:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,32 @@ void	write_heredoc(t_shell *shell,
 			ft_putstr_fd(shell->redir->file, fd);
 		close(fd);
 	}
+}
+
+/**
+ * @brief Resizes the lines buffer when capacity is reached.
+ *
+ * @param lines Current lines array
+ * @param capacity Current capacity
+ * @return New capacity, or 0 on failure
+ */
+int	resize_lines_buffer(char ***lines, int capacity)
+{
+	char	**new_lines;
+	int		new_capacity;
+	int		i;
+
+	new_capacity = capacity * 2;
+	new_lines = malloc(sizeof(char *) * new_capacity);
+	if (!new_lines)
+		return (0);
+	i = 0;
+	while (i < capacity)
+	{
+		new_lines[i] = (*lines)[i];
+		i++;
+	}
+	free(*lines);
+	*lines = new_lines;
+	return (new_capacity);
 }

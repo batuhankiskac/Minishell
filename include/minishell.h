@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 19:01:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 22:42:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,8 @@ void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
+int		resize_lines_buffer(char ***lines, int capacity);
+
 
 /*
 ** Expander

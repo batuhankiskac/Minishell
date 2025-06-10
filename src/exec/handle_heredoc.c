@@ -6,21 +6,57 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:39:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 22:41:45 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
+ * @brief Handles EOF condition for heredoc input.
+ *
+ * @param shell Shell structure containing redir
+ * @param count Current line count
+ * @return count with EOF flag set
+ */
+static int	handle_heredoc_eof(t_shell *shell, int count)
+{
+	ft_putstr_fd("minishell: warning: here-document at line 1", 2);
+	ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(shell->redir->file, 2);
+	ft_putstr_fd("')\n", 2);
+	return (count | 0x80000000);
+}
+
+/**
+ * @brief Expands buffer capacity when needed.
+ *
+ * @param lines Pointer to lines array
+ * @param capacity Pointer to current capacity
+ * @return 0 on success, ERROR on failure
+ */
+static int	expand_buffer_if_needed(char ***lines, int *capacity, int count)
+{
+	if (count >= *capacity)
+	{
+		*capacity = resize_lines_buffer(lines, *capacity);
+		if (*capacity == 0)
+			return (ERROR);
+	}
+	return (0);
+}
+
+/**
  * @brief Collects input lines for heredoc until delimiter is found.
  *
  * @param shell Shell structure containing redir
- * @param lines Array to store lines
+ * @param lines Pointer to array to store lines
+ * @param capacity Pointer to current capacity
  * @param pipe_fd Write end of pipe
  * @return Number of lines collected, or count if EOF received
  */
-static int	collect_input(t_shell *shell, char **lines, int pipe_fd)
+static int	collect_input(t_shell *shell, char ***lines,
+				int *capacity, int pipe_fd)
 {
 	char	*line;
 	int		count;
@@ -30,20 +66,16 @@ static int	collect_input(t_shell *shell, char **lines, int pipe_fd)
 	{
 		line = readline("> ");
 		if (!line)
-		{
-			ft_putstr_fd("minishell: warning: here-document at line 1", 2);
-			ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
-			ft_putstr_fd(shell->redir->file, 2);
-			ft_putstr_fd("')\n", 2);
-			return (count | 0x80000000);
-		}
+			return (handle_heredoc_eof(shell, count));
 		if (ft_strcmp(line, shell->redir->file) == 0)
 		{
 			free(line);
 			break ;
 		}
+		if (expand_buffer_if_needed(lines, capacity, count) == ERROR)
+			return (free(line), ERROR);
 		ft_putendl_fd(line, pipe_fd);
-		lines[count++] = ft_strdup(line);
+		(*lines)[count++] = ft_strdup(line);
 		free(line);
 	}
 	return (count);
@@ -62,11 +94,15 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd)
 	char	*full_heredoc;
 	int		count;
 	int		eof_received;
+	int		capacity;
 
-	lines = malloc(sizeof(char *) * 1000);
+	capacity = 100;
+	lines = malloc(sizeof(char *) * capacity);
 	if (!lines)
 		return (ERROR);
-	count = collect_input(shell, lines, pipe_fd);
+	count = collect_input(shell, &lines, &capacity, pipe_fd);
+	if (count == ERROR)
+		return (free(lines), ERROR);
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
 	full_heredoc = join_heredoc(lines, count);
