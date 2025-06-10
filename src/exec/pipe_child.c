@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 20:32:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 22:02:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ static void	handle_output_redir(int pipe_write_fd)
  */
 static void	execute_child_cmd(t_shell *shell)
 {
+	reset_signals();
 	if (setup_redir(shell) == ERROR)
 		exit(EXIT_FAILURE);
 	if (is_builtin(shell->command->cmd))

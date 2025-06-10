@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 14:53:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 22:12:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	builtin_echo(int argc, char **args)
 
 	i = 1;
 	nl_flag = 1;
-	while (i < argc && args[i] && ft_strncmp(args[i], "-n", 2) == 0)
+	while (i < argc && args[i] && ft_strcmp(args[i], "-n") == 0)
 	{
 		nl_flag = 0;
 		i++;
