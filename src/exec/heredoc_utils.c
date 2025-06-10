@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:08:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:39:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param count Number of lines
  * @return Joined string or NULL on failure
  */
-char	*join_heredoc_lines(char **lines, int count)
+char	*join_heredoc(char **lines, int count)
 {
 	char	*result;
 	char	*temp;
@@ -52,7 +52,7 @@ char	*join_heredoc_lines(char **lines, int count)
  * @param lines Array of lines to free
  * @param count Number of lines
  */
-void	free_heredoc_lines(char **lines, int count)
+void	free_heredoc(char **lines, int count)
 {
 	int	i;
 
@@ -71,7 +71,7 @@ void	free_heredoc_lines(char **lines, int count)
  * @param full_heredoc The complete heredoc content
  * @param eof_received Whether EOF was received (no delimiter)
  */
-void	write_heredoc_to_file(t_shell *shell,
+void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received)
 {
 	int	fd;

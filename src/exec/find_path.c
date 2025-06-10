@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 20:56:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:37:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	**split_cmd(char *cmd)
  *         executable if found. Returns `NULL` if the command is not found
  *         in any of the provided paths or if an error occurs.
  */
-static char	*process_path_search_loop(char **allpath, char **s_cmd_arg)
+static char	*process_path_search(char **allpath, char **s_cmd_arg)
 {
 	char	*exec;
 	char	*path_part;
@@ -98,7 +98,7 @@ static char	*process_path_search_loop(char **allpath, char **s_cmd_arg)
  * @return A dynamically allocated string containing the full path to the
  *         executable if found. Returns `NULL` if not found or on error.
  */
-static char	*search_env_paths(char **s_cmd_arg, char *path_list_str)
+static char	*search_env(char **s_cmd_arg, char *path_list_str)
 {
 	char	**allpath_arr;
 	char	*exec_res;
@@ -113,7 +113,7 @@ static char	*search_env_paths(char **s_cmd_arg, char *path_list_str)
 		ft_free_all(s_cmd_arg);
 		return (exec_res);
 	}
-	exec_res = process_path_search_loop(allpath_arr, s_cmd_arg);
+	exec_res = process_path_search(allpath_arr, s_cmd_arg);
 	if (exec_res)
 		return (exec_res);
 	return (ft_free_all(allpath_arr), ft_free_all(s_cmd_arg), NULL);
@@ -164,7 +164,7 @@ char	*find_path(char *cmd, char *envp[])
 		if (!envp)
 			return (ft_free_all(s_cmd_arr), NULL);
 		path_env_val = get_env("PATH", envp);
-		result_path = search_env_paths(s_cmd_arr, path_env_val);
+		result_path = search_env(s_cmd_arr, path_env_val);
 		return (result_path);
 	}
 }

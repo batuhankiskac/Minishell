@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:01:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,11 +127,11 @@ int		handle_heredoc_redir(t_shell *shell);
 int		execute_pipe(t_shell *shell);
 char	*find_path(char *cmd, char *envp[]);
 char	*get_env(char *name, char *envp[]);
-char	*join_heredoc_lines(char **lines, int count);
+char	*join_heredoc(char **lines, int count);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
-void	free_heredoc_lines(char **lines, int count);
-void	write_heredoc_to_file(t_shell *shell,
+void	free_heredoc(char **lines, int count);
+void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
@@ -157,7 +157,7 @@ int		read_words(int pos, const char *str, t_token **tokens);
 int		token_reader(t_shell *shell);
 int		tokenize_line(char *line, t_shell *shell);
 void	clear_command_list(t_command *cmd);
-void	token_add(t_token **tokens, const char *word, int len);
+int	token_add(t_token **tokens, const char *word, int len);
 void	clear_token_list(t_token **tokens_head);
 
 /*
@@ -192,7 +192,6 @@ void	reset_signal_flag(void);
 /*
 ** Utils
 */
-void	*safe_malloc(size_t size);
 void	ft_free_all(char **arr);
 void	free_redirections(t_redir *r);
 

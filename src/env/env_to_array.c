@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 20:50:35 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ char	**env_list_to_array(t_env *env)
 	int		i;
 
 	i = 0;
-	env_array = (char **)safe_malloc(sizeof(char *) * (env_count(env) + 1));
+	env_array = (char **)malloc(sizeof(char *) * (env_count(env) + 1));
+	if (!env_array)
+		return (perror("malloc error"), NULL);
 	while (env)
 	{
 		str = env_node_to_string(env);

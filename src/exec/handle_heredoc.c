@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:05:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:39:22 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * @param pipe_fd Write end of pipe
  * @return Number of lines collected, or count if EOF received
  */
-static int	collect_input_lines(t_shell *shell, char **lines, int pipe_fd)
+static int	collect_input(t_shell *shell, char **lines, int pipe_fd)
 {
 	char	*line;
 	int		count;
@@ -56,7 +56,7 @@ static int	collect_input_lines(t_shell *shell, char **lines, int pipe_fd)
  * @param pipe_fd Write end of pipe
  * @return 0 on success, ERROR on failure, 1 if EOF received
  */
-static int	collect_heredoc_lines(t_shell *shell, int pipe_fd)
+static int	collect_heredoc(t_shell *shell, int pipe_fd)
 {
 	char	**lines;
 	char	*full_heredoc;
@@ -66,13 +66,13 @@ static int	collect_heredoc_lines(t_shell *shell, int pipe_fd)
 	lines = malloc(sizeof(char *) * 1000);
 	if (!lines)
 		return (ERROR);
-	count = collect_input_lines(shell, lines, pipe_fd);
+	count = collect_input(shell, lines, pipe_fd);
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
-	full_heredoc = join_heredoc_lines(lines, count);
-	write_heredoc_to_file(shell, full_heredoc, eof_received);
+	full_heredoc = join_heredoc(lines, count);
+	write_heredoc(shell, full_heredoc, eof_received);
 	free(full_heredoc);
-	free_heredoc_lines(lines, count);
+	free_heredoc(lines, count);
 	if (eof_received)
 	{
 		shell->heredoc_eof = 1;
@@ -101,7 +101,7 @@ int	handle_heredoc_redir(t_shell *shell)
 
 	if (pipe(pipe_fd) == -1)
 		return (perror("minishell: pipe"), ERROR);
-	collect_result = collect_heredoc_lines(shell, pipe_fd[1]);
+	collect_result = collect_heredoc(shell, pipe_fd[1]);
 	if (collect_result == ERROR)
 		return (close(pipe_fd[0]), close(pipe_fd[1]), ERROR);
 	if (collect_result == 1)

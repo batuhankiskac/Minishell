@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:00:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 16:59:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,13 @@ int	count_words_until_pipe(t_token *t)
 int	init_command_args(t_command *cmd, int count)
 {
 	cmd->argc = count;
-	cmd->args = safe_malloc(sizeof(char *) * (count + 1));
-	return (cmd->args != NULL);
+	cmd->args = malloc(sizeof(char *) * (count + 1));
+	if (!cmd->args)
+	{
+		perror("malloc error");
+		return (0);
+	}
+	return (1);
 }
 
 /**

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:26:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,9 @@ static t_command	*new_cmd(void)
 {
 	t_command	*c;
 
-	c = safe_malloc(sizeof(*c));
+	c = malloc(sizeof(*c));
+	if (!c)
+		return (perror("malloc error"), NULL);
 	c->cmd = NULL;
 	c->args = NULL;
 	c->argc = 0;

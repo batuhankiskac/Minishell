@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:16:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,32 @@ static t_token_type	determine_token_type(const char *word, int len)
  * @param tokens A pointer to the head of the linked list of tokens.
  * @param word The string to be stored in the new token.
  * @param len The length of the string to be stored in the new token.
+ * @return 1 on success, 0 on failure.
  */
-void	token_add(t_token **tokens, const char *word, int len)
+int	token_add(t_token **tokens, const char *word, int len)
 {
 	t_token	*new_token;
 	t_token	*current;
 
-	new_token = safe_malloc(sizeof(t_token));
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return (perror("malloc error"), 0);
 	new_token->str = ft_strndup(word, len);
+	if (!new_token->str)
+	{
+		free(new_token);
+		return (perror("ft_strndup error"), 0);
+	}
 	new_token->type = determine_token_type(word, len);
 	new_token->next = NULL;
 	if (*tokens == NULL)
 	{
 		*tokens = new_token;
-		return ;
+		return (1);
 	}
 	current = *tokens;
 	while (current->next)
 		current = current->next;
 	current->next = new_token;
+	return (1);
 }

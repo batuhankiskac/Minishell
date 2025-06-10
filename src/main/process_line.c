@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:00:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:41:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	execute_commands(t_shell *shell)
  *
  * @param shell A pointer to the shell structure
  */
-static void	update_line_from_heredoc(t_shell *shell)
+static void	update_line(t_shell *shell)
 {
 	int		fd;
 	char	buffer[4096];
@@ -108,7 +108,7 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	}
 	else if (shell->command && !shell->heredoc_eof)
 		execute_commands(shell);
-	update_line_from_heredoc(shell);
+	update_line(shell);
 	if (*shell->line)
 		add_history(shell->line);
 	cleanup_loop(raw_line_ptr, shell);

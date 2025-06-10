@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 20:53:28 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 18:51:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,10 @@ void	update_env(char *key, char *value, t_env **env)
 
 	node = find_env(key, *env);
 	if (node)
-	{
-		update_existing_env(value, node);
-		return ;
-	}
-	node = safe_malloc(sizeof(t_env));
+		return (update_existing_env(value, node));
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (perror("malloc error"));
 	node->key = ft_strdup(key);
 	if (value)
 		node->value = ft_strdup(value);
@@ -74,10 +73,5 @@ void	update_env(char *key, char *value, t_env **env)
 	node->next = *env;
 	*env = node;
 	if (!node->key || (value && !node->value))
-	{
-		free(node->key);
-		free(node->value);
-		free(node);
-		return ;
-	}
+		return (free(node->key), free(node->value), free(node));
 }
