@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:02:25 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 21:50:57 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	open_file(char *filename, int flags, int mode, char *type)
 	{
 		ft_putstr_fd("minishell: open ", 2);
 		ft_putstr_fd(type, 2);
-		ft_putstr_fd(" file", 2);
+		ft_putstr_fd(" file ", 2);
 		perror(filename);
 		return (ERROR);
 	}
