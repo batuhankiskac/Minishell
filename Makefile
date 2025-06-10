@@ -2,7 +2,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline -g
+CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline
 
 LIBFT_DIR = ./libft
 
@@ -11,6 +11,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 LDLIBS = -lreadline
 
 SRCS = src/main/main.c \
+	   src/main/process_line.c \
 	   src/main/loop_errors.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
