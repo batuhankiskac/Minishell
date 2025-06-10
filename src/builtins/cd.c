@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:44:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 21:45:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ static char	*get_target(int argc, char **args, t_env **env)
 		raw = get_env_value("OLDPWD", *env);
 		if (!raw)
 			return (ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO), NULL);
+		return (ft_strdup(raw));
+	}
+	if (ft_strcmp(args[1], "~") == 0)
+	{
+		raw = get_env_value("HOME", *env);
+		if (!raw)
+			return (ft_putendl_fd("cd: HOME not set", STDERR_FILENO), NULL);
 		return (ft_strdup(raw));
 	}
 	return (ft_strdup(args[1]));

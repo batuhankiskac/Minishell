@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 21:40:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	ft_free_all(char **arr)
 {
 	int	i;
 
+	if (!arr)
+		return ;
 	i = -1;
 	while (arr[++i])
 		free(arr[i]);
