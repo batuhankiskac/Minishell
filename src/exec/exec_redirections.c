@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 16:45:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 17:00:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,37 @@ static int	handle_append_redir(t_redir *redir)
 		return (ERROR);
 	if (dup_fd(fd, STDOUT_FILENO, "append") == ERROR)
 		return (ERROR);
+	return (0);
+}
+
+/**
+ * @brief Processes a single redirection based on its type.
+ *
+ * @param shell Shell structure (needed for HEREDOC)
+ * @param redir The redirection to process
+ * @return 0 on success, ERROR on failure
+ */
+static int	process_single_redir(t_shell *shell, t_redir *redir)
+{
+	int	result;
+
+	if (redir->type == REDIR_IN)
+		return (handle_input_redir(redir));
+	else if (redir->type == REDIR_OUT)
+		return (handle_output_redir(redir));
+	else if (redir->type == REDIR_APPEND)
+		return (handle_append_redir(redir));
+	else if (redir->type == REDIR_HEREDOC)
+	{
+		shell->redir = redir;
+		result = handle_heredoc_redir(shell);
+		if (result == 1)
+		{
+			shell->heredoc_eof = 1;
+			return (ERROR);
+		}
+		return (result);
+	}
 	return (0);
 }
 
@@ -88,16 +119,7 @@ int	setup_redir(t_shell *shell)
 		return (0);
 	while (redir)
 	{
-		if (redir->type == REDIR_IN)
-			ret = handle_input_redir(redir);
-		else if (redir->type == REDIR_OUT)
-			ret = handle_output_redir(redir);
-		else if (redir->type == REDIR_APPEND)
-			ret = handle_append_redir(redir);
-		else if (redir->type == REDIR_HEREDOC)
-			ret = handle_heredoc_redir(redir);
-		else
-			ret = 0;
+		ret = process_single_redir(shell, redir);
 		if (ret == ERROR)
 			return (ERROR);
 		redir = redir->next;

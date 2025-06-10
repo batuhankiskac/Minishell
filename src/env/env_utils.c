@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:59:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 17:01:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	is_valid_identifier(char *str)
 		return (0);
 	i = 0;
 	if (!ft_isalpha(str[i]) && str[i] != '_')
-        return (0);
+		return (0);
 	while (str[i])
 	{
 		if (!is_env_char(str[i]))

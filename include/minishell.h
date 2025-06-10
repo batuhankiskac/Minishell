@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 15:18:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 17:01:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ typedef struct s_shell
 	t_env		*env;
 	t_command	*command;
 	t_token		*tokens;
+	t_redir		*redir;
 	char		*line;
 	int			exit_status;
+	int			heredoc_eof;
 }				t_shell;
 
 /*
@@ -121,12 +123,16 @@ int		exec_external(t_shell *shell);
 int		open_file(char *filename, int flags, int mode, char *type);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
-int		handle_heredoc_redir(t_redir *redir);
+int		handle_heredoc_redir(t_shell *shell);
 int		execute_pipe(t_shell *shell);
 char	*find_path(char *cmd, char *envp[]);
 char	*get_env(char *name, char *envp[]);
+char	*join_heredoc_lines(char **lines, int count);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
+void	free_heredoc_lines(char **lines, int count);
+void	write_heredoc_to_file(t_shell *shell,
+			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
 
@@ -168,9 +174,6 @@ int		build_command_list(t_shell *shell);
 int		parse_commands(t_shell *shell);
 int		handle_parse_error(char *raw_line_ptr, t_shell *shell);
 int		process_command_block(t_command *cmd, t_token **t_ptr);
-
-/*
-** Parser Helpers */
 int		count_words_until_pipe(t_token *t);
 int		init_command_args(t_command *cmd, int count);
 void	populate_args(t_token **t_ptr, t_command *cmd);

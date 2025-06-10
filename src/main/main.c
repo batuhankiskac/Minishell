@@ -6,11 +6,27 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 15:18:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 17:00:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Handles the end-of-file (EOF) signal by printing "exit" and
+ *        terminating the shell.
+ *
+ * This function is called when the user sends an EOF signal (e.g., Ctrl+D).
+ * It prints "exit" to indicate that the shell is exiting.
+ *
+ * @param shell A pointer to the `t_shell` structure, which contains the
+ *              current shell state.
+ */
+static void	handle_eof(t_shell *shell)
+{
+	(void)shell;
+	write(STDOUT_FILENO, "exit\n", 5);
+}
 
 /**
  * @brief Main loop for processing user input in the shell.
@@ -63,6 +79,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.tokens = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
+	shell.heredoc_eof = 0;
 	input_loop(&shell);
 	reset_signals();
 	free(shell.line);

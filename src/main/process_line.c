@@ -6,27 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 15:16:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/10 17:00:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Handles the end-of-file (EOF) signal by printing "exit" and
- *        terminating the shell.
- *
- * This function is called when the user sends an EOF signal (e.g., Ctrl+D).
- * It prints "exit" to indicate that the shell is exiting.
- *
- * @param shell A pointer to the `t_shell` structure, which contains the
- *              current shell state.
- */
-static void	handle_eof(t_shell *shell)
-{
-	(void)shell;
-	write(STDOUT_FILENO, "exit\n", 5);
-}
 
 /**
  * @brief Executes the commands in the shell.
@@ -52,6 +36,49 @@ static void	execute_commands(t_shell *shell)
 }
 
 /**
+ * @brief Updates shell line from heredoc content file if it exists.
+ *
+ * @param shell A pointer to the shell structure
+ */
+static void	update_line_from_heredoc(t_shell *shell)
+{
+	int		fd;
+	char	buffer[4096];
+	int		bytes_read;
+
+	fd = open("/tmp/minishell_heredoc_content", O_RDONLY);
+	if (fd != -1)
+	{
+		bytes_read = read(fd, buffer, sizeof(buffer) - 1);
+		close(fd);
+		unlink("/tmp/minishell_heredoc_content");
+		if (bytes_read > 0)
+		{
+			buffer[bytes_read] = '\0';
+			free(shell->line);
+			shell->line = ft_strdup(buffer);
+		}
+	}
+}
+
+/**
+ * @brief Handles the parsing phase of command processing.
+ *
+ * @param shell A pointer to the shell structure
+ * @return 0 on success, 1 on failure
+ */
+static int	handle_parsing(t_shell *shell)
+{
+	if (tokenize_line(shell->line, shell) == ERROR
+		|| !build_command_list(shell)
+		|| !parse_commands(shell)
+		|| !parse_redirections(shell)
+		|| !expander(shell))
+		return (1);
+	return (0);
+}
+
+/**
  * @brief Processes a single line of input from the user.
  *
  * This function takes a raw line of input, tokenizes it, builds a command list,
@@ -64,6 +91,7 @@ static void	execute_commands(t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
+	shell->heredoc_eof = 0;
 	if (shell->line)
 		free(shell->line);
 	shell->line = ft_strdup(raw_line_ptr);
@@ -73,19 +101,16 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		free(raw_line_ptr);
 		return (1);
 	}
-	if (*shell->line)
-		add_history(shell->line);
-	if (tokenize_line(shell->line, shell) == ERROR
-		|| !build_command_list(shell)
-		|| !parse_commands(shell)
-		|| !parse_redirections(shell)
-		|| !expander(shell))
+	if (handle_parsing(shell))
 	{
 		if (handle_parse_error(raw_line_ptr, shell))
 			return (1);
 	}
-	if (shell->command)
+	else if (shell->command && !shell->heredoc_eof)
 		execute_commands(shell);
+	update_line_from_heredoc(shell);
+	if (*shell->line)
+		add_history(shell->line);
 	cleanup_loop(raw_line_ptr, shell);
 	return (0);
 }
