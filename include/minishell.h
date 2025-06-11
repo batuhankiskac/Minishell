@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 15:18:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 17:12:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,11 +152,9 @@ char	*expand_string(const char *s, t_env *env, int exit_status);
 /*
 ** Lexer
 */
-int		skip_spaces(const char *str, int start);
 int		check_token(char c);
 int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
-int		token_reader(t_shell *shell);
 int		tokenize_line(char *line, t_shell *shell);
 void	clear_command_list(t_command *cmd);
 int	token_add(t_token **tokens, const char *word, int len);
