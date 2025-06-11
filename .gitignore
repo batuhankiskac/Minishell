@@ -1,0 +1,88 @@
+# Minishell .gitignore
+
+# Executable
+minishell
+
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.a
+*.so
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Compilation database
+compile_commands.json
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test files (if any)
+test_*
+*.test
+
+# Log files
+*.log
+
+# Core dumps
+core
+core.*
+vgcore.*
+
+# Valgrind output
+valgrind-out.txt
+*.valgrind
+
+# Backup files
+*.bak
+*.backup
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Documentation build files
+docs/_build/
+
+# Python cache (if any Python scripts are used)
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (if any Node.js tools are used)
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+coverage/
+
+# Dependency directories
+vendor/
+deps/

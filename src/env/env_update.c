@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 20:52:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:18:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,36 @@
 /**
  * @brief Updates the value of an existing environment variable node.
  *
- * This function is called when an environment variable already exists and its
- * value needs to be updated. It duplicates the new `value` (if not NULL)
- * and assigns it to `node->value`, after freeing the old `node->value`.
- * If `value` is NULL, `node->value` is set to NULL.
- * If `ft_strdup` fails, the function returns without changing the value,
- * potentially leaving the old value intact or causing an issue if the old
- * value was already freed. (Note: Current implementation frees old value first).
+ * This function safely updates an environment variable's value by first
+ * attempting to allocate memory for the new value before freeing the old one.
+ * This prevents data loss if memory allocation fails.
  *
  * @param value The new value for the environment variable. Can be NULL.
  * @param node A pointer to the `t_env` node whose value is to be updated.
+ * @return 0 on success, ERROR (-1) on memory allocation failure.
  */
-static void	update_existing_env(char *value, t_env *node)
+static int	update_existing_env(char *value, t_env *node)
 {
 	char	*new_value;
+	char	*old_value;
 
 	if (value)
 	{
 		new_value = ft_strdup(value);
 		if (!new_value)
-			return ;
+		{
+			perror("minishell: export: memory allocation failed");
+			return (ERROR);
+		}
 	}
 	else
 	{
 		new_value = NULL;
 	}
-	free(node->value);
+	old_value = node->value;
 	node->value = new_value;
+	free(old_value);
+	return (0);
 }
 
 /**
@@ -54,8 +57,9 @@ static void	update_existing_env(char *value, t_env *node)
  * @param key The key of the environment variable to update or add.
  * @param value The value to set for the environment variable (can be NULL).
  * @param env A pointer to the environment list.
+ * @return 0 on success, ERROR (-1) on failure.
  */
-void	update_env(char *key, char *value, t_env **env)
+int	update_env(char *key, char *value, t_env **env)
 {
 	t_env	*node;
 
@@ -64,14 +68,20 @@ void	update_env(char *key, char *value, t_env **env)
 		return (update_existing_env(value, node));
 	node = malloc(sizeof(t_env));
 	if (!node)
-		return (perror("malloc error"));
+		return (perror("minishell: malloc error"), ERROR);
 	node->key = ft_strdup(key);
 	if (value)
 		node->value = ft_strdup(value);
 	else
 		node->value = NULL;
+	if (!node->key || (value && !node->value))
+	{
+		free(node->key);
+		free(node->value);
+		free(node);
+		return (perror("minishell: malloc error"), ERROR);
+	}
 	node->next = *env;
 	*env = node;
-	if (!node->key || (value && !node->value))
-		return (free(node->key), free(node->value), free(node));
+	return (0);
 }

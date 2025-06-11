@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 21:45:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:18:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,11 @@ int	builtin_cd(int argc, char **args, t_env **env)
 		return (free(old_pwd), free(target), ERROR);
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
 		ft_putendl_fd(new_pwd, STDOUT_FILENO);
-	update_env("OLDPWD", old_pwd, env);
-	update_env("PWD", new_pwd, env);
+	if (update_env("OLDPWD", old_pwd, env) == ERROR
+		|| update_env("PWD", new_pwd, env) == ERROR)
+	{
+		ft_putstr_fd("minishell: cd: failed to update environment\n", 2);
+		return (free(old_pwd), free(new_pwd), free(target), ERROR);
+	}
 	return (free(old_pwd), free(new_pwd), free(target), 0);
 }
