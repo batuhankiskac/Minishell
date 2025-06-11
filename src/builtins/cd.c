@@ -6,11 +6,34 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 15:18:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 17:22:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Expands tilde (~) in path to HOME directory.
+ *
+ * @param path The path that may start with ~
+ * @param env Environment variables
+ * @return Expanded path or NULL on error
+ */
+static char	*tilde_expansion(char *path, t_env **env)
+{
+	char	*home;
+
+	if (path[0] != '~')
+		return (ft_strdup(path));
+	home = get_env_value("HOME", *env);
+	if (!home)
+		return (ft_putendl_fd("cd: HOME not set", STDERR_FILENO), NULL);
+	if (path[1] == '\0')
+		return (ft_strdup(home));
+	if (path[1] == '/')
+		return (ft_strjoin(home, path + 1));
+	return (ft_strdup(path));
+}
 
 /**
  * @brief Determines the target directory for the cd command.
@@ -45,14 +68,7 @@ static char	*get_target(int argc, char **args, t_env **env)
 			return (ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO), NULL);
 		return (ft_strdup(raw));
 	}
-	if (ft_strcmp(args[1], "~") == 0)
-	{
-		raw = get_env_value("HOME", *env);
-		if (!raw)
-			return (ft_putendl_fd("cd: HOME not set", STDERR_FILENO), NULL);
-		return (ft_strdup(raw));
-	}
-	return (ft_strdup(args[1]));
+	return (tilde_expansion(args[1], env));
 }
 
 /**
