@@ -6,34 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:41:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 16:56:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Executes the commands in the shell.
- *
- * This function checks if the command is a single command or a pipeline.
- * For single commands, it determines if it's a built-in or external command
- * and calls the appropriate execution function. For pipelines, it calls
- * the execute_pipe function to handle multiple commands connected by pipes.
- *
- * @param shell A pointer to the `t_shell` structure containing the command.
- */
-static void	execute_commands(t_shell *shell)
-{
-	if (shell->command->next == NULL)
-	{
-		if (is_builtin(shell->command->cmd))
-			shell->exit_status = exec_builtin(shell);
-		else
-			shell->exit_status = exec_external(shell);
-	}
-	else
-		shell->exit_status = execute_pipe(shell);
-}
 
 /**
  * @brief Updates shell line from heredoc content file if it exists.
@@ -107,7 +84,7 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 			return (1);
 	}
 	else if (shell->command && !shell->heredoc_eof)
-		execute_commands(shell);
+		run_command(shell);
 	update_line(shell);
 	if (*shell->line)
 		add_history(shell->line);
