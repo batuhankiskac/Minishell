@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 15:18:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:19:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,24 +83,16 @@ static int	process_export_arg(char *arg, t_env **env)
 		if (!find_env(key, *env))
 		{
 			if (update_env(key, NULL, env) == ERROR)
-			{
-				free(key);
-				return (1);
-			}
+				return (free(key), 1);
 		}
 	}
 	else
 	{
 		if (update_env(key, value, env) == ERROR)
-		{
-			free(value);
-			free(key);
-			return (1);
-		}
+			return (free(key), free(value), 1);
 		free(value);
 	}
-	free(key);
-	return (0);
+	return (free(key), 0);
 }
 
 /**
