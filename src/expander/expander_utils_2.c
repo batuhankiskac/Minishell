@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
+/*   By: megoz <megoz@student.42istanbul.com.tr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:14:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/29 12:40:56 by megoz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,72 @@ static char	*expand_dollar_chunk(char *res, const char *s, int *i,
  * @return A dynamically allocated string containing the expanded result,
  *         or NULL on failure.
  */
+
+
+// void	quote_handler(char *res, const char *s, int i)
+// {
+// 	if (s[i] == '\'')
+// 		single_quote_handler(res, s, i);
+// 	else if (s[i] == '"')
+// 		double_quote_handler(res, s, i);
+// }
+
+// void	single_quote_handler(char *res, const char *s, int i)
+// {
+// 	int j = i + 1;
+// 	while (s[j] && s[j] != '\'')
+// 		j++;
+// 	res = append_literal(res, s, i + 1, j);
+// 	if (s[j])
+// 		i = j + 1;
+// 	else
+// 		i = j;
+// }
+
+// void	double_quote_handler_util(char *res, const char *s, int i)
+// {
+// 	int j;
+	
+// 	j = i + 1;
+// 	while (s[j] && s[j] != '"')
+// 		j++;
+// }
+
+// void	double_quote_handler(char *res, const char *s, int i)
+// {
+// 	int j;
+
+// 	j = i + 1;
+// 	double_quote_handler_util(res, s, i);
+// 	char *inner = ft_substr(s, i + 1, j - (i + 1));
+// 	char *exp_inner;
+// 	char *tmp;
+// 	if (!inner)
+// 	{
+// 		free(res);
+// 		return (NULL);
+// 	}
+// 	exp_inner = expand_string(inner, env, exit_status);
+// 	free(inner);
+// 	if (!exp_inner)
+// 	{
+// 		free(res);
+// 		return (NULL);
+// 	}
+// 	tmp = ft_strjoin(res, exp_inner);
+// 	free(res);
+// 	free(exp_inner);
+// 	if (!tmp)
+// 		return (NULL);
+// 	res = tmp;
+// }
+
+// expand ederken aynı türden quote gelene kadar arguman almaya devam et
+// aynısını gorunce flag i sifirla
+// flag char olsun, char turunde ' veya " yapılabilir
+// tek tırnakta dolar ozelligini kaybediyor
+// cift tirnakta dolarlıgını koruyor
+
 char	*expand_string(const char *s, t_env *env, int exit_status)
 {
 	t_shell	shell_context;
@@ -121,44 +187,67 @@ char	*expand_string(const char *s, t_env *env, int exit_status)
 	i = 0;
 	while (s && s[i])
 	{
+		// quote_handler(res, s, i); // redirects the single quote or the double
 		if (s[i] == '\'')
 		{
 			int j = i + 1;
 			while (s[j] && s[j] != '\'')
 				j++;
 			res = append_literal(res, s, i + 1, j);
-			i = (s[j] ? j + 1 : j);
+			if (s[j]) // saibeli
+				i = j + 1;
+			else
+				i = j;
+			// i = (s[j] ? j + 1 : j);
 		}
-		else if (s[i] == '"')
+		// single_quote_handler(res, s, i); // redirects the single quote or the double
+		else if (s[i] == '\"')
 		{
 			int j = i + 1;
-			while (s[j] && s[j] != '"')
+			while (s[j] && s[j] != '\"')
 				j++;
 			{
 				char *inner = ft_substr(s, i + 1, j - (i + 1));
-				char *exp_inner;
+				// char *exp_inner;
 				char *tmp;
+				// char	inner_quote;
+				// int		inner_i;
+				// int		inner_i_count;
+
+				// inner_i_count = 0;
+				// inner_i = 0;
+				// inner_quote = '\'';
 				if (!inner)
 				{
 					free(res);
 					return (NULL);
 				}
-				exp_inner = expand_string(inner, env, exit_status);
-				free(inner);
-				if (!exp_inner)
-				{
-					free(res);
-					return (NULL);
-				}
-				tmp = ft_strjoin(res, exp_inner);
+				// exp_inner = expand_string(inner, env, exit_status);  // guncellendi
+				// free(inner);
+				// if (!exp_inner)
+				// {
+				// 	free(res);
+				// 	return (NULL);
+				// }
+				// printf("inner i suan: %d\n", inner_i);
+				// if (inner[inner_i] = inner_quote)
+				// {
+				// 	inner_i_count++;
+				// }
+				tmp = ft_strjoin(res, inner);
 				free(res);
-				free(exp_inner);
+				// free(exp_inner);
 				if (!tmp)
 					return (NULL);
 				res = tmp;
 			}
-			i = (s[j] ? j + 1 : j);
+			// i = (s[j] ? j + 1 : j); guncellendi
+			if (s[j])
+				i = j + 1;
+			else
+				i = j;
 		}
+		// double_quote_handler(res, s, i); // redirects the single quote or the double
 		else if (s[i] == '$')
 			res = expand_dollar_chunk(res, s, &i, &shell_context);
 		else
