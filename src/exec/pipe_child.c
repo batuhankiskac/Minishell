@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 22:02:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/29 14:46:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	init_pipe_write_fd(t_command *cmd, int pipe_fd[2])
  *                previous command in the pipeline. A value of -1 indicates
  *                no input pipe (e.g., first command).
  */
-static void	handle_input_redir(int prev_fd)
+static void	handle_input_pipe(int prev_fd)
 {
 	if (prev_fd != -1)
 	{
@@ -76,7 +76,7 @@ static void	handle_input_redir(int prev_fd)
  *                      no output pipe (e.g., last command, or output is to
  *                      a file/terminal).
  */
-static void	handle_output_redir(int pipe_write_fd)
+static void	handle_output_pipe(int pipe_write_fd)
 {
 	if (pipe_write_fd != -1)
 	{
@@ -149,7 +149,7 @@ void	pipe_child_process(t_shell *shell,
 
 	shell->command = cmd;
 	pipe_write_fd = init_pipe_write_fd(cmd, pipe_fd);
-	handle_input_redir(prev_fd);
-	handle_output_redir(pipe_write_fd);
+	handle_input_pipe(prev_fd);
+	handle_output_pipe(pipe_write_fd);
 	execute_child_cmd(shell);
 }
