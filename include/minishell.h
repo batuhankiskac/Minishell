@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 17:12:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/29 14:50:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
 int		resize_lines_buffer(char ***lines, int capacity);
 
-
 /*
 ** Expander
 */
@@ -157,7 +156,7 @@ int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
 int		tokenize_line(char *line, t_shell *shell);
 void	clear_command_list(t_command *cmd);
-int	token_add(t_token **tokens, const char *word, int len);
+int		token_add(t_token **tokens, const char *word, int len);
 void	clear_token_list(t_token **tokens_head);
 
 /*

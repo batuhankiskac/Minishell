@@ -6,12 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 21:58:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/29 14:52:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200809L
 #include "minishell.h"
+#define _POSIX_C_SOURCE 200809L
 
 /**
  * @brief Handles the SIGINT signal.
