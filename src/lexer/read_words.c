@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/06/29 13:07:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,6 @@ int	read_words(int pos, const char *str, t_token **tokens)
 	}
 	word = ft_substr(str, start, pos - start);
 	if (!word || !token_add(tokens, word, pos - start))
-	{
-		free(word);
-		return (ERROR);
-	}
-	free(word);
-	return (pos - start);
+		return (free(word), ERROR);
+	return (free(word), pos - start);
 }
