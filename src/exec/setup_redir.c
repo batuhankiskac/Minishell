@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_redirections.c                                :+:      :+:    :+:   */
+/*   setup_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -55,7 +55,7 @@ static int	handle_append_redir(t_redir *redir)
  * @param redir The redirection to process
  * @return 0 on success, ERROR on failure
  */
-static int	process_single_redir(t_shell *shell, t_redir *redir)
+static int	apply_redirection(t_shell *shell, t_redir *redir)
 {
 	int	result;
 
@@ -119,7 +119,7 @@ int	setup_redir(t_shell *shell)
 		return (0);
 	while (redir)
 	{
-		ret = process_single_redir(shell, redir);
+		ret = apply_redirection(shell, redir);
 		if (ret == ERROR)
 			return (ERROR);
 		redir = redir->next;

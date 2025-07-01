@@ -22,7 +22,7 @@
  * @param shell A pointer to the shell structure containing the command.
  * @param env_array An array of environment variables for the child process.
  */
-static void	execute_command(t_shell *shell, char **env_array)
+static void	find_and_exec_command(t_shell *shell, char **env_array)
 {
 	char	*path;
 
@@ -68,7 +68,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 		ft_putendl_fd("minishell: redirection setup failed", STDERR_FILENO);
 		exit(1);
 	}
-	execute_command(shell, env_array);
+	find_and_exec_command(shell, env_array);
 }
 
 /**
