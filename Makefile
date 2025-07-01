@@ -12,7 +12,7 @@ LDLIBS = -lreadline
 
 SRCS = src/main/main.c \
 	   src/main/process_line.c \
-	   src/main/loop_errors.c \
+	   src/main/cleanup.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
 	   src/builtins/env.c \
