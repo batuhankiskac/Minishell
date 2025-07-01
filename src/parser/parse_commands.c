@@ -6,11 +6,36 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:10:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:20:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Validates initial conditions and pipe placement.
+ *
+ * @param shell A pointer to the shell structure containing the token list.
+ * @return 1 if validation passes, 0 otherwise.
+ */
+static int	validate_initial_conditions(t_shell *shell)
+{
+	if (!shell->tokens)
+		return (1);
+	if (shell->tokens->type == TOKEN_PIPE)
+	{
+		clear_command_list(shell->command);
+		shell->command = NULL;
+		return (0);
+	}
+	if (!validate_pipe_sequence(shell->tokens))
+	{
+		clear_command_list(shell->command);
+		shell->command = NULL;
+		return (0);
+	}
+	return (1);
+}
 
 /**
  * @brief Parses the token list into a linked list of commands.
@@ -27,20 +52,8 @@ int	parse_commands(t_shell *shell)
 	t_token		*t;
 	t_command	*cmd;
 
-	if (!shell->tokens)
-		return (1);
-	if (shell->tokens->type == TOKEN_PIPE)
-	{
-		clear_command_list(shell->command);
-		shell->command = NULL;
+	if (!validate_initial_conditions(shell))
 		return (0);
-	}
-	if (!validate_pipe_sequence(shell->tokens))
-	{
-		clear_command_list(shell->command);
-		shell->command = NULL;
-		return (0);
-	}
 	t = shell->tokens;
 	cmd = shell->command;
 	while (cmd && t)

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:10:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:17:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,34 +107,28 @@ static void	handle_output_pipe(int pipe_write_fd)
  */
 static void	execute_child_cmd(t_shell *shell)
 {
-	int		exit_status;
 	char	**env_array;
+	int		exit_status;
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-	{
-		clear_command_list(shell->command);
-		clear_token_list(&shell->tokens);
-		exit(EXIT_FAILURE);
-	}
-	if (is_builtin(shell->command->cmd))
-	{
+		exit_status = EXIT_FAILURE;
+	else if (is_builtin(shell->command->cmd))
 		exit_status = exec_builtin(shell);
-		clear_command_list(shell->command);
-		clear_token_list(&shell->tokens);
-		exit(exit_status);
-	}
-	env_array = env_list_to_array(shell->env);
-	if (!env_array)
+	else
 	{
-		clear_command_list(shell->command);
-		clear_token_list(&shell->tokens);
-		exit(EXIT_FAILURE);
+		env_array = env_list_to_array(shell->env);
+		if (!env_array)
+			exit_status = EXIT_FAILURE;
+		else
+		{
+			exec_external_direct(shell, env_array);
+			exit_status = EXIT_FAILURE;
+		}
 	}
-	exec_external_direct(shell, env_array);
 	clear_command_list(shell->command);
 	clear_token_list(&shell->tokens);
-	exit(EXIT_FAILURE);
+	exit(exit_status);
 }
 
 /**

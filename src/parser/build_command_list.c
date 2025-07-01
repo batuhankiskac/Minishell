@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:11:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:20:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,28 @@ static t_command	*new_cmd(void)
 }
 
 /**
+ * @brief Adds a new command to the command list.
+ *
+ * @param head Pointer to the head of the command list.
+ * @param tail Pointer to the tail of the command list.
+ * @param new_command The new command to add.
+ */
+static void	add_command_to_list(t_command **head, t_command **tail,
+	t_command *new_command)
+{
+	if (!*head)
+	{
+		*head = new_command;
+		*tail = *head;
+	}
+	else
+	{
+		(*tail)->next = new_command;
+		*tail = (*tail)->next;
+	}
+}
+
+/**
  * @brief Builds a linked list of commands from the token list.
  *
  * This function processes the token list in the shell structure and
@@ -83,16 +105,7 @@ int	build_command_list(t_shell *shell)
 		new_command = new_cmd();
 		if (!new_command)
 			return (clear_command_list(head), 0);
-		if (!head)
-		{
-			head = new_command;
-			tail = head;
-		}
-		else
-		{
-			tail->next = new_command;
-			tail = tail->next;
-		}
+		add_command_to_list(&head, &tail, new_command);
 		t = skip_pipe_tokens(t);
 	}
 	shell->command = head;
