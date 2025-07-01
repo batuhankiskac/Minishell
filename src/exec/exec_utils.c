@@ -6,42 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 21:50:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:10:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Retrieves the value of an environment variable.
- *
- * This function searches the provided environment array (`envp`) for a variable
- * with the specified `name`. The search is case-sensitive. If a matching
- * variable is found (e.g., "NAME=value"), a pointer to the character
- * immediately following the '=' is returned (i.e., the start of the value).
- * If the variable is not found, `NULL` is returned.
- *
- * @param name The name of the environment variable to retrieve.
- * @param envp An array of strings, where each string is in the format
- *             "NAME=value", representing the environment.
- * @return A pointer to the value of the environment variable if found,
- *         otherwise `NULL`.
- */
-char	*get_env(char *name, char *envp[])
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = ft_strlen(name);
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
-			return (envp[i] + len + 1);
-		i++;
-	}
-	return (NULL);
-}
 
 /**
  * @brief Opens a file with specified flags and mode.
@@ -131,4 +100,28 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2])
 		close(pipe_fd[0]);
 	if (pipe_fd[1] != -1)
 		close(pipe_fd[1]);
+}
+
+/**
+ * @brief Checks if a given command is a built-in shell command.
+ *
+ * This function compares the input command string `cmd` against a predefined
+ * list of built-in command names: "echo", "cd", "pwd", "export", "unset",
+ * "env", and "exit". The comparison is done using `ft_strcmp`.
+ *
+ * @param cmd A string representing the command to be checked.
+ * @return Returns 1 if `cmd` matches one of the built-in command names.
+ *         Returns 0 otherwise.
+ */
+int	is_builtin(char *cmd)
+{
+	if (ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "cd") == 0
+		|| ft_strcmp(cmd, "pwd") == 0
+		|| ft_strcmp(cmd, "export") == 0
+		|| ft_strcmp(cmd, "unset") == 0
+		|| ft_strcmp(cmd, "env") == 0
+		|| ft_strcmp(cmd, "exit") == 0)
+		return (1);
+	return (0);
 }

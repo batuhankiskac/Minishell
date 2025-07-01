@@ -30,13 +30,12 @@ SRCS = src/main/main.c \
 	   src/exec/exec_external.c \
 	   src/exec/exec_pipe.c \
 	   src/exec/pipe_child.c \
-	   src/exec/exec_redirections.c \
+	   src/exec/setup_redir.c \
 	   src/exec/exec_utils.c \
 	   src/exec/execute.c \
 	   src/exec/find_path.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/heredoc_utils.c \
-	   src/exec/is_builtin.c \
 	   src/expander/expander.c \
 	   src/expander/expander_utils_1.c \
 	   src/expander/expander_utils_2.c \

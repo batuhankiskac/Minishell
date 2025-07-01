@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/29 14:50:44 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:10:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,14 @@ t_env	*find_env(char *key, t_env *env);
 int		env_value_len(char *str);
 int		is_env_char(char c);
 int		is_valid_identifier(char *str);
+int		update_env(char *key, char *value, t_env **env);
 char	*env_value(char *env);
 char	*get_env_value(char *key, t_env *env);
 char	**env_list_to_array(t_env *env);
+char	*get_env(char *name, char *envp[]);
 void	free_env(t_env *env);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);
-int		update_env(char *key, char *value, t_env **env);
 
 /*
 ** Execution
@@ -125,8 +126,8 @@ int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_shell *shell);
 int		execute_pipe(t_shell *shell);
+int		resize_lines_buffer(char ***lines, int capacity);
 char	*find_path(char *cmd, char *envp[]);
-char	*get_env(char *name, char *envp[]);
 char	*join_heredoc(char **lines, int count);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
@@ -135,7 +136,6 @@ void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
-int		resize_lines_buffer(char ***lines, int capacity);
 
 /*
 ** Expander
@@ -155,8 +155,8 @@ int		check_token(char c);
 int		handle_token(const char *str, int pos, t_token **tokens);
 int		read_words(int pos, const char *str, t_token **tokens);
 int		tokenize_line(char *line, t_shell *shell);
-void	clear_command_list(t_command *cmd);
 int		token_add(t_token **tokens, const char *word, int len);
+void	clear_command_list(t_command *cmd);
 void	clear_token_list(t_token **tokens_head);
 
 /*
@@ -175,9 +175,9 @@ int		handle_parse_error(char *raw_line_ptr, t_shell *shell);
 int		process_command_block(t_command *cmd, t_token **t_ptr);
 int		count_words_until_pipe(t_token *t);
 int		init_command_args(t_command *cmd, int count);
+int		validate_pipe_sequence(t_token *tokens);
 void	populate_args(t_token **t_ptr, t_command *cmd);
 void	set_command_name(t_command *cmd);
-int		validate_pipe_sequence(t_token *tokens);
 
 /*
 ** Signal Handling

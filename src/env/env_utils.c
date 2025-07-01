@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:01:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:09:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,35 @@ int	is_valid_identifier(char *str)
 		i++;
 	}
 	return (1);
+}
+
+/**
+ * @brief Retrieves the value of an environment variable.
+ *
+ * This function searches the provided environment array (`envp`) for a variable
+ * with the specified `name`. The search is case-sensitive. If a matching
+ * variable is found (e.g., "NAME=value"), a pointer to the character
+ * immediately following the '=' is returned (i.e., the start of the value).
+ * If the variable is not found, `NULL` is returned.
+ *
+ * @param name The name of the environment variable to retrieve.
+ * @param envp An array of strings, where each string is in the format
+ *             "NAME=value", representing the environment.
+ * @return A pointer to the value of the environment variable if found,
+ *         otherwise `NULL`.
+ */
+char	*get_env(char *name, char *envp[])
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(name);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+			return (envp[i] + len + 1);
+		i++;
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/29 13:15:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:14:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	input_loop(t_shell *shell)
 			ft_putstr_fd("exit\n", STDOUT_FILENO);
 			break ;
 		}
-		if (process_line(raw_line_ptr, shell) == 1)
+		if (process_line(raw_line_ptr, shell))
 			continue ;
 	}
 }
