@@ -110,7 +110,7 @@ int		update_env(char *key, char *value, t_env **env);
 char	*env_value(char *env);
 char	*get_env_value(char *key, t_env *env);
 char	**env_list_to_array(t_env *env);
-char	*get_env(char *name, char *envp[]);
+char	*find_in_envp(char *name, char *envp[]);
 void	free_env(t_env *env);
 void	print_sorted_env(t_env *env);
 void	sort_env(char **env_array);

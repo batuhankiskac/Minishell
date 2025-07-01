@@ -98,7 +98,7 @@ int	is_valid_identifier(char *str)
  * @return A pointer to the value of the environment variable if found,
  *         otherwise `NULL`.
  */
-char	*get_env(char *name, char *envp[])
+char	*find_in_envp(char *name, char *envp[])
 {
 	int	i;
 	int	len;

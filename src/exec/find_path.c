@@ -98,7 +98,7 @@ static char	*process_path_search(char **allpath, char **s_cmd_arg)
  * @return A dynamically allocated string containing the full path to the
  *         executable if found. Returns `NULL` if not found or on error.
  */
-static char	*search_env(char **s_cmd_arg, char *path_list_str)
+static char	*find_command_in_path(char **s_cmd_arg, char *path_list_str)
 {
 	char	**allpath_arr;
 	char	*exec_res;
@@ -163,8 +163,8 @@ char	*find_path(char *cmd, char *envp[])
 	{
 		if (!envp)
 			return (ft_free_all(s_cmd_arr), NULL);
-		path_env_val = get_env("PATH", envp);
-		result_path = search_env(s_cmd_arr, path_env_val);
+		path_env_val = find_in_envp("PATH", envp);
+		result_path = find_command_in_path(s_cmd_arr, path_env_val);
 		return (result_path);
 	}
 }

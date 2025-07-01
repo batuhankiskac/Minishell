@@ -92,7 +92,7 @@ static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
  *                read end of the pipe from the previous command.
  * @return Returns 0 on success, `ERROR` on failure (e.g., fork or pipe error).
  */
-static int	handle_pipe_iteration(t_shell *shell, t_command *cmd, int *prev_fd)
+static int	fork_pipeline_command(t_shell *shell, t_command *cmd, int *prev_fd)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -139,7 +139,7 @@ int	execute_pipe(t_shell *shell)
 	cmd = shell->command;
 	while (cmd)
 	{
-		ret = handle_pipe_iteration(shell, cmd, &prev_fd);
+		ret = fork_pipeline_command(shell, cmd, &prev_fd);
 		if (ret == ERROR)
 		{
 			if (prev_fd != -1)
