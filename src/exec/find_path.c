@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:00:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 18:14:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,17 +95,17 @@ static char	*process_path_search(char **all_path, char *cmd_name)
  */
 static char	*find_command_in_path(char *cmd_name, char *path_list_str)
 {
-	char	**allpath_arr;
+	char	**all_path_arr;
 	char	*exec_res;
 
-	allpath_arr = ft_split(path_list_str, ':');
-	if (!allpath_arr)
+	all_path_arr = ft_split(path_list_str, ':');
+	if (!all_path_arr)
 	{
 		if (access(cmd_name, F_OK | X_OK) == 0)
 			return (ft_strdup(cmd_name));
 		return (NULL);
 	}
-	exec_res = process_path_search(allpath_arr, cmd_name);
+	exec_res = process_path_search(all_path_arr, cmd_name);
 	return (exec_res);
 }
 
