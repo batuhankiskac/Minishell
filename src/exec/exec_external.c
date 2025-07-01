@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 22:02:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:12:32 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param shell A pointer to the shell structure containing the command.
  * @param env_array An array of environment variables for the child process.
  */
-static void	find_and_exec_command(t_shell *shell, char **env_array)
+void	find_and_exec_command(t_shell *shell, char **env_array)
 {
 	char	*path;
 
@@ -83,7 +83,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
  * @param env_array An array of environment variables for cleanup if needed.
  * @return 0 if the command is valid, or an error code if validation fails.
  */
-static int	validate_command(t_shell *shell, char **env_array)
+int	validate_command(t_shell *shell, char **env_array)
 {
 	if (!shell->command || !shell->command->cmd || !shell->command->args)
 	{
@@ -135,4 +135,31 @@ int	exec_external(t_shell *shell)
 		waitpid(pid, &status, 0);
 	ft_free_all(env_array);
 	return (WEXITSTATUS(status));
+}
+
+/**
+ * @brief Executes an external command directly without forking.
+ *
+ * This function is used by pipeline child processes to execute external
+ * commands directly using execve without creating another child process.
+ * It validates the command, converts environment, finds the path,
+ * and calls execve.
+ * Memory cleanup is handled before exit on error cases.
+ *
+ * @param shell A pointer to the shell structure containing the command.
+ * @param env_array An array of environment variables for the process.
+ */
+void	exec_external_direct(t_shell *shell, char **env_array)
+{
+	int	validation_result;
+
+	validation_result = validate_command(shell, env_array);
+	if (validation_result != 0)
+	{
+		ft_free_all(env_array);
+		exit(validation_result);
+	}
+	find_and_exec_command(shell, env_array);
+	ft_free_all(env_array);
+	exit(EXIT_FAILURE);
 }

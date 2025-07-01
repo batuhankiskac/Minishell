@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:11:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,20 +73,24 @@ int	build_command_list(t_shell *shell)
 	t_token		*t;
 	t_command	*head;
 	t_command	*tail;
+	t_command	*new_command;
 
 	head = NULL;
 	tail = NULL;
 	t = shell->tokens;
 	while (t)
 	{
+		new_command = new_cmd();
+		if (!new_command)
+			return (clear_command_list(head), 0);
 		if (!head)
 		{
-			head = new_cmd();
+			head = new_command;
 			tail = head;
 		}
 		else
 		{
-			tail->next = new_cmd();
+			tail->next = new_command;
 			tail = tail->next;
 		}
 		t = skip_pipe_tokens(t);
