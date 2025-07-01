@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   loop_errors.c                                      :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 14:47:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 18:21:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,18 @@
  */
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell)
 {
-	clear_command_list(shell->command);
-	shell->command = NULL;
-	clear_token_list(&shell->tokens);
-	shell->tokens = NULL;
-	free(raw_line_ptr);
+	if (!shell)
+		return ;
+	if (shell->command)
+	{
+		clear_command_list(shell->command);
+		shell->command = NULL;
+	}
+	if (shell->tokens)
+	{
+		clear_token_list(&shell->tokens);
+		shell->tokens = NULL;
+	}
+	if (raw_line_ptr)
+		free(raw_line_ptr);
 }
