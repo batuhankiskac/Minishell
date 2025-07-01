@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:10:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:39:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,7 @@ void	sort_env(char **env_array);
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell);
 int		exec_external(t_shell *shell);
-int		validate_command(t_shell *shell, char **env_array);
 void	exec_external_direct(t_shell *shell, char **env_array);
-void	find_and_exec_command(t_shell *shell, char **env_array);
 int		open_file(char *filename, int flags, int mode, char *type);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);

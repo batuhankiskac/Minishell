@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:12:32 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:39:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
  * @param shell A pointer to the shell structure containing the command.
  * @param env_array An array of environment variables for the child process.
  */
-void	find_and_exec_command(t_shell *shell, char **env_array)
+static void	find_and_exec_command(t_shell *shell, char **env_array)
 {
 	char	*path;
 
@@ -83,7 +83,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
  * @param env_array An array of environment variables for cleanup if needed.
  * @return 0 if the command is valid, or an error code if validation fails.
  */
-int	validate_command(t_shell *shell, char **env_array)
+static int	validate_command(t_shell *shell, char **env_array)
 {
 	if (!shell->command || !shell->command->cmd || !shell->command->args)
 	{
