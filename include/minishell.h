@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:39:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/02 23:20:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,10 @@ int		expander(t_shell *shell);
 char	*append_variable(char *res, char *s, int *i, t_shell *shell);
 char	*append_literal(char *res, const char *s, int start, int end);
 char	*expand_string(const char *s, t_env *env, int exit_status);
+char	*expand_text_chunk(char *res, const char *s, int *i);
+char	*handle_single_quote(char *res, const char *s, int *i);
+char	*handle_double_quote(char *res, const char *s, int *i,
+			t_shell *shell_context);
 
 /*
 ** Lexer
