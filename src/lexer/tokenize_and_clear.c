@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:41:18 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 21:33:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/02 21:46:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	tokenize_line(char *line, t_shell *shell)
 			pos++;
 		if (!line[pos])
 			break ;
-
 		result = process_next_token(shell, line, pos);
 		if (result == ERROR)
 			return (ERROR);
