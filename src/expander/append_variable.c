@@ -6,11 +6,44 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 22:09:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/02 23:25:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief      Handles brace variable expansion ${VAR}.
+ * @param s    The source string.
+ * @param i    A pointer to the current position, which will be advanced.
+ * @param env  The environment list to search for the variable.
+ * @return     A dynamically allocated string with the variable's value,
+ * an empty string if not found, or NULL on allocation failure.
+ */
+static char	*handle_brace_variable_expansion(char *s, int *i, t_env *env)
+{
+	char	*key;
+	char	*value;
+	int		j;
+
+	j = *i + 2;
+	while (s[j] && s[j] != '}' && is_env_char(s[j]))
+		j++;
+	if (s[j] != '}')
+	{
+		(*i)++;
+		return (ft_strdup("$"));
+	}
+	key = ft_substr(s, *i + 2, j - (*i + 2));
+	if (!key)
+		return (NULL);
+	*i = j + 1;
+	value = get_env_value(key, env);
+	free(key);
+	if (!value)
+		return (ft_strdup(""));
+	return (value);
+}
 
 /**
  * @brief      Reads a variable name after a '$' and returns its expanded value.
@@ -56,6 +89,8 @@ static char	*get_expansion_value(char *s, int *i, t_shell *shell)
 		*i += 2;
 		return (ft_itoa(shell->exit_status));
 	}
+	else if (s[*i + 1] == '{')
+		return (handle_brace_variable_expansion(s, i, shell->env));
 	else if (is_env_char(s[*i + 1]))
 		return (handle_variable_expansion(s, i, shell->env));
 	else
