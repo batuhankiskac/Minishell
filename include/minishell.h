@@ -144,8 +144,7 @@ void	pipe_child_process(t_shell *shell,
 int		expand_on_args(t_command *cmd, t_env *env, int exit_status);
 int		expand_on_redirs(t_command *cmd, t_env *env, int exit_status);
 int		expander(t_shell *shell);
-char	*append_variable(char *res, const char *s,
-			int *i, t_env *env, int exit_status);
+char	*append_variable(char *res, char *s, int *i, t_shell *shell);
 char	*append_literal(char *res, const char *s, int start, int end);
 char	*expand_string(const char *s, t_env *env, int exit_status);
 

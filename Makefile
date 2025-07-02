@@ -37,7 +37,7 @@ SRCS = src/main/main.c \
 	   src/exec/handle_heredoc.c \
 	   src/exec/heredoc_utils.c \
 	   src/expander/expander.c \
-	   src/expander/expander_utils_1.c \
+	   src/expander/append_variable.c \
 	   src/expander/expander_utils_2.c \
 	   src/expander/expand_on_args.c \
 	   src/expander/expand_on_redirs.c \

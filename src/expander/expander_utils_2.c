@@ -90,8 +90,7 @@ static char	*expand_text_chunk(char *res, const char *s, int *i)
 static char	*expand_dollar_chunk(char *res, const char *s, int *i,
 								t_shell *shell_context)
 {
-	return (append_variable(res, s, i, shell_context->env,
-			shell_context->exit_status));
+	return (append_variable(res, (char *)s, i, shell_context));
 }
 
 /**
