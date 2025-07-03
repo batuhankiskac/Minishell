@@ -6,16 +6,22 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:24:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:42:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Frees a command sequence structure and its allocated memory.
+ * @brief Frees the memory allocated for a command sequence (`t_seq`) structure.
  *
- * @param seq A pointer to the command sequence structure to free.
+ * This function safely deallocates the `t_seq` structure and all the
+ * command strings it contains. It first iterates through the `commands` array,
+ * freeing each individual command string. It then frees the `commands` array
+ * itself, and finally, the `t_seq` structure.
+ *
+ * @param seq A pointer to the `t_seq` structure to be freed. If `seq` is NULL,
+ *            the function does nothing.
  */
 void	free_sequence(t_seq *seq)
 {
@@ -34,11 +40,20 @@ void	free_sequence(t_seq *seq)
 }
 
 /**
- * @brief Checks if a character is inside quotes in a string.
+ * @brief Checks if a character at a given position in a string is enclosed
+ *        within single or double quotes.
  *
- * @param str The string to check.
- * @param pos The position in the string.
- * @return 1 if the character is inside quotes, 0 otherwise.
+ * This function iterates through the string up to the specified position `pos`,
+ * keeping track of the quoting state. It correctly handles nested and
+ * alternating
+ * quotes. For example, in `"'hello'"`, the single quotes are inside double
+ * quotes. This is crucial for the parser to avoid splitting commands based on
+ * semicolons that are part of a quoted string literal.
+ *
+ * @param str The input string to check.
+ * @param pos The zero-based index of the character to check.
+ * @return Returns 1 if the character at `pos` is inside any type of quotes,
+ *         and 0 otherwise.
  */
 static int	is_inside_quotes(const char *str, int pos)
 {
@@ -60,11 +75,18 @@ static int	is_inside_quotes(const char *str, int pos)
 }
 
 /**
- * @brief Creates and initializes a command sequence structure.
+ * @brief Allocates and initializes a `t_seq` structure for storing a sequence
+ *        of commands.
  *
- * @param line The input line to analyze.
- * @return A pointer to an initialized command sequence structure,
- * or NULL on failure.
+ * This function first allocates memory for the `t_seq` structure itself. It then
+ * scans the input `line` to count how many separate commands exist, based on
+ * semicolons that are not inside quotes. Finally, it allocates the `commands`
+ * array within the `t_seq` structure to hold the individual command strings.
+ *
+ * @param line The complete command line string containing one or more commands
+ *             separated by semicolons.
+ * @return Returns a pointer to the newly allocated and initialized `t_seq`
+ *         structure. If any memory allocation fails, it returns NULL.
  */
 static t_seq	*create_sequence_structure(const char *line)
 {
@@ -91,11 +113,20 @@ static t_seq	*create_sequence_structure(const char *line)
 }
 
 /**
- * @brief Parses commands from a line and fills the sequence structure.
+ * @brief Parses the input line and populates the `commands` array in the `t_seq`
+ *        structure.
  *
- * @param seq The command sequence structure to fill.
- * @param line The input line to parse.
- * @return 0 on success, ERROR on failure.
+ * This function iterates through the input `line`, identifying command
+ * boundaries
+ * marked by semicolons that are not inside quotes. For each command found, it
+ * extracts the substring and stores it in the `seq->commands` array. The `start`
+ * variable tracks the beginning of the current command being parsed.
+ *
+ * @param seq A pointer to the `t_seq` structure where the parsed commands
+ * 			  will be stored.
+ * @param line The complete command line string to be parsed.
+ * @return Returns 0 on successful parsing. If a memory allocation for a command
+ *         substring fails, it returns `ERROR` (-1).
  */
 static int	parse_commands_from_line(t_seq *seq, const char *line)
 {
@@ -124,10 +155,16 @@ static int	parse_commands_from_line(t_seq *seq, const char *line)
 }
 
 /**
- * @brief Splits a line into multiple commands based on semicolons.
+ * @brief Splits a complete command line into a sequence of individual commands.
  *
- * @param line The input line to split.
- * @return A pointer to a command sequence structure, or NULL on failure.
+ * This is the main entry point for parsing a line that may contain multiple
+ * commands separated by semicolons. It orchestrates the creation of the `t_seq`
+ * structure and the parsing of the command strings.
+ *
+ * @param line The raw command line input from the user.
+ * @return Returns a pointer to a `t_seq` structure containing the parsed
+ *         commands. If memory allocation or parsing fails, it cleans up any
+ *         partially allocated memory and returns NULL.
  */
 t_seq	*split_command_line(const char *line)
 {

@@ -6,16 +6,24 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:19:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:43:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Updates shell line from heredoc content file if it exists.
+ * @brief Reads content from a temporary heredoc file and updates the shell's
+ *        current line.
  *
- * @param shell A pointer to the shell structure
+ * This function is called after a command execution to check for the existence
+ * of a temporary file (`/tmp/minishell_heredoc_content`) that may have been
+ * created by a heredoc redirection. If the file exists, its content is read
+ * into the shell's `line` buffer. This is used to preserve the input for
+ * history.
+ *
+ * @param shell A pointer to the `t_shell` structure, which contains the `line`
+ *              field to be updated.
  */
 static void	update_line(t_shell *shell)
 {
@@ -39,10 +47,22 @@ static void	update_line(t_shell *shell)
 }
 
 /**
- * @brief Handles the parsing phase of command processing.
+ * @brief Executes the core parsing pipeline for a command line.
  *
- * @param shell A pointer to the shell structure
- * @return 0 on success, 1 on failure
+ * This function orchestrates the sequence of parsing stages:
+ * 1. `tokenize_line`: Converts the raw command string into a list of tokens.
+ * 2. `build_command_list`: Groups tokens into command structures.
+ * 3. `parse_commands`: Validates and finalizes command syntax.
+ * 4. `parse_redirections`: Handles I/O redirection operators (`<`, `>` etc.).
+ * 5. `expander`: Performs variable expansion (`$VAR`), tilde expansion (`~`),
+ *    and quote removal.
+ *
+ * If any of these stages fail, the function returns an error, and the shell
+ * will report a syntax error.
+ *
+ * @param shell A pointer to the `t_shell` structure containing the line to parse
+ *              and where the resulting command structures will be stored.
+ * @return Returns 0 on success, or 1 if any parsing stage fails.
  */
 static int	handle_parsing(t_shell *shell)
 {
@@ -56,11 +76,19 @@ static int	handle_parsing(t_shell *shell)
 }
 
 /**
- * @brief Handles multiple commands separated by semicolons.
+ * @brief Processes a line containing multiple commands separated by semicolons.
  *
- * @param raw_line_ptr A pointer to the raw line string entered by the user.
- * @param shell A pointer to the t_shell structure containing the shell state.
- * @return Returns 0 on success, or 1 if an error occurs during processing.
+ * This function takes a raw input line, splits it into individual command
+ * strings using `split_command_line`, and then processes each command
+ * sequentially by calling `handle_command_string`. It ensures that all
+ * commands in the sequence are executed, regardless of the success or failure
+ * of previous ones.
+ *
+ * @param raw_line_ptr The raw input string from the user. This function takes
+ *                     ownership of the pointer and frees it.
+ * @param shell A pointer to the `t_shell` structure.
+ * @return Returns 0 if all commands were processed (even if they failed), or 1
+ *         if the initial command splitting fails.
  */
 int	handle_command_sequence(char *raw_line_ptr, t_shell *shell)
 {
@@ -84,16 +112,18 @@ int	handle_command_sequence(char *raw_line_ptr, t_shell *shell)
 }
 
 /**
- * @brief Handles a single line of input from the user
- * (original implementation).
+ * @brief Processes a single command line (which may contain pipes
+ * and redirections).
  *
- * This function takes a raw line of input, tokenizes it, builds a command list,
- * parses commands and redirections, and executes the commands. It handles errors
- * during parsing and execution, cleaning up resources as necessary.
+ * This is the main handler for a line that does not contain semicolons. It
+ * duplicates the raw input, runs the full parsing and execution pipeline, and
+ * then cleans up. If parsing fails, it prints a syntax error. Otherwise, it
+ * executes the command, updates the command history, and performs cleanup.
  *
- * @param raw_line_ptr A pointer to the raw line string entered by the user.
- * @param shell A pointer to the `t_shell` structure containing the shell state.
- * @return Returns 0 on success, or 1 if an error occurs during processing.
+ * @param raw_line_ptr The raw input string from the user. This function takes
+ *                     ownership of the pointer and frees it.
+ * @param shell A pointer to the `t_shell` structure.
+ * @return Returns 0 on success, 1 on failure (e.g., syntax error).
  */
 int	handle_single_command(char *raw_line_ptr, t_shell *shell)
 {
@@ -119,11 +149,18 @@ int	handle_single_command(char *raw_line_ptr, t_shell *shell)
 }
 
 /**
- * @brief Handles a single command string (without raw_line_ptr management).
+ * @brief A variant of `handle_single_command` that takes a command string
+ *        directly.
+ *
+ * This function is used by `handle_command_sequence` to process individual
+ * commands from a semicolon-separated list. It performs the same parsing and
+ * execution logic as `handle_single_command` but does not manage the
+ * `raw_line_ptr`, as the caller (`handle_command_sequence`) is responsible for
+ * managing the memory of the command sequence.
  *
  * @param line_content The command string to process.
- * @param shell A pointer to the t_shell structure containing the shell state.
- * @return Returns 0 on success, or 1 if an error occurs during processing.
+ * @param shell A pointer to the `t_shell` structure.
+ * @return Returns 0 on success, 1 on failure.
  */
 int	handle_command_string(char *line_content, t_shell *shell)
 {
