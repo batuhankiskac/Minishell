@@ -63,7 +63,7 @@ Bu rapor, Minishell projesinin çeşitli uç durumlarla test edilmesi sonucunda 
 - **Boş komut (` `)**: Başarılı. Kabuk çıktı vermeden `exit` yaptı.
 - **Sadece boşluklar (`   `)**: Başarılı. Kabuk çıktı vermeden `exit` yaptı.
 - **Çoklu boşluklar (`echo    hello`)**: Başarılı. `echo` komutu tek boşlukla çıktı verdi.
-- **Tab karakterleri (`echo\t\t\thello`)**: Başarılı. `echo` komutu tek boşlukla çıktı verdi.
+- **Tab karakterleri (`echo			hello`)**: Başarılı. `echo` komutu tek boşlukla çıktı verdi.
 - **Yorumlar (`echo hello # this is a comment`)**: Başarılı. Yorum kısmı yok sayıldı.
 - **Ardışık pipe'lar (`ls ||| cat`)**: Başarılı. Kabuk hata mesajı vermeden `exit` yaptı. Bu durum, kabuğun sözdizimi hatalarını sessizce ele aldığını gösterir.
 - **Ardışık yönlendirmeler (`echo hello >>> file.txt`)**: Başarılı. Kabuk hata mesajı vermeden `exit` yaptı. Bu durum, kabuğun sözdizimi hatalarını sessizce ele aldığını gösterir.
@@ -88,43 +88,99 @@ Bu rapor, Minishell projesinin çeşitli uç durumlarla test edilmesi sonucunda 
 - **Açılmamış tek tırnak (`echo 'hello`)**: Başarısız. Minishell sessizce çıktı. Hata mesajı yok.
   - **Valgrind Sonucu:** Bellek sızıntısı yok.
 
+## Yapılan Yeni Testler ve Sonuçları
+
+### 1. Bilinmeyen Komut Testi (`asdf`)
+
+- **Komut:** `asdf`
+- **Beklenen Davranış:** `minishell: asdf: command not found` hata mesajı ve 127 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: asdf: command not found` hata mesajı ve 127 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI** (Önceki rapordaki sorun çözülmüş).
+
+### 2. Ardışık Pipe Testi (`ls ||| cat`)
+
+- **Komut:** `ls ||| cat`
+- **Beklenen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI** (Önceki rapordaki sorun çözülmüş).
+
+### 3. Açılmamış Çift Tırnak Testi (`echo "hello`)
+
+- **Komut:** `echo "hello`
+- **Beklenen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI** (Önceki rapordaki sorun çözülmüş).
+
+### 4. Pipe Sonrası Boş Komut Testi (`ls | `)
+
+- **Komut:** `ls | `
+- **Beklenen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: syntax error` hata mesajı ve 2 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI** (Önceki rapordaki sorun çözülmüş).
+
+### 5. Geçersiz Dosya İsimleri Testi (`cat < non/existent/file`)
+
+- **Komut:** `cat < non/existent/file`
+- **Beklenen Davranış:** `minishell: open input file non/existent/file: No such file or directory` ve `minishell: redirection setup failed` hata mesajları ve 1 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: open input file non/existent/file: No such file or directory` ve `minishell: redirection setup failed` hata mesajları ve 1 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI** (Önceki rapordaki sorun çözülmüş).
+
+### 6. Karmaşık Pipe ve Yönlendirme Testi (`echo "hello" | cat -e | grep "hello" > output.txt`)
+
+- **Komut:** `echo "hello" | cat -e | grep "hello" > output.txt`
+- **Beklenen Davranış:** `output.txt` dosyasına `hello$` yazılması ve 0 çıkış kodu.
+- **Gerçekleşen Davranış:** `output.txt` dosyasına `hello$` yazıldı ve 0 çıkış kodu.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARILI**.
+
+### 7. Ortam Değişkeni Genişletme Testi (`export VAR1="Hello"; export VAR2="$VAR1 World"; unset VAR1; echo $VAR2`)
+
+- **Komut:** `export VAR1="Hello"; export VAR2="$VAR1 World"; unset VAR1; echo $VAR2`
+- **Beklenen Davranış:** `Hello World` çıktısı ve 0 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: export: `VAR1;`: not a valid identifier` hata mesajı ve 1 çıkış kodu. `echo $VAR2` komutunun çıktısı ` World`.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARISIZ** (Ayrıntılar için `minishell_error_report_env_expansion.md` dosyasına bakın).
+
+### 8. Karmaşık Heredoc ve Komut Zincirleme Testi (`cat << EOF | grep "line" > file1.txt && cat file1.txt >> file2.txt`)
+
+- **Komut:** `cat << EOF | grep "line" > file1.txt && cat file1.txt >> file2.txt`
+- **Beklenen Davranış:** `file1.txt` ve `file2.txt` dosyalarının doğru içerikle oluşturulması ve 0 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')` ve `grep: &&: No such file or directory` gibi hatalar. Çıkış kodu 2.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARISIZ** (Ayrıntılar için `minishell_error_report_heredoc_chaining.md` dosyasına bakın).
+
+### 9. Alt Kabuk ve Komut Gruplama Testi (`(echo "hello world" | sed 's/world/there/') > subshell_output.txt`)
+
+- **Komut:** `(echo "hello world" | sed 's/world/there/') > subshell_output.txt`
+- **Beklenen Davranış:** `subshell_output.txt` dosyasına `hello there` yazılması ve 0 çıkış kodu.
+- **Gerçekleşen Davranış:** `minishell: (echo: command not found` ve `sed: -e expression #1, char 15: unknown option to `s'` gibi hatalar. Çıkış kodu 1.
+- **Valgrind Sonucu:** Bellek sızıntısı yok (still reachable bloklar readline kütüphanesinden kaynaklanmaktadır ve normaldir).
+- **Durum:** **BAŞARISIZ** (Ayrıntılar için `minishell_error_report_subshell.md` dosyasına bakın).
+
+### 10. Sinyal İşleme Testi (Manuel Test Gerekir)
+
+- **Komut:** `minishell`'i etkileşimli olarak çalıştırın ve `sleep 5` gibi uzun süren bir komut girin. Komut çalışırken `Ctrl+C`'ye basın.
+- **Beklenen Davranış:** `sleep` komutunun kesilmesi ve minishell'in çökmeden komut istemine geri dönmesi. `echo $?` komutu 130 (128 + SIGINT sinyal numarası) çıktısını vermelidir.
+- **Gerçekleşen Davranış:** Manuel test gerektirir.
+- **Durum:** **MANUEL TEST GEREKLİ**.
+
 ## Potansiyel İyileştirmeler ve Çözüm Talimatları
 
-Genel olarak, Minishell projesi bellek yönetimi açısından sağlam görünmektedir ve temel işlevleri doğru bir şekilde yerine getirmektedir. Ancak, bazı sözdizimi hataları durumunda kullanıcıya daha bilgilendirici geri bildirim sağlamak için iyileştirmeler yapılabilir.
+Genel olarak, Minishell projesi bellek yönetimi açısından sağlam görünmektedir ve temel işlevleri doğru bir şekilde yerine getirmektedir. Önceki raporda belirtilen sözdizimi ve dosya erişim hatalarındaki "sessiz çıkış" sorunları giderilmiştir. Artık minishell, bu tür durumlarda anlamlı hata mesajları ve uygun çıkış kodları sağlamaktadır.
 
-### Sorun 1: Sessiz Sözdizimi Hataları ve Yönlendirme Hataları
+### Kalan Potansiyel İyileştirmeler:
 
-**Tanım:** Minishell, ardışık pipe'lar (`|||`), ardışık yönlendirmeler (`>>>`), geçersiz dosya isimleri, var olmayan dizinlere yönlendirme veya izin reddedilen dosyalara yazma, açılmamış tırnak işaretleri ve pipe sonrası boş komut gibi bazı sözdizimi ve dosya erişim hatalarında herhangi bir hata mesajı basmadan sessizce `exit` yapmaktadır. Bu durum, kullanıcının hatanın nedenini anlamasını zorlaştırabilir.
-
-**Kök Neden:** Kabuğun sözdizimi ayrıştırma ve hata işleme mekanizmalarının bu tür durumları açıkça raporlamaması ve dosya erişim hatalarını yakalamaması.
-
-**Çözüm Talimatları:**
-
-1.  **Ayrıştırma Aşaması İyileştirmesi:** Lexer veya parser aşamasında, ardışık operatörler veya geçersiz dosya isimleri gibi sözdizimi kurallarını ihlal eden durumları tespit edin. Ayrıca, açılmamış tırnak işaretleri ve pipe sonrası boş komut gibi durumlarda da hata tespiti yapın.
-2.  **Dosya Erişimi Hata Kontrolü:** Yönlendirme işlemleri sırasında (örneğin `open`, `access` sistem çağrıları sonrası) dosya oluşturma veya yazma izinleri gibi hataları kontrol edin.
-3.  **Hata Mesajı Üretimi:** Tespit edilen her sözdizimi veya dosya erişim hatası için, standart hata çıktısına (stderr) anlamlı bir hata mesajı yazdırın. Örneğin:
-    - `minishell: syntax error near unexpected token '||'`
-    - `minishell: syntax error near unexpected token '>>>'`
-    - `minishell: no such file or directory: non/existent/file`
-    - `minishell: /nonexistent_dir/output.txt: No such file or directory`
-    - `minishell: /root/output.txt: Permission denied`
-    - `minishell: unexpected EOF while looking for matching '"'`
-    - `minishell: syntax error near unexpected token '|'`
-4.  **Çıkış Kodu:** Sözdizimi veya dosya erişim hatası durumunda kabuğun sıfır olmayan bir çıkış koduyla (`exit 2` veya uygun POSIX hata kodu gibi) sonlanmasını sağlayın.
-
-### Sorun 2: Bilinmeyen Komutlarda Sessiz Çıkış
-
-**Tanım:** Minishell, bulunamayan komutlar için (örneğin `asdf`) herhangi bir hata mesajı basmadan sessizce `exit` yapmaktadır. Standart kabuklar bu durumda "command not found" gibi bir mesaj basar.
-
-**Kök Neden:** Komut yürütme aşamasında, `PATH` içinde komut bulunamadığında uygun bir hata mesajı basılmaması.
-
-**Çözüm Talimatları:**
-
-1.  **Komut Bulunamadı Kontrolü:** `execve` çağrısı başarısız olduğunda (genellikle `ENOENT` hatası ile), komutun bulunamadığını belirten bir hata mesajı yazdırın.
-2.  **Hata Mesajı Üretimi:** Standart hata çıktısına (stderr) anlamlı bir hata mesajı yazdırın. Örneğin:
-    - `minishell: asdf: command not found`
-3.  **Çıkış Kodu:** Komut bulunamadığında kabuğun sıfır olmayan bir çıkış koduyla (`exit 127` gibi) sonlanmasını sağlayın.
+- **Ortam Değişkeni Genişletme Hatası:** `minishell_error_report_env_expansion.md` dosyasında detaylandırılan ortam değişkeni genişletme sorunu giderilmelidir.
+- **Karmaşık Heredoc ve Komut Zincirleme Hatası:** `minishell_error_report_heredoc_chaining.md` dosyasında detaylandırılan heredoc ve komut zincirleme sorunu giderilmelidir.
+- **Alt Kabuk ve Komut Gruplama Hatası:** `minishell_error_report_subshell.md` dosyasında detaylandırılan alt kabuk ve komut gruplama sorunu giderilmelidir.
+- **Daha Detaylı Hata Mesajları:** Bazı durumlarda (örneğin `ls ||| cat` gibi ardışık operatörlerde), `minishell: syntax error` yerine daha spesifik bir hata mesajı (`minishell: syntax error near unexpected token '|||'`) sağlanabilir. Bu, kullanıcının hatayı daha kolay anlamasına yardımcı olacaktır.
+- **Açılmamış Tek Tırnak (`echo 'hello`)**: Bu durum hala `minishell: syntax error` mesajı ile sonuçlanmaktadır. Daha spesifik bir hata mesajı (`minishell: unexpected EOF while looking for matching '''`) sağlanabilir.
 
 ## Sonuç
 
-Minishell projesi, bellek yönetimi açısından sağlam görünmektedir. Ancak, kullanıcı deneyimini artırmak ve hata ayıklamayı kolaylaştırmak için sözdizimi hataları, dosya erişim hataları ve bilinmeyen komutlar için daha açık hata mesajları ve uygun çıkış kodları sağlamak önemlidir. Bu iyileştirmeler, kabuğun daha kullanıcı dostu ve standartlara uygun olmasını sağlayacaktır.
+Minishell projesi, yapılan iyileştirmelerle birlikte daha sağlam ve kullanıcı dostu hale gelmiştir. Bellek yönetimi açısından herhangi bir kritik sorun bulunmamaktadır. Kalan potansiyel iyileştirmeler, genel kullanıcı deneyimini daha da artıracaktır.
