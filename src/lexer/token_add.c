@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 10:09:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 static t_token_type	determine_token_type(const char *word, int len)
 {
 	if (len == 1 && word[0] == '|')
+		return (TOKEN_PIPE);
+	else if (len == 1 && word[0] == ';')
 		return (TOKEN_PIPE);
 	else if (len == 1 && word[0] == '<')
 		return (TOKEN_REDIR_IN);

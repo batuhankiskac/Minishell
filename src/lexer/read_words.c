@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 23:20:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 10:09:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ int	read_words(int pos, const char *str, t_token **tokens)
 	char	*word;
 
 	start = pos;
-	while (str[pos] && !ft_isspace(str[pos]) && !check_token(str[pos]))
+	while (str[pos] && !ft_isspace(str[pos]))
 	{
-		if (str[pos] == '\'' || str[pos] == '"')
+		if (str[pos] == '\'' || str[pos] == '\"')
 		{
 			quote = str[pos++];
 			while (str[pos] && str[pos] != quote)
@@ -42,6 +42,8 @@ int	read_words(int pos, const char *str, t_token **tokens)
 				return (ERROR);
 			pos++;
 		}
+		else if (check_token(str[pos]))
+			break ;
 		else
 			pos++;
 	}

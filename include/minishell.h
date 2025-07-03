@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 23:20:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:09:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,13 @@ typedef struct s_command
 	t_redir				*redir;
 	struct s_command	*next;
 }						t_command;
+
+typedef struct s_seq
+{
+	char	**commands;
+	int		count;
+	int		current;
+}				t_seq;
 
 typedef struct s_shell
 {
@@ -166,7 +173,16 @@ void	clear_token_list(t_token **tokens_head);
 /*
 ** Main
 */
+t_seq	*split_command_line(const char *line);
 int		process_line(char *raw_line_ptr, t_shell *shell);
+int		process_line_original(char *raw_line_ptr, t_shell *shell);
+int		process_line_single(char *line_content, t_shell *shell);
+int		process_command_sequence(char *raw_line_ptr, t_shell *shell);
+void	free_command_sequence(t_seq *seq);
+
+/*
+** Cleanup
+*/
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 
 /*
