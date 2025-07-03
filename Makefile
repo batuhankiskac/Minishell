@@ -12,7 +12,6 @@ LDLIBS = -lreadline
 
 SRCS = src/main/main.c \
 	   src/main/process_line.c \
-	   src/main/command_sequence.c \
 	   src/main/cleanup.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \

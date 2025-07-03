@@ -6,39 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:42:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:59:13 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Determines whether the input line contains single or multiple commands
- *        and routes it to the appropriate handler.
- *
- * This function acts as a dispatcher. It inspects the raw input string for the
- * presence of semicolons (';'). If a semicolon is found, it assumes the line
- * contains a sequence of commands and passes the line to
- * `handle_command_sequence`.
- * Otherwise, it treats the line as a single command and passes it to
- * `handle_single_command`.
- *
- * @param raw_line_ptr A pointer to the null-terminated string containing the raw
- *                     input from the user. The function will duplicate this
- * 					   string for processing.
- * @param shell A pointer to the main `t_shell` structure, which holds the
- * 				shell's state, including environment variables and exit status.
- * @return Returns the exit status of the executed command(s). A return value
- * 		   of 0 typically indicates success, while a non-zero
- * 		   value indicates an error.
- */
-int	process_line(char *raw_line_ptr, t_shell *shell)
-{
-	if (ft_strchr(raw_line_ptr, ';'))
-		return (handle_command_sequence(raw_line_ptr, shell));
-	else
-		return (handle_single_command(raw_line_ptr, shell));
-}
 
 /**
  * @brief The main interactive loop of the shell.
