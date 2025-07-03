@@ -6,12 +6,44 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 14:14:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:19:13 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Processes a single line of input from the user (new wrapper).
+ *
+ * This function checks if the input contains semicolons and routes to
+ * appropriate processing function.
+ *
+ * @param raw_line_ptr A pointer to the raw line string entered by the user.
+ * @param shell A pointer to the `t_shell` structure containing the shell state.
+ * @return Returns 0 on success, or 1 if an error occurs during processing.
+ */
+int	process_line(char *raw_line_ptr, t_shell *shell)
+{
+	if (ft_strchr(raw_line_ptr, ';'))
+		return (handle_command_sequence(raw_line_ptr, shell));
+	else
+		return (handle_single_command(raw_line_ptr, shell));
+}
+
+
+
+/**
+ * @brief The main function of the minishell program.
+ *
+ * This function initializes the shell environment, sets up signal handling,
+ * and enters the main input processing loop. It cleans up resources before
+ * exiting and returns the exit status of the shell.
+ *
+ * @param argc The number of command-line arguments (not used).
+ * @param argv The command-line arguments (not used).
+ * @param envp The environment variables passed to the shell.
+ * @return The exit status of the shell.
+ */
 /**
  * @brief Main loop for processing user input in the shell.
  *

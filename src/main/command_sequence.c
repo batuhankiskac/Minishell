@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 10:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:08:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:24:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  *
  * @param seq A pointer to the command sequence structure to free.
  */
-void	free_command_sequence(t_seq *seq)
+void	free_sequence(t_seq *seq)
 {
 	int	i;
 
@@ -60,16 +60,21 @@ static int	is_inside_quotes(const char *str, int pos)
 }
 
 /**
- * @brief Counts the number of semicolons that are not inside quotes.
+ * @brief Creates and initializes a command sequence structure.
  *
  * @param line The input line to analyze.
- * @return The number of command segments (semicolons + 1).
+ * @return A pointer to an initialized command sequence structure,
+ * or NULL on failure.
  */
-static int	count_command_segments(const char *line)
+static t_seq	*create_sequence_structure(const char *line)
 {
-	int	i;
-	int	count;
+	t_seq	*seq;
+	int		i;
+	int		count;
 
+	seq = malloc(sizeof(t_seq));
+	if (!seq)
+		return (NULL);
 	i = -1;
 	count = 1;
 	while (line[++i])
@@ -77,7 +82,45 @@ static int	count_command_segments(const char *line)
 		if (line[i] == ';' && !is_inside_quotes(line, i))
 			count++;
 	}
-	return (count);
+	seq->count = count;
+	seq->current = 0;
+	seq->commands = malloc(sizeof(char *) * seq->count);
+	if (!seq->commands)
+		return (free(seq), NULL);
+	return (seq);
+}
+
+/**
+ * @brief Parses commands from a line and fills the sequence structure.
+ *
+ * @param seq The command sequence structure to fill.
+ * @param line The input line to parse.
+ * @return 0 on success, ERROR on failure.
+ */
+static int	parse_commands_from_line(t_seq *seq, const char *line)
+{
+	int	i;
+	int	start;
+	int	cmd_idx;
+
+	i = -1;
+	start = 0;
+	cmd_idx = 0;
+	while (line[++i])
+	{
+		if (line[i] == ';' && !is_inside_quotes(line, i))
+		{
+			seq->commands[cmd_idx] = ft_substr(line, start, i - start);
+			if (!seq->commands[cmd_idx])
+				return (-1);
+			cmd_idx++;
+			start = i + 1;
+		}
+	}
+	seq->commands[cmd_idx] = ft_substr(line, start, i - start);
+	if (!seq->commands[cmd_idx])
+		return (ERROR);
+	return (0);
 }
 
 /**
@@ -89,35 +132,11 @@ static int	count_command_segments(const char *line)
 t_seq	*split_command_line(const char *line)
 {
 	t_seq	*seq;
-	int					i;
-	int					start;
-	int					cmd_idx;
 
-	seq = malloc(sizeof(t_seq));
+	seq = create_sequence_structure(line);
 	if (!seq)
 		return (NULL);
-	seq->count = count_command_segments(line);
-	seq->current = 0;
-	seq->commands = malloc(sizeof(char *) * seq->count);
-	if (!seq->commands)
-		return (free(seq), NULL);
-	i = 0;
-	start = 0;
-	cmd_idx = 0;
-	while (line[i])
-	{
-		if (line[i] == ';' && !is_inside_quotes(line, i))
-		{
-			seq->commands[cmd_idx] = ft_substr(line, start, i - start);
-			if (!seq->commands[cmd_idx])
-				return (free_command_sequence(seq), NULL);
-			cmd_idx++;
-			start = i + 1;
-		}
-		i++;
-	}
-	seq->commands[cmd_idx] = ft_substr(line, start, i - start);
-	if (!seq->commands[cmd_idx])
-		return (free_command_sequence(seq), NULL);
+	if (parse_commands_from_line(seq, line) == ERROR)
+		return (free_sequence(seq), NULL);
 	return (seq);
 }

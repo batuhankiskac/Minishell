@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:08:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:19:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,36 +56,35 @@ static int	handle_parsing(t_shell *shell)
 }
 
 /**
- * @brief Processes multiple commands separated by semicolons.
+ * @brief Handles multiple commands separated by semicolons.
  *
  * @param raw_line_ptr A pointer to the raw line string entered by the user.
  * @param shell A pointer to the t_shell structure containing the shell state.
  * @return Returns 0 on success, or 1 if an error occurs during processing.
  */
-int	process_command_sequence(char *raw_line_ptr, t_shell *shell)
+int	handle_command_sequence(char *raw_line_ptr, t_shell *shell)
 {
 	t_seq	*seq;
-	int			i;
-	int			result;
+	int		i;
+	int		result;
 
 	seq = split_command_line(raw_line_ptr);
 	if (!seq)
 		return (free(raw_line_ptr), 1);
 	result = 0;
-	i = 0;
-	while (i < seq->count)
+	i = -1;
+	while (++i < seq->count)
 	{
-		if (process_line_single(seq->commands[i], shell))
+		if (handle_command_string(seq->commands[i], shell))
 			result = 1;
-		i++;
 	}
-	free_command_sequence(seq);
+	free_sequence(seq);
 	free(raw_line_ptr);
 	return (result);
 }
 
 /**
- * @brief Processes a single line of input from the user
+ * @brief Handles a single line of input from the user
  * (original implementation).
  *
  * This function takes a raw line of input, tokenizes it, builds a command list,
@@ -96,7 +95,7 @@ int	process_command_sequence(char *raw_line_ptr, t_shell *shell)
  * @param shell A pointer to the `t_shell` structure containing the shell state.
  * @return Returns 0 on success, or 1 if an error occurs during processing.
  */
-int	process_line_original(char *raw_line_ptr, t_shell *shell)
+int	handle_single_command(char *raw_line_ptr, t_shell *shell)
 {
 	shell->heredoc_eof = 0;
 	if (shell->line)
@@ -120,13 +119,13 @@ int	process_line_original(char *raw_line_ptr, t_shell *shell)
 }
 
 /**
- * @brief Processes a single command string (without raw_line_ptr management).
+ * @brief Handles a single command string (without raw_line_ptr management).
  *
  * @param line_content The command string to process.
  * @param shell A pointer to the t_shell structure containing the shell state.
  * @return Returns 0 on success, or 1 if an error occurs during processing.
  */
-int	process_line_single(char *line_content, t_shell *shell)
+int	handle_command_string(char *line_content, t_shell *shell)
 {
 	shell->heredoc_eof = 0;
 	if (shell->line)
@@ -147,22 +146,4 @@ int	process_line_single(char *line_content, t_shell *shell)
 		add_history(shell->line);
 	cleanup_iteration_resources(NULL, shell);
 	return (0);
-}
-
-/**
- * @brief Processes a single line of input from the user (new wrapper).
- *
- * This function checks if the input contains semicolons and routes to
- * appropriate processing function.
- *
- * @param raw_line_ptr A pointer to the raw line string entered by the user.
- * @param shell A pointer to the `t_shell` structure containing the shell state.
- * @return Returns 0 on success, or 1 if an error occurs during processing.
- */
-int	process_line(char *raw_line_ptr, t_shell *shell)
-{
-	if (ft_strchr(raw_line_ptr, ';'))
-		return (process_command_sequence(raw_line_ptr, shell));
-	else
-		return (process_line_original(raw_line_ptr, shell));
 }
