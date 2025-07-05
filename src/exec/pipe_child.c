@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:17:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/05 12:09:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,14 @@ static int	init_pipe_write_fd(t_command *cmd, int pipe_fd[2])
  *                previous command in the pipeline. A value of -1 indicates
  *                no input pipe (e.g., first command).
  */
-static void	handle_input_pipe(int prev_fd)
+static void	handle_input_pipe(int prev_fd, t_shell *shell)
 {
 	if (prev_fd != -1)
 	{
 		if (dup2(prev_fd, STDIN_FILENO) == -1)
 		{
 			perror("minishell: dup2 prev_fd");
+			cleanup_child_process(shell, NULL);
 			exit(EXIT_FAILURE);
 		}
 		close(prev_fd);
@@ -76,12 +77,15 @@ static void	handle_input_pipe(int prev_fd)
  *                      no output pipe (e.g., last command, or output is to
  *                      a file/terminal).
  */
-static void	handle_output_pipe(int pipe_write_fd)
+static void	handle_output_pipe(int pipe_write_fd, t_shell *shell)
 {
 	if (pipe_write_fd != -1)
 	{
 		if (dup_fd(pipe_write_fd, STDOUT_FILENO, "pipe") == ERROR)
+		{
+			cleanup_child_process(shell, NULL);
 			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -112,22 +116,28 @@ static void	execute_child_cmd(t_shell *shell)
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-		exit_status = EXIT_FAILURE;
+	{
+		cleanup_child_process(shell, NULL);
+		exit(EXIT_FAILURE);
+	}
 	else if (is_builtin(shell->command->cmd))
 		exit_status = exec_builtin(shell);
 	else
 	{
 		env_array = env_list_to_array(shell->env);
 		if (!env_array)
-			exit_status = EXIT_FAILURE;
+		{
+			cleanup_child_process(shell, NULL);
+			exit(EXIT_FAILURE);
+		}
 		else
 		{
 			exec_external_direct(shell, env_array);
-			exit_status = EXIT_FAILURE;
+			cleanup_child_process(shell, env_array);
+			exit(EXIT_FAILURE);
 		}
 	}
-	clear_command_list(shell->command);
-	clear_token_list(&shell->tokens);
+	cleanup_child_process(shell, NULL);
 	exit(exit_status);
 }
 
@@ -166,7 +176,7 @@ void	pipe_child_process(t_shell *shell,
 
 	shell->command = cmd;
 	pipe_write_fd = init_pipe_write_fd(cmd, pipe_fd);
-	handle_input_pipe(prev_fd);
-	handle_output_pipe(pipe_write_fd);
+	handle_input_pipe(prev_fd, shell);
+	handle_output_pipe(pipe_write_fd, shell);
 	execute_child_cmd(shell);
 }

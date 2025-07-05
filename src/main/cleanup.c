@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 18:21:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/05 12:09:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,38 @@ void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell)
 	}
 	if (raw_line_ptr)
 		free(raw_line_ptr);
+}
+
+/**
+ * @brief Frees memory allocated specifically within a child process
+ * before exiting.
+ *
+ * This function should be called from a forked process before it exits,
+ * especially on an error path (e.g., command not found).
+ * It frees resources that are not managed by the main process, such as
+ * the command table, token list, and the duplicated environment array
+ * for execve.
+ *
+ * @param shell A pointer to the main shell data structure.
+ * @param env_array The environment array created for execve, if any.
+ */
+void	cleanup_child_process(t_shell *shell, char **env_array)
+{
+	if (env_array)
+		ft_free_all(env_array);
+	if (shell && shell->command)
+	{
+		clear_command_list(shell->command);
+		shell->command = NULL;
+	}
+	if (shell && shell->tokens)
+	{
+		clear_token_list(&shell->tokens);
+		shell->tokens = NULL;
+	}
+	if (shell && shell->line)
+	{
+		free(shell->line);
+		shell->line = NULL;
+	}
 }

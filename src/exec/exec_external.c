@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 15:39:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/05 12:09:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static void	find_and_exec_command(t_shell *shell, char **env_array)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(shell->command->cmd, STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
+		cleanup_child_process(shell, env_array);
 		exit(127);
 	}
 	if (execve(path, shell->command->args, env_array) == -1)
@@ -42,6 +43,7 @@ static void	find_and_exec_command(t_shell *shell, char **env_array)
 		ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		if (ft_strcmp(path, shell->command->cmd) != 0)
 			free(path);
+		cleanup_child_process(shell, env_array);
 		exit(EXIT_FAILURE);
 	}
 	if (ft_strcmp(path, shell->command->cmd) != 0)
@@ -156,10 +158,10 @@ void	exec_external_direct(t_shell *shell, char **env_array)
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
 	{
-		ft_free_all(env_array);
+		cleanup_child_process(shell, env_array);
 		exit(validation_result);
 	}
 	find_and_exec_command(shell, env_array);
-	ft_free_all(env_array);
+	cleanup_child_process(shell, env_array);
 	exit(EXIT_FAILURE);
 }
