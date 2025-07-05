@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/05 12:09:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/05 12:27:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,56 +36,36 @@ static int	init_pipe_write_fd(t_command *cmd, int pipe_fd[2])
 }
 
 /**
- * @brief Handles input redirection from a previous pipe in a child process.
+ * @brief Handles both input and output pipe redirection in a child process.
  *
- * If `prev_fd` (the read end of the pipe from the previous command) is valid
- * (not -1), this function duplicates `prev_fd` to `STDIN_FILENO`. This makes
- * the output of the previous command in the pipeline the standard input for
- * the current child process. After successful duplication, `prev_fd` is closed.
- * If `dup2` fails, an error message is printed, and the child process exits
- * with `EXIT_FAILURE`.
+ * This function sets up pipe redirection for both input and output:
+ * - If `prev_fd` is valid (not -1), it redirects the previous command's output
+ *   to this process's stdin using `dup2`.
+ * - If `pipe_write_fd` is valid (not -1), it redirects this process's stdout
+ *   to the next command's input using `dup_fd`.
+ * If any redirection fails, the child process exits with `EXIT_FAILURE`.
  *
- * @param prev_fd The file descriptor for the read end of the pipe from the
- *                previous command in the pipeline. A value of -1 indicates
- *                no input pipe (e.g., first command).
+ * @param prev_fd The read end of the pipe from the previous command.
+ *                A value of -1 indicates no input pipe (first command).
+ * @param pipe_write_fd The write end of the pipe to the next command.
+ *                      A value of -1 indicates no output pipe (last command).
+ * @param shell A pointer to the shell structure for cleanup on error.
  */
-static void	handle_input_pipe(int prev_fd, t_shell *shell)
+static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 {
 	if (prev_fd != -1)
 	{
 		if (dup2(prev_fd, STDIN_FILENO) == -1)
 		{
 			perror("minishell: dup2 prev_fd");
-			cleanup_child_process(shell, NULL);
-			exit(EXIT_FAILURE);
+			(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
 		}
 		close(prev_fd);
 	}
-}
-
-/**
- * @brief Handles output redirection to the next pipe in a child process.
- *
- * If `pipe_write_fd` (the write end of the pipe to the next command) is valid
- * (not -1), this function duplicates `pipe_write_fd` to `STDOUT_FILENO` using
- * `dup_fd` (which also closes `pipe_write_fd`). This makes the standard output
- * of the current child process go into the pipe for the next command. If
- * `dup_fd` fails, the child process exits with `EXIT_FAILURE`.
- *
- * @param pipe_write_fd The file descriptor for the write end of the pipe to the
- *                      next command in the pipeline. A value of -1 indicates
- *                      no output pipe (e.g., last command, or output is to
- *                      a file/terminal).
- */
-static void	handle_output_pipe(int pipe_write_fd, t_shell *shell)
-{
 	if (pipe_write_fd != -1)
 	{
 		if (dup_fd(pipe_write_fd, STDOUT_FILENO, "pipe") == ERROR)
-		{
-			cleanup_child_process(shell, NULL);
-			exit(EXIT_FAILURE);
-		}
+			(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
 	}
 }
 
@@ -116,29 +96,18 @@ static void	execute_child_cmd(t_shell *shell)
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
+		(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+	if (is_builtin(shell->command->cmd))
 	{
-		cleanup_child_process(shell, NULL);
-		exit(EXIT_FAILURE);
-	}
-	else if (is_builtin(shell->command->cmd))
 		exit_status = exec_builtin(shell);
-	else
-	{
-		env_array = env_list_to_array(shell->env);
-		if (!env_array)
-		{
-			cleanup_child_process(shell, NULL);
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			exec_external_direct(shell, env_array);
-			cleanup_child_process(shell, env_array);
-			exit(EXIT_FAILURE);
-		}
+		(cleanup_child_process(shell, NULL), exit(exit_status));
 	}
-	cleanup_child_process(shell, NULL);
-	exit(exit_status);
+	env_array = env_list_to_array(shell->env);
+	if (!env_array)
+		(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+	exec_external_direct(shell, env_array);
+	cleanup_child_process(shell, env_array);
+	exit(EXIT_FAILURE);
 }
 
 /**
@@ -176,7 +145,6 @@ void	pipe_child_process(t_shell *shell,
 
 	shell->command = cmd;
 	pipe_write_fd = init_pipe_write_fd(cmd, pipe_fd);
-	handle_input_pipe(prev_fd, shell);
-	handle_output_pipe(pipe_write_fd, shell);
+	handle_pipe_redir(prev_fd, pipe_write_fd, shell);
 	execute_child_cmd(shell);
 }

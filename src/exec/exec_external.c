@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/05 12:09:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/05 12:28:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,7 @@ void	exec_external_direct(t_shell *shell, char **env_array)
 
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
-	{
-		cleanup_child_process(shell, env_array);
-		exit(validation_result);
-	}
+		(cleanup_child_process(shell, env_array), exit(validation_result));
 	find_and_exec_command(shell, env_array);
 	cleanup_child_process(shell, env_array);
 	exit(EXIT_FAILURE);
