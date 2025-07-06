@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:03:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/06 11:55:38 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	run_command(t_shell *shell)
 {
 	if (!shell->command)
 		return ;
+	setup_exec_signals();
 	if (!shell->command->next)
 	{
 		if (is_builtin(shell->command->cmd))
@@ -46,4 +47,5 @@ void	run_command(t_shell *shell)
 	}
 	else
 		shell->exit_status = execute_pipe(shell);
+	init_signals();
 }

@@ -53,6 +53,7 @@ SRCS = src/main/main.c \
 	   src/parser/parse_commands_utils.c \
 	   src/parser/parse_commands_validation.c \
 	   src/parser/parse_redirections.c \
+	   src/signals/signal_exec.c \
 	   src/signals/signal_flag.c \
 	   src/signals/signal_handlers.c \
 	   src/utils/utils.c
