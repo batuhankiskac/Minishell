@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/05 12:25:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 09:03:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ void	sort_env(char **env_array);
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell *shell);
 int		exec_external(t_shell *shell);
-void	exec_external_direct(t_shell *shell, char **env_array);
 int		open_file(char *filename, int flags, int mode, char *type);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
@@ -130,6 +129,7 @@ int		execute_pipe(t_shell *shell);
 int		resize_lines_buffer(char ***lines, int capacity);
 char	*find_path(char *cmd, char *envp[]);
 char	*join_heredoc(char **lines, int count);
+void	exec_external_direct(t_shell *shell, char **env_array);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	free_heredoc(char **lines, int count);
@@ -189,6 +189,7 @@ void	init_signals(void);
 void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
+void	setup_exec_signals(void);
 
 /*
 ** Utils

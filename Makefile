@@ -1,3 +1,5 @@
+SHELL = /bin/bash
+
 NAME = minishell
 
 CC = cc
@@ -88,5 +90,15 @@ re: fclean all
 
 main: all clean
 
-.PHONY: all clean fclean re
-.SILENT: all clean fclean re
+val: all
+	@echo "Running with Valgrind..."
+	@valgrind --leak-check=full \
+		--show-leak-kinds=all \
+		--track-fds=yes \
+		--trace-children=yes \
+		--track-origins=yes \
+		--suppressions=./readline.supp \
+		./minishell
+
+.PHONY: all clean fclean re main val
+.SILENT: all clean fclean re main val
