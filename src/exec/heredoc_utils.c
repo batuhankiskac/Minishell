@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 22:15:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 00:17:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	write_heredoc(t_shell *shell,
 	int	fd;
 
 	fd = open_file("/tmp/minishell_heredoc_content",
-			O_WRONLY | O_CREAT | O_TRUNC, 0644, "heredoc");
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd != ERROR)
 	{
 		ft_printf(1, "%s\n", shell->line);

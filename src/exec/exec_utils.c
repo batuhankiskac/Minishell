@@ -6,38 +6,27 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:03:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 00:17:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Opens a file with specified flags and mode.
- *
- * This function attempts to open the file specified by `filename` using the
- * given `flags` (e.g., `O_RDONLY`, `O_WRONLY | O_CREAT | O_TRUNC`) and `mode`
- * (e.g., `0644`, relevant if `O_CREAT` is in flags). If the `open()` system
- * call fails, it prints an error message to standard error, including the
- * `filename` and a `type` string (e.g., "input", "output") for context,
- * using `perror` to display the system error. It then returns `ERROR`.
- * On success, it returns the file descriptor of the opened file.
- *
+ * @brief Opens a file with specified flags and prints an error on failure.
  * @param filename The path to the file to be opened.
  * @param flags Integer flags for `open()` (e.g., `O_RDONLY`, `O_WRONLY`).
  * @param mode The file mode (permissions) to be used if the file is created.
- * @param type A string describing the purpose of the file (e.g., "input",
- *             "output"), used in error messages.
  * @return The file descriptor of the opened file on success, or `ERROR` on
  *         failure.
  */
-int	open_file(char *filename, int flags, int mode, char *type)
+int	open_file(char *filename, int flags, int mode)
 {
 	int	fd;
 
 	fd = open(filename, flags, mode);
 	if (fd == -1)
-		return (print_error(type, filename, strerror(errno), ERROR));
+		return (print_error(NULL, filename, strerror(errno), ERROR));
 	return (fd);
 }
 
