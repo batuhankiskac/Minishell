@@ -1,0 +1,45 @@
+{
+   <readline_suppressions>
+   Memcheck:Leak
+   match-and-suppress:readline
+   fun:readline
+   fun:rl_initialize
+   fun:_rl_init_terminal_io
+   fun:rl_set_prompt
+   fun:rl_expand_prompt
+   fun:_rl_init_locale
+   fun:_rl_init_eightbit
+   fun:rl_parse_and_bind
+   fun:rl_add_funmap_entry
+   fun:rl_initialize_funmap
+   fun:rl_redisplay
+   fun:readline_internal_setup
+   fun:alloc_history_entry
+   fun:add_history
+   fun:rl_extend_line_buffer
+   fun:rl_insert_text
+   fun:_rl_insert_char
+   fun:rl_insert
+   fun:_rl_dispatch_subseq
+   fun:readline_internal_char
+   fun:readline_internal_teardown
+   obj:*/libreadline.so*
+}
+{
+   <libtinfo_suppressions>
+   Memcheck:Leak
+   match-and-suppress:libtinfo
+   fun:_nc_trim_sgr0
+   fun:tgetent_sp
+   fun:_nc_setupterm
+   fun:_nc_first_db
+   fun:_nc_read_entry2
+   fun:_nc_home_terminfo
+   fun:_nc_doalloc
+   fun:_nc_read_termtype
+   fun:_nc_read_file_entry
+   fun:_nc_tparm_analyze
+   fun:_nc_tiparm
+   fun:tgetstr_sp
+   obj:*/libtinfo.so*
+}
