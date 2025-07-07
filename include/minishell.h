@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 17:40:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 18:48:39 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ int		open_file(char *filename, int flags, int mode, char *type);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_shell *shell);
+int		handle_heredoc_collect_only(t_shell *shell);
 int		execute_pipe(t_shell *shell);
 int		resize_lines_buffer(char ***lines, int capacity);
 char	*find_path(char *cmd, char *envp[]);

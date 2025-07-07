@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 17:41:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:00:57 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,10 @@ static int	collect_input(t_shell *shell, char ***lines,
  *
  * @param shell Shell structure containing redir and original command line
  * @param pipe_fd Write end of pipe
+ * @param show_warning Whether to show EOF warning (only for last heredoc)
  * @return 0 on success, ERROR on failure, 1 if EOF received
  */
-static int	collect_heredoc(t_shell *shell, int pipe_fd)
+static int	collect_heredoc(t_shell *shell, int pipe_fd, int show_warning)
 {
 	char	**lines;
 	char	*full_heredoc;
@@ -117,7 +118,9 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd)
 	}
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
-	if (eof_received)
+
+	/* If EOF was received, print warning first (like bash) - but only if show_warning is true */
+	if (eof_received && show_warning)
 	{
 		ft_putstr_fd("minishell: line ", 2);
 		ft_putnbr_fd(shell->line_number, 2);
@@ -159,7 +162,7 @@ int	handle_heredoc_redir(t_shell *shell)
 		perror("minishell: pipe");
 		return (ERROR);
 	}
-	collect_result = collect_heredoc(shell, pipe_fd[1]);
+	collect_result = collect_heredoc(shell, pipe_fd[1], 1);
 	if (collect_result == ERROR)
 	{
 		close(pipe_fd[0]);
@@ -173,5 +176,38 @@ int	handle_heredoc_redir(t_shell *shell)
 		return (ERROR);
 	}
 	close(pipe_fd[0]);
+	return (0);
+}
+
+/**
+ * @brief Collects heredoc input without redirecting to stdin (for multiple heredocs).
+ *
+ * This function handles heredoc input collection when there are multiple heredocs
+ * and only the last one should be redirected to stdin. It processes the input
+ * but doesn't redirect it.
+ *
+ * @param shell A pointer to the `t_shell` structure, which contains the
+ *              redir structure with delimiter string in `shell->redir->file`.
+ * @return Returns 0 on successful handling. Returns `ERROR` if `pipe()` fails.
+ */
+int	handle_heredoc_collect_only(t_shell *shell)
+{
+	int	pipe_fd[2];
+	int	collect_result;
+
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("minishell: pipe");
+		return (ERROR);
+	}
+	collect_result = collect_heredoc(shell, pipe_fd[1], 0);
+	if (collect_result == ERROR)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (ERROR);
+	}
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
 	return (0);
 }

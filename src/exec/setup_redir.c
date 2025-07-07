@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 17:00:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:00:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ static int	apply_redirection(t_shell *shell, t_redir *redir)
 int	setup_redir(t_shell *shell)
 {
 	t_redir	*redir;
+	t_redir	*last_heredoc;
 	int		ret;
 
 	if (!shell || !shell->command)
@@ -117,11 +118,49 @@ int	setup_redir(t_shell *shell)
 	redir = shell->command->redir;
 	if (!redir)
 		return (0);
+
+	/* First, find the last heredoc if any exist */
+	last_heredoc = NULL;
+	t_redir *temp = redir;
+	while (temp)
+	{
+		if (temp->type == REDIR_HEREDOC)
+			last_heredoc = temp;
+		temp = temp->next;
+	}
+
+	/* Process all redirections */
 	while (redir)
 	{
-		ret = apply_redirection(shell, redir);
-		if (ret == ERROR)
-			return (ERROR);
+		if (redir->type == REDIR_HEREDOC)
+		{
+			shell->redir = redir;
+			if (redir == last_heredoc)
+			{
+				/* This is the last heredoc, actually redirect to stdin */
+				ret = handle_heredoc_redir(shell);
+				if (ret == 1)
+				{
+					shell->heredoc_eof = 1;
+					return (ERROR);
+				}
+				if (ret == ERROR)
+					return (ERROR);
+			}
+			else
+			{
+				/* Not the last heredoc, just collect input but don't redirect */
+				ret = handle_heredoc_collect_only(shell);
+				if (ret == ERROR)
+					return (ERROR);
+			}
+		}
+		else
+		{
+			ret = apply_redirection(shell, redir);
+			if (ret == ERROR)
+				return (ERROR);
+		}
 		redir = redir->next;
 	}
 	return (0);
