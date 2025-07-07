@@ -80,11 +80,11 @@ void	write_heredoc(t_shell *shell,
 			O_WRONLY | O_CREAT | O_TRUNC, 0644, "heredoc");
 	if (fd != ERROR)
 	{
-		ft_putendl_fd(shell->line, fd);
+		ft_printf("%s\n", shell->line);
 		if (full_heredoc && ft_strlen(full_heredoc) > 0)
-			ft_putendl_fd(full_heredoc, fd);
+			ft_printf(fd, "%s\n", full_heredoc);
 		if (!eof_received)
-			ft_putstr_fd(shell->redir->file, fd);
+			ft_printf(fd, "%s", shell->redir->file);
 		close(fd);
 	}
 }

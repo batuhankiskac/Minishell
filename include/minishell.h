@@ -6,12 +6,15 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 18:48:39 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 20:09:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# define _POSIX_C_SOURCE 200809L
+# define ERROR -1
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -24,8 +27,6 @@
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
-# define ERROR -1
 
 typedef enum e_redir_type
 {

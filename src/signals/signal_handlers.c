@@ -6,11 +6,10 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/30 21:44:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 20:09:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _POSIX_C_SOURCE 200809L
 #include "minishell.h"
 
 /**

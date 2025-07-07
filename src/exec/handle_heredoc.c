@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:00:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 20:06:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	collect_input(t_shell *shell, char ***lines,
 			free(line);
 			return (ERROR);
 		}
-		ft_putendl_fd(line, pipe_fd);
+		ft_printf(pipe_fd, "%s\n", line);
 		(*lines)[count++] = ft_strdup(line);
 		free(line);
 	}
@@ -118,12 +118,8 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd, int show_warning)
 	}
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
-
-	/* If EOF was received, print warning first (like bash) - but only if show_warning is true */
 	if (eof_received && show_warning)
-	{
 		ft_printf(2, "minishell: line %d: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", shell->line_number, start_line_number, shell->redir->file);
-	}
 	full_heredoc = join_heredoc(lines, count);
 	write_heredoc(shell, full_heredoc, eof_received);
 	free(full_heredoc);

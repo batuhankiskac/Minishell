@@ -70,7 +70,7 @@ int	builtin_exit(t_shell *shell)
 	int	status_code;
 
 	if (isatty(1))
-		ft_putendl_fd("exit", 1);
+		ft_printf(1, "exit\n");
 	if (shell->command->argc > 2)
 	{
 		ft_printf(2, "minishell: exit: too many arguments\n");

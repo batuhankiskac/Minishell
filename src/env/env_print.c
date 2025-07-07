@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 20:02:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,18 +124,11 @@ static void	print_env_var(char *env_str)
 	if (equal_pos)
 	{
 		*equal_pos = '\0';
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(env_str, 1);
-		ft_putstr_fd("=\"", 1);
-		ft_putstr_fd(equal_pos + 1, 1);
-		ft_putendl_fd("\"", 1);
+		ft_printf(1, "declare -x %s=\"%s\"\n", env_str, equal_pos + 1);
 		*equal_pos = '=';
 	}
 	else
-	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putendl_fd(env_str, 1);
-	}
+		ft_printf(1, "declare -x %s\n", env_str);
 }
 
 /**
