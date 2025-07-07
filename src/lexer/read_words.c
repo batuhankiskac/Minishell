@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:30:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 22:15:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ int	read_words(int pos, const char *str, t_token **tokens)
 		free(word);
 		return (ERROR);
 	}
+	free(word);
 	return (pos - start);
 }

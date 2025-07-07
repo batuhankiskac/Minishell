@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 22:47:42 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
  * @param shell A pointer to the `t_shell` structure, containing the command
  *              and its context.
  */
-static void	execute_child_cmd(t_shell *shell)
+static void	execute_child_cmd(t_shell *shell, t_command *original_head)
 {
 	char	**env_array;
 	int		exit_status;
@@ -101,22 +101,26 @@ static void	execute_child_cmd(t_shell *shell)
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
 	{
+		shell->command = original_head;
 		cleanup_child_process(shell, NULL);
 		exit(EXIT_FAILURE);
 	}
 	if (is_builtin(shell->command->cmd))
 	{
 		exit_status = exec_builtin(shell);
+		shell->command = original_head;
 		cleanup_child_process(shell, NULL);
 		exit(exit_status);
 	}
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
 	{
+		shell->command = original_head;
 		cleanup_child_process(shell, NULL);
 		exit(EXIT_FAILURE);
 	}
 	exec_external_direct(shell, env_array);
+	shell->command = original_head;
 	cleanup_child_process(shell, env_array);
 	exit(EXIT_FAILURE);
 }
@@ -152,10 +156,12 @@ static void	execute_child_cmd(t_shell *shell)
 void	pipe_child_process(t_shell *shell,
 	t_command *cmd, int prev_fd, int pipe_fd[2])
 {
-	int	pipe_write_fd;
+	int			pipe_write_fd;
+	t_command	*original_head;
 
+	original_head = shell->command;
 	shell->command = cmd;
 	pipe_write_fd = init_pipe_write_fd(cmd, pipe_fd);
 	handle_pipe_redir(prev_fd, pipe_write_fd, shell);
-	execute_child_cmd(shell);
+	execute_child_cmd(shell, original_head);
 }

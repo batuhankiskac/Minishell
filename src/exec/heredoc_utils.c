@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 22:41:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 22:15:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	write_heredoc(t_shell *shell,
 			O_WRONLY | O_CREAT | O_TRUNC, 0644, "heredoc");
 	if (fd != ERROR)
 	{
-		ft_printf("%s\n", shell->line);
+		ft_printf(1, "%s\n", shell->line);
 		if (full_heredoc && ft_strlen(full_heredoc) > 0)
 			ft_printf(fd, "%s\n", full_heredoc);
 		if (!eof_received)

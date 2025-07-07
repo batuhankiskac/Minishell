@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 20:07:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 22:37:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,17 @@ int	expand_on_redirs(t_command *cmd, t_env *env, int exit_status)
 			}
 			else
 				new = ft_strdup(r->original_file);
+			free(r->file);
+			r->file = new;
 		}
 		else
+		{
 			new = expand_string(r->file, env, exit_status);
-		if (!new)
-			return (0);
-		free(r->file);
-		r->file = new;
+			if (!new)
+				return (1);
+			free(r->file);
+			r->file = new;
+		}
 		r = r->next;
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:32 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 22:47:42 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,10 @@ void	cleanup_child_process(t_shell *shell, char **env_array)
 	{
 		free(shell->line);
 		shell->line = NULL;
+	}
+	if (shell && shell->env)
+	{
+		free_env(shell->env);
+		shell->env = NULL;
 	}
 }
