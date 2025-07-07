@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:45:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 16:22:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 16:34:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	process_command_block(t_command *cmd, t_token **t_ptr)
 	{
 		if (!init_command_args(cmd, 1))
 			return (0);
-		cmd->args[0] = ft_strdup("cat");
+		cmd->args[0] = ft_strdup("/bin/true");
 		cmd->args[1] = NULL;
 		cmd->argc = 1;
 		cmd->cmd = cmd->args[0];
