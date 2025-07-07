@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 20:09:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:32:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int		handle_heredoc_redir(t_shell *shell);
 int		handle_heredoc_collect_only(t_shell *shell);
 int		execute_pipe(t_shell *shell);
 int		resize_lines_buffer(char ***lines, int capacity);
+int		apply_redirection(t_shell *shell, t_redir *redir);
 char	*find_path(char *cmd, char *envp[]);
 char	*join_heredoc(char **lines, int count);
 void	exec_external_direct(t_shell *shell, char **env_array);

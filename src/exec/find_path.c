@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 18:14:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:36:45 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,24 @@ static char	*find_command_in_path(char *cmd_name, char *path_list_str)
 }
 
 /**
+ * @brief Handles direct path commands (containing '/').
+ *
+ * This function processes commands that contain a '/' character, treating
+ * them as direct paths (absolute or relative). It checks if the path is
+ * accessible and executable.
+ *
+ * @param cmd_name The command name that contains '/'.
+ * @return A dynamically allocated string containing the command name if
+ *         accessible and executable, or NULL if not accessible.
+ */
+static char	*handle_direct_path(char *cmd_name)
+{
+	if (access(cmd_name, F_OK | X_OK) == 0)
+		return (ft_strdup(cmd_name));
+	return (NULL);
+}
+
+/**
  * @brief Finds the full path of an executable command.
  *
  * This function determines the absolute or relative path of an executable
@@ -142,23 +160,17 @@ char	*find_path(char *cmd, char *envp[])
 		return (NULL);
 	if (ft_strchr(cmd_name, '/'))
 	{
-		if (access(cmd_name, F_OK | X_OK) == 0)
-			result_path = ft_strdup(cmd_name);
-		else
-			result_path = NULL;
+		result_path = handle_direct_path(cmd_name);
 		free(cmd_name);
 		return (result_path);
 	}
-	else
+	if (!envp)
 	{
-		if (!envp)
-		{
-			free(cmd_name);
-			return (NULL);
-		}
-		path_env_val = find_in_envp("PATH", envp);
-		result_path = find_command_in_path(cmd_name, path_env_val);
 		free(cmd_name);
-		return (result_path);
+		return (NULL);
 	}
+	path_env_val = find_in_envp("PATH", envp);
+	result_path = find_command_in_path(cmd_name, path_env_val);
+	free(cmd_name);
+	return (result_path);
 }

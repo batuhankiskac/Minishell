@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:25:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int	builtin_exit(t_shell *shell)
 	{
 		if (!is_numeric(shell->command->args[1]))
 		{
-			ft_printf(2, "minishell: exit: %s: numeric argument required\n", shell->command->args[1]);
+			ft_printf(2, "minishell: exit: %s: numeric argument required\n",
+				shell->command->args[1]);
 			status_code = 2;
 		}
 		else

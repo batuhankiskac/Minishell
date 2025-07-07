@@ -6,75 +6,102 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:35:34 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_input_redir(t_redir *redir)
+/**
+ * @brief Finds the last heredoc redirection in a redirection list.
+ *
+ * This function iterates through a redirection list and returns a pointer
+ * to the last heredoc redirection found, or NULL if none exists.
+ *
+ * @param redir A pointer to the first redirection in the list.
+ * @return A pointer to the last heredoc redirection, or NULL if none found.
+ */
+static t_redir	*find_last_heredoc(t_redir *redir)
 {
-	int	fd;
+	t_redir	*last_heredoc;
+	t_redir	*temp;
 
-	fd = open_file(redir->file, O_RDONLY, 0, "input");
-	if (fd == ERROR)
-		return (ERROR);
-	if (dup_fd(fd, 0, "input") == ERROR)
-		return (ERROR);
-	return (0);
-}
-
-static int	handle_output_redir(t_redir *redir)
-{
-	int	fd;
-
-	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644, "output");
-	if (fd == ERROR)
-		return (ERROR);
-	if (dup_fd(fd, 1, "output") == ERROR)
-		return (ERROR);
-	return (0);
-}
-
-static int	handle_append_redir(t_redir *redir)
-{
-	int	fd;
-
-	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644, "append");
-	if (fd == ERROR)
-		return (ERROR);
-	if (dup_fd(fd, 1, "append") == ERROR)
-		return (ERROR);
-	return (0);
+	last_heredoc = NULL;
+	temp = redir;
+	while (temp)
+	{
+		if (temp->type == REDIR_HEREDOC)
+			last_heredoc = temp;
+		temp = temp->next;
+	}
+	return (last_heredoc);
 }
 
 /**
- * @brief Processes a single redirection based on its type.
+ * @brief Processes a heredoc redirection.
  *
- * @param shell Shell structure (needed for HEREDOC)
- * @param redir The redirection to process
- * @return 0 on success, ERROR on failure
+ * This function handles heredoc redirections by determining whether to
+ * process them normally or collect them only, based on whether it's
+ * the last heredoc in the list.
+ *
+ * @param shell A pointer to the shell structure.
+ * @param redir A pointer to the current redirection.
+ * @param last_heredoc A pointer to the last heredoc in the list.
+ * @return 0 on success, ERROR on failure.
  */
-static int	apply_redirection(t_shell *shell, t_redir *redir)
+static int	process_heredoc(t_shell *shell, t_redir *redir,
+		t_redir *last_heredoc)
 {
-	int	result;
+	int	ret;
 
-	if (redir->type == REDIR_IN)
-		return (handle_input_redir(redir));
-	else if (redir->type == REDIR_OUT)
-		return (handle_output_redir(redir));
-	else if (redir->type == REDIR_APPEND)
-		return (handle_append_redir(redir));
-	else if (redir->type == REDIR_HEREDOC)
+	shell->redir = redir;
+	if (redir == last_heredoc)
 	{
-		shell->redir = redir;
-		result = handle_heredoc_redir(shell);
-		if (result == 1)
+		ret = handle_heredoc_redir(shell);
+		if (ret == 1)
 		{
 			shell->heredoc_eof = 1;
 			return (ERROR);
 		}
-		return (result);
+		if (ret == ERROR)
+			return (ERROR);
+	}
+	else
+	{
+		ret = handle_heredoc_collect_only(shell);
+		if (ret == ERROR)
+			return (ERROR);
+	}
+	return (0);
+}
+
+/**
+ * @brief Processes a single redirection.
+ *
+ * This function handles a single redirection, either heredoc or regular
+ * redirection types (input, output, append).
+ *
+ * @param shell A pointer to the shell structure.
+ * @param redir A pointer to the current redirection.
+ * @param last_heredoc A pointer to the last heredoc in the list.
+ * @return 0 on success, ERROR on failure.
+ */
+static int	process_single_redir(t_shell *shell, t_redir *redir,
+		t_redir *last_heredoc)
+{
+	int	ret;
+
+	if (redir->type == REDIR_HEREDOC)
+	{
+		ret = process_heredoc(shell, redir, last_heredoc);
+		if (ret == ERROR)
+			return (ERROR);
+	}
+	else
+	{
+		ret = apply_redirection(shell, redir);
+		if (ret == ERROR)
+			return (ERROR);
 	}
 	return (0);
 }
@@ -118,49 +145,12 @@ int	setup_redir(t_shell *shell)
 	redir = shell->command->redir;
 	if (!redir)
 		return (0);
-
-	/* First, find the last heredoc if any exist */
-	last_heredoc = NULL;
-	t_redir *temp = redir;
-	while (temp)
-	{
-		if (temp->type == REDIR_HEREDOC)
-			last_heredoc = temp;
-		temp = temp->next;
-	}
-
-	/* Process all redirections */
+	last_heredoc = find_last_heredoc(redir);
 	while (redir)
 	{
-		if (redir->type == REDIR_HEREDOC)
-		{
-			shell->redir = redir;
-			if (redir == last_heredoc)
-			{
-				/* This is the last heredoc, actually redirect to stdin */
-				ret = handle_heredoc_redir(shell);
-				if (ret == 1)
-				{
-					shell->heredoc_eof = 1;
-					return (ERROR);
-				}
-				if (ret == ERROR)
-					return (ERROR);
-			}
-			else
-			{
-				/* Not the last heredoc, just collect input but don't redirect */
-				ret = handle_heredoc_collect_only(shell);
-				if (ret == ERROR)
-					return (ERROR);
-			}
-		}
-		else
-		{
-			ret = apply_redirection(shell, redir);
-			if (ret == ERROR)
-				return (ERROR);
-		}
+		ret = process_single_redir(shell, redir, last_heredoc);
+		if (ret == ERROR)
+			return (ERROR);
 		redir = redir->next;
 	}
 	return (0);

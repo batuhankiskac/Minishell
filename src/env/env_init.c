@@ -6,11 +6,50 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:28:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Creates a new environment node from an environment variable string.
+ *
+ * This function creates a new t_env node by parsing an environment variable
+ * string (format: "KEY=VALUE") and extracting the key and value parts.
+ *
+ * @param env_var The environment variable string to parse.
+ * @return A pointer to the newly created environment node,
+ * or NULL if an error occurs.
+ */
+static t_env	*create_env_node(char *env_var)
+{
+	t_env	*new_node;
+	char	*equal_sign;
+
+	equal_sign = ft_strchr(env_var, '=');
+	if (!equal_sign)
+		return (NULL);
+	new_node = (t_env *)malloc(sizeof(t_env));
+	if (!new_node)
+	{
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
+		return (NULL);
+	}
+	new_node->key = ft_substr(env_var, 0, equal_sign - env_var);
+	new_node->value = ft_strdup(equal_sign + 1);
+	if (!new_node->key || !new_node->value)
+	{
+		if (new_node->key)
+			free(new_node->key);
+		if (new_node->value)
+			free(new_node->value);
+		free(new_node);
+		return (NULL);
+	}
+	new_node->next = NULL;
+	return (new_node);
+}
 
 /**
  * @brief Initializes the environment linked list from envp.
@@ -27,31 +66,21 @@ t_env	*env_init(char *envp[])
 {
 	t_env	*env;
 	t_env	*new_node;
-	char	*equal_sign;
 	int		i;
 
 	env = NULL;
-	new_node = NULL;
 	i = -1;
 	while (envp[++i])
 	{
-		equal_sign = ft_strchr(envp[i], '=');
-		if (!equal_sign)
-			continue ;
-		new_node = (t_env *)malloc(sizeof(t_env));
+		new_node = create_env_node(envp[i]);
 		if (!new_node)
 		{
-			free_env(env);
-			ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
-			return (NULL);
-		}
-		new_node->key = ft_substr(envp[i], 0, equal_sign - envp[i]);
-		new_node->value = ft_strdup(equal_sign + 1);
-		if (!new_node->key || !new_node->value)
-		{
-			free_env(env);
-			free(new_node);
-			return (NULL);
+			if (ft_strchr(envp[i], '='))
+			{
+				free_env(env);
+				return (NULL);
+			}
+			continue ;
 		}
 		new_node->next = env;
 		env = new_node;

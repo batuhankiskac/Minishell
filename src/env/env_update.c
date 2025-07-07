@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:30:22 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static int	update_existing_env(char *value, t_env *node)
 		new_value = ft_strdup(value);
 		if (!new_value)
 		{
-			ft_printf(2, "minishell: export: memory allocation failed: %s\n", strerror(errno));
+			ft_printf(2, "minishell: export: memory allocation failed: %s\n",
+				strerror(errno));
 			return (ERROR);
 		}
 	}
@@ -45,6 +46,43 @@ static int	update_existing_env(char *value, t_env *node)
 	node->value = new_value;
 	free(old_value);
 	return (0);
+}
+
+/**
+ * @brief Creates a new environment variable node.
+ *
+ * This function creates a new t_env node with the given key and value.
+ * It handles memory allocation and error checking for both key and value.
+ *
+ * @param key The key for the new environment variable.
+ * @param value The value for the new environment variable (can be NULL).
+ * @return A pointer to the new node on success, NULL on failure.
+ */
+static t_env	*create_new_env_node(char *key, char *value)
+{
+	t_env	*node;
+
+	node = malloc(sizeof(t_env));
+	if (!node)
+	{
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
+		return (NULL);
+	}
+	node->key = ft_strdup(key);
+	if (value)
+		node->value = ft_strdup(value);
+	else
+		node->value = NULL;
+	if (!node->key || (value && !node->value))
+	{
+		free(node->key);
+		free(node->value);
+		free(node);
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
+		return (NULL);
+	}
+	node->next = NULL;
+	return (node);
 }
 
 /**
@@ -66,25 +104,9 @@ int	update_env(char *key, char *value, t_env **env)
 	node = find_env(key, *env);
 	if (node)
 		return (update_existing_env(value, node));
-	node = malloc(sizeof(t_env));
+	node = create_new_env_node(key, value);
 	if (!node)
-	{
-		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (ERROR);
-	}
-	node->key = ft_strdup(key);
-	if (value)
-		node->value = ft_strdup(value);
-	else
-		node->value = NULL;
-	if (!node->key || (value && !node->value))
-	{
-		free(node->key);
-		free(node->value);
-		free(node);
-		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
-		return (ERROR);
-	}
 	node->next = *env;
 	*env = node;
 	return (0);

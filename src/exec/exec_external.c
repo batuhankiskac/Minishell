@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:37:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static void	find_and_exec_command(t_shell *shell, char **env_array)
 	}
 	if (execve(path, shell->command->args, env_array) == -1)
 	{
-		ft_printf(2, "minishell: %s: %s\n", shell->command->cmd, strerror(errno));
+		ft_printf(2, "minishell: %s: %s\n", shell->command->cmd,
+			strerror(errno));
 		if (ft_strcmp(path, shell->command->cmd) != 0)
 			free(path);
 		cleanup_child_process(shell, env_array);

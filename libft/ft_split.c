@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/15 14:27:02 by nkahrima         ###   ########.fr       */
+/*   Updated: 2025/07/07 23:24:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,7 @@ char	**ft_split(char const *s, char c)
 			len = ft_word_len(s, c);
 			res[i] = (char *)malloc((len + 1) * sizeof(char));
 			if (res[i] == NULL)
-			{
 				return (freeall(res, i));
-			}
 			ft_strlcpy(res[i++], s, len + 1);
 			s += len;
 		}
