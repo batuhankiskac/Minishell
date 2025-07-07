@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 15:19:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,9 +142,26 @@ int	builtin_cd(int argc, char **args, t_env **env)
 		perror("getcwd error");
 		return (ERROR);
 	}
-	target = get_target(argc, args, env);
-	if (!target)
-		return (ERROR);
+	if (argc == 1 || (args[1] && args[1][0] == '\0'))
+	{
+		target = get_env_value("HOME", *env);
+		if (!target)
+		{
+			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+			free(old_pwd);
+			return (ERROR);
+		}
+		target = ft_strdup(target);
+	}
+	else
+	{
+		target = get_target(argc, args, env);
+		if (!target)
+		{
+			free(old_pwd);
+			return (ERROR);
+		}
+	}
 	if (change_directory(target, &new_pwd) == ERROR)
 	{
 		free(old_pwd);
