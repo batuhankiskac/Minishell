@@ -48,7 +48,10 @@ static t_command	*new_cmd(void)
 
 	c = malloc(sizeof(*c));
 	if (!c)
-		return (perror("malloc error"), NULL);
+	{
+		perror("malloc error");
+		return (NULL);
+	}
 	c->cmd = NULL;
 	c->args = NULL;
 	c->argc = 0;
@@ -104,7 +107,10 @@ int	build_command_list(t_shell *shell)
 	{
 		new_command = new_cmd();
 		if (!new_command)
-			return (clear_command_list(head), 0);
+		{
+			clear_command_list(head);
+			return (0);
+		}
 		add_command_to_list(&head, &tail, new_command);
 		t = skip_pipe_tokens(t);
 	}

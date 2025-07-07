@@ -33,7 +33,10 @@ static int	setup_pipe_for_cmd(t_command *cmd, int pipe_fd[2])
 	if (cmd->next)
 	{
 		if (pipe(pipe_fd) == -1)
-			return (perror("minishell: pipe"), ERROR);
+		{
+			perror("minishell: pipe");
+			return (ERROR);
+		}
 	}
 	else
 	{
@@ -101,8 +104,11 @@ static int	fork_pipeline_command(t_shell *shell, t_command *cmd, int *prev_fd)
 		return (ERROR);
 	pid = fork();
 	if (pid < 0)
-		return (close_pipe_fd(*prev_fd, pipe_fd),
-			perror("minishell: fork"), ERROR);
+	{
+		close_pipe_fd(*prev_fd, pipe_fd);
+		perror("minishell: fork");
+		return (ERROR);
+	}
 	if (pid == 0)
 		pipe_child_process(shell, cmd, *prev_fd, pipe_fd);
 	else

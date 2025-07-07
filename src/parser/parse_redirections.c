@@ -36,13 +36,17 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 		type = REDIR_APPEND;
 	r = malloc(sizeof(*r));
 	if (!r)
-		return (perror("malloc error"), NULL);
+	{
+		perror("malloc error");
+		return (NULL);
+	}
 	r->type = type;
 	r->file = ft_strdup(file);
 	if (!r->file)
 	{
 		free(r);
-		return (perror("ft_strdup error"), NULL);
+		perror("ft_strdup error");
+		return (NULL);
 	}
 	r->next = NULL;
 	return (r);

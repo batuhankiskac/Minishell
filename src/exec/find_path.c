@@ -74,7 +74,8 @@ static char	*process_path_search(char **all_path, char *cmd_name)
 		}
 		free(exec);
 	}
-	return (ft_free_all(all_path), NULL);
+	ft_free_all(all_path);
+	return (NULL);
 }
 
 /**
@@ -145,14 +146,19 @@ char	*find_path(char *cmd, char *envp[])
 			result_path = ft_strdup(cmd_name);
 		else
 			result_path = NULL;
-		return (free(cmd_name), result_path);
+		free(cmd_name);
+		return (result_path);
 	}
 	else
 	{
 		if (!envp)
-			return (free(cmd_name), NULL);
+		{
+			free(cmd_name);
+			return (NULL);
+		}
 		path_env_val = find_in_envp("PATH", envp);
 		result_path = find_command_in_path(cmd_name, path_env_val);
-		return (free(cmd_name), result_path);
+		free(cmd_name);
+		return (result_path);
 	}
 }

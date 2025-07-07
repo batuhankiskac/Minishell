@@ -94,10 +94,16 @@ char	*handle_double_quote(char *res, const char *s, int *i,
 		j++;
 	inner = ft_substr(s, *i + 1, j - (*i + 1));
 	if (!inner)
-		return (free(res), NULL);
+	{
+		free(res);
+		return (NULL);
+	}
 	expanded = expand_inner_content(inner, shell_context);
 	if (!expanded)
-		return (free(res), NULL);
+	{
+		free(res);
+		return (NULL);
+	}
 	tmp = ft_strjoin(res, expanded);
 	free(res);
 	free(expanded);

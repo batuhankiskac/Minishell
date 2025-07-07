@@ -57,12 +57,16 @@ int	token_add(t_token **tokens, const char *word, int len)
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		return (perror("malloc error"), 0);
+	{
+		perror("malloc error");
+		return (0);
+	}
 	new_token->str = ft_strndup(word, len);
 	if (!new_token->str)
 	{
 		free(new_token);
-		return (perror("ft_strndup error"), 0);
+		perror("ft_strndup error");
+		return (0);
 	}
 	new_token->type = determine_token_type(word, len);
 	new_token->next = NULL;

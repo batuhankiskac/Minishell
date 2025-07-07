@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 22:41:45 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:36:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ static int	collect_input(t_shell *shell, char ***lines,
 			break ;
 		}
 		if (expand_buffer_if_needed(lines, capacity, count) == ERROR)
-			return (free(line), ERROR);
+		{
+			free(line);
+			return (ERROR);
+		}
 		ft_putendl_fd(line, pipe_fd);
 		(*lines)[count++] = ft_strdup(line);
 		free(line);
@@ -102,7 +105,10 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd)
 		return (ERROR);
 	count = collect_input(shell, &lines, &capacity, pipe_fd);
 	if (count == ERROR)
-		return (free(lines), ERROR);
+	{
+		free(lines);
+		return (ERROR);
+	}
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
 	full_heredoc = join_heredoc(lines, count);
@@ -136,15 +142,29 @@ int	handle_heredoc_redir(t_shell *shell)
 	int	collect_result;
 
 	if (pipe(pipe_fd) == -1)
-		return (perror("minishell: pipe"), ERROR);
+	{
+		perror("minishell: pipe");
+		return (ERROR);
+	}
 	collect_result = collect_heredoc(shell, pipe_fd[1]);
 	if (collect_result == ERROR)
-		return (close(pipe_fd[0]), close(pipe_fd[1]), ERROR);
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (ERROR);
+	}
 	if (collect_result == 1)
-		return (close(pipe_fd[0]), close(pipe_fd[1]), 1);
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (1);
+	}
 	close(pipe_fd[1]);
 	if (dup_fd(pipe_fd[0], STDIN_FILENO, "heredoc") == ERROR)
-		return (close(pipe_fd[0]), ERROR);
+	{
+		close(pipe_fd[0]);
+		return (ERROR);
+	}
 	close(pipe_fd[0]);
 	return (0);
 }

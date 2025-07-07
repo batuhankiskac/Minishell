@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/31 14:58:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:35:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ int	builtin_pwd(void)
 		return (ERROR);
 	}
 	ft_putendl_fd(cwd, STDOUT_FILENO);
-	return (free(cwd), 0);
+	free(cwd);
+	return (0);
 }

@@ -117,7 +117,10 @@ char	*append_variable(char *res, char *s, int *i, t_shell *shell)
 
 	val = get_expansion_value(s, i, shell);
 	if (!val)
-		return (free(res), NULL);
+	{
+		free(res);
+		return (NULL);
+	}
 	new_res = ft_strjoin(res, val);
 	free(res);
 	free(val);

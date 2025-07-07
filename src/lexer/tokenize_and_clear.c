@@ -29,13 +29,19 @@ static int	process_next_token(t_shell *shell, char *line, int pos)
 	{
 		result = handle_token(line, pos, &shell->tokens);
 		if (result == ERROR)
-			return (clear_token_list(&shell->tokens), ERROR);
+		{
+			clear_token_list(&shell->tokens);
+			return (ERROR);
+		}
 	}
 	else
 	{
 		result = read_words(pos, line, &shell->tokens);
 		if (result == ERROR)
-			return (clear_token_list(&shell->tokens), ERROR);
+		{
+			clear_token_list(&shell->tokens);
+			return (ERROR);
+		}
 	}
 	return (result);
 }

@@ -96,12 +96,18 @@ char	**env_list_to_array(t_env *env)
 	i = 0;
 	env_array = (char **)malloc(sizeof(char *) * (env_count(env) + 1));
 	if (!env_array)
-		return (perror("malloc error"), NULL);
+	{
+		perror("malloc error");
+		return (NULL);
+	}
 	while (env)
 	{
 		str = env_node_to_string(env);
 		if (!str)
-			return (ft_free_all(env_array), NULL);
+		{
+			ft_free_all(env_array);
+			return (NULL);
+		}
 		env_array[i++] = str;
 		env = env->next;
 	}

@@ -49,6 +49,9 @@ int	read_words(int pos, const char *str, t_token **tokens)
 	}
 	word = ft_substr(str, start, pos - start);
 	if (!word || !token_add(tokens, word, pos - start))
-		return (free(word), ERROR);
-	return (free(word), pos - start);
+	{
+		free(word);
+		return (ERROR);
+	}
+	return (pos - start);
 }

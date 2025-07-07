@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 15:19:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:33:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,16 @@ static int	parse_export_arg(char *arg, char **key, char **value)
 	{
 		keystr = ft_substr(arg, 0, equal - arg);
 		if (!keystr || !is_valid_identifier(keystr))
-			return (free(keystr), ERROR);
+		{
+			free(keystr);
+			return (ERROR);
+		}
 		*value = ft_strdup(equal + 1);
 		if (!*value)
-			return (free(keystr), ERROR);
+		{
+			free(keystr);
+			return (ERROR);
+		}
 	}
 	else
 	{
@@ -83,16 +89,24 @@ static int	process_export_arg(char *arg, t_env **env)
 		if (!find_env(key, *env))
 		{
 			if (update_env(key, NULL, env) == ERROR)
-				return (free(key), 1);
+			{
+				free(key);
+				return (1);
+			}
 		}
 	}
 	else
 	{
 		if (update_env(key, value, env) == ERROR)
-			return (free(key), free(value), 1);
+		{
+			free(key);
+			free(value);
+			return (1);
+		}
 		free(value);
 	}
-	return (free(key), 0);
+	free(key);
+	return (0);
 }
 
 /**
@@ -114,7 +128,10 @@ int	builtin_export(int argc, char **args, t_env **env)
 	int		ret;
 
 	if (argc == 1)
-		return (print_sorted_env(*env), 0);
+	{
+		print_sorted_env(*env);
+		return (0);
+	}
 	i = 0;
 	ret = 0;
 	while (++i < argc)

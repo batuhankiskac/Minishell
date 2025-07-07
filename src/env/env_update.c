@@ -43,7 +43,8 @@ static int	update_existing_env(char *value, t_env *node)
 	}
 	old_value = node->value;
 	node->value = new_value;
-	return (free(old_value), 0);
+	free(old_value);
+	return (0);
 }
 
 /**
@@ -67,7 +68,10 @@ int	update_env(char *key, char *value, t_env **env)
 		return (update_existing_env(value, node));
 	node = malloc(sizeof(t_env));
 	if (!node)
-		return (perror("minishell: malloc error"), ERROR);
+	{
+		perror("minishell: malloc error");
+		return (ERROR);
+	}
 	node->key = ft_strdup(key);
 	if (value)
 		node->value = ft_strdup(value);
@@ -78,7 +82,8 @@ int	update_env(char *key, char *value, t_env **env)
 		free(node->key);
 		free(node->value);
 		free(node);
-		return (perror("minishell: malloc error"), ERROR);
+		perror("minishell: malloc error");
+		return (ERROR);
 	}
 	node->next = *env;
 	*env = node;

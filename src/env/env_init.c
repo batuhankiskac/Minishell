@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:36:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,19 @@ t_env	*env_init(char *envp[])
 			continue ;
 		new_node = (t_env *)malloc(sizeof(t_env));
 		if (!new_node)
-			return (free_env(env), perror("malloc error"), NULL);
+		{
+			free_env(env);
+			perror("malloc error");
+			return (NULL);
+		}
 		new_node->key = ft_substr(envp[i], 0, equal_sign - envp[i]);
 		new_node->value = ft_strdup(equal_sign + 1);
 		if (!new_node->key || !new_node->value)
-			return (free_env(env), free(new_node), NULL);
+		{
+			free_env(env);
+			free(new_node);
+			return (NULL);
+		}
 		new_node->next = env;
 		env = new_node;
 	}

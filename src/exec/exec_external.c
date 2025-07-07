@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/05 12:28:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:36:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,13 +124,20 @@ int	exec_external(t_shell *shell)
 	status = 0;
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
-		return (perror("minishell: env_list_to_array"), ERROR);
+	{
+		perror("minishell: env_list_to_array");
+		return (ERROR);
+	}
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
 		return (validation_result);
 	pid = fork();
 	if (pid < 0)
-		return (perror("minishell: fork"), ft_free_all(env_array), ERROR);
+	{
+		perror("minishell: fork");
+		ft_free_all(env_array);
+		return (ERROR);
+	}
 	if (pid == 0)
 		execute_child_process(shell, env_array);
 	else
@@ -157,7 +164,10 @@ void	exec_external_direct(t_shell *shell, char **env_array)
 
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
-		(cleanup_child_process(shell, env_array), exit(validation_result));
+	{
+		cleanup_child_process(shell, env_array);
+		exit(validation_result);
+	}
 	find_and_exec_command(shell, env_array);
 	cleanup_child_process(shell, env_array);
 	exit(EXIT_FAILURE);

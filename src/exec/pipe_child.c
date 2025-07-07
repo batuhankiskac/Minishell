@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/05 12:27:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:33:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,18 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 		if (dup2(prev_fd, STDIN_FILENO) == -1)
 		{
 			perror("minishell: dup2 prev_fd");
-			(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+			cleanup_child_process(shell, NULL);
+			exit(EXIT_FAILURE);
 		}
 		close(prev_fd);
 	}
 	if (pipe_write_fd != -1)
 	{
 		if (dup_fd(pipe_write_fd, STDOUT_FILENO, "pipe") == ERROR)
-			(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+		{
+			cleanup_child_process(shell, NULL);
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -96,15 +100,22 @@ static void	execute_child_cmd(t_shell *shell)
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-		(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+	{
+		cleanup_child_process(shell, NULL);
+		exit(EXIT_FAILURE);
+	}
 	if (is_builtin(shell->command->cmd))
 	{
 		exit_status = exec_builtin(shell);
-		(cleanup_child_process(shell, NULL), exit(exit_status));
+		cleanup_child_process(shell, NULL);
+		exit(exit_status);
 	}
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
-		(cleanup_child_process(shell, NULL), exit(EXIT_FAILURE));
+	{
+		cleanup_child_process(shell, NULL);
+		exit(EXIT_FAILURE);
+	}
 	exec_external_direct(shell, env_array);
 	cleanup_child_process(shell, env_array);
 	exit(EXIT_FAILURE);

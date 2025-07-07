@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 12:00:38 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 08:36:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ static int	handle_parsing(t_shell *shell)
 		|| !parse_commands(shell)
 		|| !parse_redirections(shell)
 		|| !expander(shell))
+	{
 		return (1);
+	}
 	return (0);
 }
 
@@ -73,12 +75,17 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		free(shell->line);
 	shell->line = ft_strdup(raw_line_ptr);
 	if (!shell->line)
-		return (perror("ft_strdup failed"), free(raw_line_ptr), 1);
+	{
+		perror("ft_strdup failed");
+		free(raw_line_ptr);
+		return (1);
+	}
 	if (handle_parsing(shell))
 	{
 		ft_putendl_fd("minishell: syntax error", STDERR_FILENO);
 		shell->exit_status = 2;
-		return (cleanup_iteration_resources(raw_line_ptr, shell), 1);
+		cleanup_iteration_resources(raw_line_ptr, shell);
+		return (1);
 	}
 	else if (shell->command && !shell->heredoc_eof)
 		run_command(shell);

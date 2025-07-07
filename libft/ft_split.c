@@ -73,7 +73,9 @@ char	**ft_split(char const *s, char c)
 			len = ft_word_len(s, c);
 			res[i] = (char *)malloc((len + 1) * sizeof(char));
 			if (res[i] == NULL)
+			{
 				return (freeall(res, i));
+			}
 			ft_strlcpy(res[i++], s, len + 1);
 			s += len;
 		}
