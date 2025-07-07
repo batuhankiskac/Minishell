@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/06 11:40:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 13:34:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,46 @@ static void	free_shell(t_shell *shell)
 }
 
 /**
- * @brief Implements the built-in exit command.
+ * @brief Validates exit arguments and determines the exit status.
  *
- * Handles the termination of the minishell process. It validates arguments,
- * sets the appropriate exit status, and cleans up all allocated resources
- * before exiting. It correctly handles "too many arguments" as a non-fatal
- * error, unlike other argument errors.
+ * @param shell A pointer to the t_shell structure.
+ * @param status_code A pointer to store the determined exit status.
+ * @return 0 if shell should exit, 1 if shell should continue (too many args).
+ */
+static int	validate_exit_args(t_shell *shell, int *status_code)
+{
+	if (shell->command->argc == 1)
+	{
+		*status_code = shell->exit_status;
+		return (0);
+	}
+	if (!is_numeric(shell->command->args[1]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(shell->command->args[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		*status_code = 2;
+		return (0);
+	}
+	if (shell->command->argc > 2)
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		return (1);
+	}
+	*status_code = ft_atoi(shell->command->args[1]);
+	return (0);
+}
+
+/**
+ * @brief Implements the built-in exit command according to bash behavior.
+ *
+ * It handles argument validation with specific logic:
+ * - `exit`: Exits with the last command's status.
+ * - `exit [numeric]`: Exits with the given status code.
+ * - `exit [non-numeric] ...`: Prints a "numeric argument required" error
+ * and exits with status 2.
+ * - `exit [numeric] [any] ...`: Prints a "too many arguments" error,
+ * sets $? to 1, but DOES NOT exit the shell.
  *
  * @param shell A pointer to the t_shell structure.
  * @return Returns 1 if there are too many arguments (non-fatal error).
@@ -68,27 +102,13 @@ static void	free_shell(t_shell *shell)
 int	builtin_exit(t_shell *shell)
 {
 	int	status_code;
+	int	should_exit;
 
 	if (isatty(STDOUT_FILENO))
 		ft_putendl_fd("exit", STDOUT_FILENO);
-	if (shell->command->argc > 2)
-	{
-		ft_putendl_fd("minishell: exit: too many arguments", 2);
+	should_exit = validate_exit_args(shell, &status_code);
+	if (should_exit == 1)
 		return (1);
-	}
-	status_code = shell->exit_status;
-	if (shell->command->argc == 2)
-	{
-		if (!is_numeric(shell->command->args[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(shell->command->args[1], 2);
-			ft_putendl_fd(": numeric argument required", 2);
-			status_code = 2;
-		}
-		else
-			status_code = ft_atoi(shell->command->args[1]);
-	}
 	free_shell(shell);
 	rl_clear_history();
 	exit(status_code & 0xFF);
