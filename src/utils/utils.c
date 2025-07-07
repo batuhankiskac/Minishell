@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/01 14:47:32 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:11:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	free_redirections(t_redir *r)
 	{
 		next = r->next;
 		free(r->file);
+		free(r->original_file);
 		free(r);
 		r = next;
 	}

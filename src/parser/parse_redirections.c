@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:11:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,13 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	}
 	r->type = type;
 	r->file = ft_strdup(file);
-	if (!r->file)
+	r->original_file = ft_strdup(file);
+	if (!r->file || !r->original_file)
 	{
+		if (r->file)
+			free(r->file);
+		if (r->original_file)
+			free(r->original_file);
 		free(r);
 		perror("ft_strdup error");
 		return (NULL);

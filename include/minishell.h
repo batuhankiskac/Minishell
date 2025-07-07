@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:40:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_redir
 {
 	t_redir_type	type;
 	char			*file;
+	char			*original_file;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -85,6 +86,7 @@ typedef struct s_shell
 	char		*line;
 	int			exit_status;
 	int			heredoc_eof;
+	int			line_number;
 }				t_shell;
 
 /*

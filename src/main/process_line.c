@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:40:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static int	handle_parsing(t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
+	shell->line_number++;
 	shell->heredoc_eof = 0;
 	if (shell->line)
 		free(shell->line);

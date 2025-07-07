@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 17:41:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@
  */
 static int	handle_heredoc_eof(t_shell *shell, int count)
 {
-	ft_putstr_fd("minishell: warning: here-document at line 1", 2);
-	ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
-	ft_putstr_fd(shell->redir->file, 2);
-	ft_putstr_fd("')\n", 2);
+	(void)shell; /* Unused - warning handled in collect_heredoc */
+	/* Just return the count with EOF flag - warning will be handled in collect_heredoc */
 	return (count | 0x80000000);
 }
 
@@ -60,13 +58,19 @@ static int	collect_input(t_shell *shell, char ***lines,
 {
 	char	*line;
 	int		count;
+	int		heredoc_line_count;
 
 	count = 0;
+	heredoc_line_count = 0;
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
+		{
+			shell->line_number = shell->line_number + heredoc_line_count;
 			return (handle_heredoc_eof(shell, count));
+		}
+		heredoc_line_count++;
 		if (ft_strcmp(line, shell->redir->file) == 0)
 		{
 			free(line);
@@ -98,7 +102,9 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd)
 	int		count;
 	int		eof_received;
 	int		capacity;
+	int		start_line_number;
 
+	start_line_number = shell->line_number;
 	capacity = 100;
 	lines = malloc(sizeof(char *) * capacity);
 	if (!lines)
@@ -111,15 +117,22 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd)
 	}
 	eof_received = (count & 0x80000000) != 0;
 	count = count & 0x7FFFFFFF;
+	if (eof_received)
+	{
+		ft_putstr_fd("minishell: line ", 2);
+		ft_putnbr_fd(shell->line_number, 2);
+		ft_putstr_fd(": warning: here-document at line ", 2);
+		ft_putnbr_fd(start_line_number, 2);
+		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
+		ft_putstr_fd(shell->redir->file, 2);
+		ft_putstr_fd("')\n", 2);
+	}
 	full_heredoc = join_heredoc(lines, count);
 	write_heredoc(shell, full_heredoc, eof_received);
 	free(full_heredoc);
 	free_heredoc(lines, count);
 	if (eof_received)
-	{
 		shell->heredoc_eof = 1;
-		return (1);
-	}
 	return (0);
 }
 
@@ -152,12 +165,6 @@ int	handle_heredoc_redir(t_shell *shell)
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		return (ERROR);
-	}
-	if (collect_result == 1)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return (1);
 	}
 	close(pipe_fd[1]);
 	if (dup_fd(pipe_fd[0], STDIN_FILENO, "heredoc") == ERROR)
