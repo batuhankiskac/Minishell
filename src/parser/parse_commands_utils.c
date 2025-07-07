@@ -57,7 +57,7 @@ int	init_command_args(t_command *cmd, int count)
 	cmd->args = malloc(sizeof(char *) * (count + 1));
 	if (!cmd->args)
 	{
-		perror("malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (0);
 	}
 	return (1);

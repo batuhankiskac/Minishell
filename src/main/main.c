@@ -36,8 +36,8 @@ static void	input_loop(t_shell *shell)
 		{
 			if (get_signal_flag() == SIGINT)
 				continue ;
-			if (isatty(STDIN_FILENO))
-				ft_putendl_fd("exit", STDOUT_FILENO);
+			if (isatty(0))
+				ft_printf(1, "exit\n");
 			break ;
 		}
 		if (process_line(raw_line_ptr, shell))

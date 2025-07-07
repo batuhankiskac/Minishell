@@ -15,13 +15,13 @@
 static void	sigint_handler_exec(int sig)
 {
 	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
+	write(1, "\n", 1);
 }
 
 static void	sigquit_handler_exec(int sig)
 {
 	(void)sig;
-	ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
+	ft_printf(2, "Quit (core dumped)\n");
 }
 
 void	setup_exec_signals(void)

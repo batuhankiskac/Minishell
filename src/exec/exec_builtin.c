@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/29 14:07:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:32:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static int	setup_builtin_redir(t_shell *shell, int *original_stdout,
 	*original_stdin = -1;
 	if (shell->command && shell->command->redir)
 	{
-		*original_stdout = dup(STDOUT_FILENO);
-		*original_stdin = dup(STDIN_FILENO);
+		*original_stdout = dup(1);
+		*original_stdin = dup(0);
 		if (setup_redir(shell) == ERROR)
 		{
 			if (*original_stdout != -1)
@@ -88,12 +88,12 @@ static void	restore_builtin_fds(int original_stdout, int original_stdin)
 {
 	if (original_stdout != -1)
 	{
-		dup2(original_stdout, STDOUT_FILENO);
+		dup2(original_stdout, 1);
 		close(original_stdout);
 	}
 	if (original_stdin != -1)
 	{
-		dup2(original_stdin, STDIN_FILENO);
+		dup2(original_stdin, 0);
 		close(original_stdin);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 09:31:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,7 @@ static int	process_export_arg(char *arg, t_env **env)
 
 	if (parse_export_arg(arg, &key, &value) == ERROR)
 	{
-		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-		ft_putstr_fd(arg, STDERR_FILENO);
-		ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+		ft_printf(2, "minishell: export: `%s': not a valid identifier\n", arg);
 		return (1);
 	}
 	if (value == NULL)

@@ -122,13 +122,7 @@ static int	collect_heredoc(t_shell *shell, int pipe_fd, int show_warning)
 	/* If EOF was received, print warning first (like bash) - but only if show_warning is true */
 	if (eof_received && show_warning)
 	{
-		ft_putstr_fd("minishell: line ", 2);
-		ft_putnbr_fd(shell->line_number, 2);
-		ft_putstr_fd(": warning: here-document at line ", 2);
-		ft_putnbr_fd(start_line_number, 2);
-		ft_putstr_fd(" delimited by end-of-file (wanted `", 2);
-		ft_putstr_fd(shell->redir->file, 2);
-		ft_putstr_fd("')\n", 2);
+		ft_printf(2, "minishell: line %d: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", shell->line_number, start_line_number, shell->redir->file);
 	}
 	full_heredoc = join_heredoc(lines, count);
 	write_heredoc(shell, full_heredoc, eof_received);
@@ -159,7 +153,7 @@ int	handle_heredoc_redir(t_shell *shell)
 
 	if (pipe(pipe_fd) == -1)
 	{
-		perror("minishell: pipe");
+		ft_printf(2, "minishell: pipe: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	collect_result = collect_heredoc(shell, pipe_fd[1], 1);
@@ -170,7 +164,7 @@ int	handle_heredoc_redir(t_shell *shell)
 		return (ERROR);
 	}
 	close(pipe_fd[1]);
-	if (dup_fd(pipe_fd[0], STDIN_FILENO, "heredoc") == ERROR)
+	if (dup_fd(pipe_fd[0], 0, "heredoc") == ERROR)
 	{
 		close(pipe_fd[0]);
 		return (ERROR);
@@ -197,7 +191,7 @@ int	handle_heredoc_collect_only(t_shell *shell)
 
 	if (pipe(pipe_fd) == -1)
 	{
-		perror("minishell: pipe");
+		ft_printf(2, "minishell: pipe: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	collect_result = collect_heredoc(shell, pipe_fd[1], 0);

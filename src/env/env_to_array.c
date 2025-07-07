@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 18:50:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	**env_list_to_array(t_env *env)
 	env_array = (char **)malloc(sizeof(char *) * (env_count(env) + 1));
 	if (!env_array)
 	{
-		perror("malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (NULL);
 	}
 	while (env)

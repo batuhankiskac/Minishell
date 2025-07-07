@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:00:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:32:10 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	handle_input_redir(t_redir *redir)
 	fd = open_file(redir->file, O_RDONLY, 0, "input");
 	if (fd == ERROR)
 		return (ERROR);
-	if (dup_fd(fd, STDIN_FILENO, "input") == ERROR)
+	if (dup_fd(fd, 0, "input") == ERROR)
 		return (ERROR);
 	return (0);
 }
@@ -31,7 +31,7 @@ static int	handle_output_redir(t_redir *redir)
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644, "output");
 	if (fd == ERROR)
 		return (ERROR);
-	if (dup_fd(fd, STDOUT_FILENO, "output") == ERROR)
+	if (dup_fd(fd, 1, "output") == ERROR)
 		return (ERROR);
 	return (0);
 }
@@ -43,7 +43,7 @@ static int	handle_append_redir(t_redir *redir)
 	fd = open_file(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644, "append");
 	if (fd == ERROR)
 		return (ERROR);
-	if (dup_fd(fd, STDOUT_FILENO, "append") == ERROR)
+	if (dup_fd(fd, 1, "append") == ERROR)
 		return (ERROR);
 	return (0);
 }
@@ -89,14 +89,14 @@ static int	apply_redirection(t_shell *shell, t_redir *redir)
  * `REDIR_APPEND`, `REDIR_HEREDOC`).
  *
  * - For `REDIR_IN`, it opens the specified file for reading and duplicates its
- *   file descriptor to `STDIN_FILENO`.
+ *   file descriptor to `0`.
  * - For `REDIR_OUT`, it opens (or creates/truncates) the specified file for
- *   writing and duplicates its file descriptor to `STDOUT_FILENO`.
+ *   writing and duplicates its file descriptor to `1`.
  * - For `REDIR_APPEND`, it opens (or creates/appends to) the specified file for
- *   writing and duplicates its file descriptor to `STDOUT_FILENO`.
+ *   writing and duplicates its file descriptor to `1`.
  * - For `REDIR_HEREDOC`, it calls `handle_heredoc_redir` to manage the
  *   here-document input, which typically involves reading lines until a
- *   delimiter and making that input available on `STDIN_FILENO`.
+ *   delimiter and making that input available on `0`.
  *
  * If any `open` or `dup2` operation fails, or if `handle_heredoc_redir` fails,
  * an error message is printed, and the function returns `ERROR`. Otherwise, it

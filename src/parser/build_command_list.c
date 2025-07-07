@@ -49,7 +49,7 @@ static t_command	*new_cmd(void)
 	c = malloc(sizeof(*c));
 	if (!c)
 	{
-		perror("malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (NULL);
 	}
 	c->cmd = NULL;

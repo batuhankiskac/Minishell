@@ -38,10 +38,8 @@ int	open_file(char *filename, int flags, int mode, char *type)
 	fd = open(filename, flags, mode);
 	if (fd == -1)
 	{
-		ft_putstr_fd("minishell: open ", 2);
-		ft_putstr_fd(type, 2);
-		ft_putstr_fd(" file ", 2);
-		perror(filename);
+		ft_printf(2, "minishell: open %s file ", type);
+		ft_printf(2, "%s: %s\n", filename, strerror(errno));
 		return (ERROR);
 	}
 	return (fd);
@@ -67,8 +65,8 @@ int	dup_fd(int old_fd, int new_fd, char *type)
 {
 	if (dup2(old_fd, new_fd) == -1)
 	{
-		ft_putstr_fd("minishell: dup2 ", 2);
-		perror(type);
+		ft_printf(2, "minishell: dup2 ");
+		ft_printf(2, "%s: %s\n", type, strerror(errno));
 		close(old_fd);
 		return (ERROR);
 	}

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:28 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	update_existing_env(char *value, t_env *node)
 		new_value = ft_strdup(value);
 		if (!new_value)
 		{
-			perror("minishell: export: memory allocation failed");
+			ft_printf(2, "minishell: export: memory allocation failed: %s\n", strerror(errno));
 			return (ERROR);
 		}
 	}
@@ -69,7 +69,7 @@ int	update_env(char *key, char *value, t_env **env)
 	node = malloc(sizeof(t_env));
 	if (!node)
 	{
-		perror("minishell: malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	node->key = ft_strdup(key);
@@ -82,7 +82,7 @@ int	update_env(char *key, char *value, t_env **env)
 		free(node->key);
 		free(node->value);
 		free(node);
-		perror("minishell: malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	node->next = *env;

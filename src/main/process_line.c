@@ -77,13 +77,13 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	shell->line = ft_strdup(raw_line_ptr);
 	if (!shell->line)
 	{
-		perror("ft_strdup failed");
+		ft_printf(2, "minishell: ft_strdup failed: %s\n", strerror(errno));
 		free(raw_line_ptr);
 		return (1);
 	}
 	if (handle_parsing(shell))
 	{
-		ft_putendl_fd("minishell: syntax error", STDERR_FILENO);
+		ft_printf(2, "minishell: syntax error\n");
 		shell->exit_status = 2;
 		cleanup_iteration_resources(raw_line_ptr, shell);
 		return (1);

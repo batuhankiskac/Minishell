@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 16:06:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:32:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*tilde_expansion(char *path, t_env **env)
 	home = get_env_value("HOME", *env);
 	if (!home)
 	{
-		ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+		ft_printf(2, "cd: HOME not set\n");
 		return (NULL);
 	}
 	if (path[1] == '\0')
@@ -62,7 +62,7 @@ static char	*get_target(int argc, char **args, t_env **env)
 		raw = get_env_value("HOME", *env);
 		if (!raw)
 		{
-			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+			ft_printf(2, "cd: HOME not set\n");
 			return (NULL);
 		}
 		return (raw);
@@ -72,7 +72,7 @@ static char	*get_target(int argc, char **args, t_env **env)
 		raw = get_env_value("OLDPWD", *env);
 		if (!raw)
 		{
-			ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+			ft_printf(2, "cd: OLDPWD not set\n");
 			return (NULL);
 		}
 		return (ft_strdup(raw));
@@ -96,16 +96,13 @@ static int	change_directory(char *target, char **new_pwd)
 {
 	if (chdir(target) == -1)
 	{
-		ft_putstr_fd("cd: ", STDERR_FILENO);
-		ft_putstr_fd(target, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		ft_printf(2, "cd: %s: %s\n", target, strerror(errno));
 		return (ERROR);
 	}
 	*new_pwd = getcwd(NULL, 0);
 	if (!*new_pwd)
 	{
-		perror("getcwd error");
+		ft_printf(2, "minishell: getcwd error: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	return (0);
@@ -133,13 +130,13 @@ int	builtin_cd(int argc, char **args, t_env **env)
 
 	if (argc > 2)
 	{
-		ft_putendl_fd("cd: too many arguments", 2);
+		ft_printf(2, "cd: too many arguments\n");
 		return (ERROR);
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd && errno != ENOENT)
 	{
-		perror("getcwd error");
+		ft_printf(2, "minishell: getcwd error: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	if (argc == 1 || (args[1] && args[1][0] == '\0'))
@@ -147,7 +144,7 @@ int	builtin_cd(int argc, char **args, t_env **env)
 		target = get_env_value("HOME", *env);
 		if (!target)
 		{
-			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+			ft_printf(2, "cd: HOME not set\n");
 			free(old_pwd);
 			return (ERROR);
 		}
@@ -169,11 +166,11 @@ int	builtin_cd(int argc, char **args, t_env **env)
 		return (ERROR);
 	}
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
-		ft_putendl_fd(new_pwd, STDOUT_FILENO);
+		ft_printf(1, "%s\n", new_pwd);
 	if (update_env("OLDPWD", old_pwd, env) == ERROR
 		|| update_env("PWD", new_pwd, env) == ERROR)
 	{
-		ft_putstr_fd("minishell: cd: failed to update environment\n", 2);
+		ft_printf(2, "minishell: cd: failed to update environment\n");
 		free(old_pwd);
 		free(new_pwd);
 		free(target);

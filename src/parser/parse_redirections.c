@@ -37,7 +37,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	r = malloc(sizeof(*r));
 	if (!r)
 	{
-		perror("malloc error");
+		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
 		return (NULL);
 	}
 	r->type = type;
@@ -50,7 +50,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 		if (r->original_file)
 			free(r->original_file);
 		free(r);
-		perror("ft_strdup error");
+		ft_printf(2, "minishell: ft_strdup error: %s\n", strerror(errno));
 		return (NULL);
 	}
 	r->next = NULL;

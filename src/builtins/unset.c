@@ -88,8 +88,7 @@ int	builtin_unset(int argc, char **args, t_env **env)
 			delete_env(args[i], env);
 		else
 		{
-			ft_putstr_fd("unset: not a valid identifier: ", 2);
-			ft_putendl_fd(args[i], 2);
+			ft_printf(2, "unset: not a valid identifier: %s\n", args[i]);
 			return (ERROR);
 		}
 	}

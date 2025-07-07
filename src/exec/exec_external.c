@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 16:06:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 19:31:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,13 @@ static void	find_and_exec_command(t_shell *shell, char **env_array)
 	path = find_path(shell->command->cmd, env_array);
 	if (!path)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(shell->command->cmd, STDERR_FILENO);
-		ft_putendl_fd(": command not found", STDERR_FILENO);
+		ft_printf(2, "minishell: %s: command not found\n", shell->command->cmd);
 		cleanup_child_process(shell, env_array);
 		exit(127);
 	}
 	if (execve(path, shell->command->args, env_array) == -1)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(shell->command->cmd, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putendl_fd(strerror(errno), STDERR_FILENO);
+		ft_printf(2, "minishell: %s: %s\n", shell->command->cmd, strerror(errno));
 		if (ft_strcmp(path, shell->command->cmd) != 0)
 			free(path);
 		cleanup_child_process(shell, env_array);
@@ -67,7 +62,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
 	{
-		ft_putendl_fd("minishell: redirection setup failed", STDERR_FILENO);
+		ft_printf(2, "minishell: redirection setup failed\n");
 		exit(1);
 	}
 	find_and_exec_command(shell, env_array);
@@ -89,13 +84,13 @@ static int	validate_command(t_shell *shell, char **env_array)
 {
 	if (!shell->command || !shell->command->cmd || !shell->command->args)
 	{
-		ft_putendl_fd("minishell: command not found", STDERR_FILENO);
+		ft_printf(2, "minishell: command not found\n");
 		ft_free_all(env_array);
 		return (127);
 	}
 	if (shell->command->cmd[0] == '\0')
 	{
-		ft_putendl_fd("minishell: command not found", STDERR_FILENO);
+		ft_printf(2, "minishell: command not found\n");
 		ft_free_all(env_array);
 		return (127);
 	}
@@ -125,7 +120,7 @@ int	exec_external(t_shell *shell)
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
 	{
-		perror("minishell: env_list_to_array");
+		ft_printf(2, "minishell: env_list_to_array: %s\n", strerror(errno));
 		return (ERROR);
 	}
 	validation_result = validate_command(shell, env_array);
@@ -134,7 +129,7 @@ int	exec_external(t_shell *shell)
 	pid = fork();
 	if (pid < 0)
 	{
-		perror("minishell: fork");
+		ft_printf(2, "minishell: fork: %s\n", strerror(errno));
 		ft_free_all(env_array);
 		return (ERROR);
 	}

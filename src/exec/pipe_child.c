@@ -55,9 +55,9 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 {
 	if (prev_fd != -1)
 	{
-		if (dup2(prev_fd, STDIN_FILENO) == -1)
+		if (dup2(prev_fd, 0) == -1)
 		{
-			perror("minishell: dup2 prev_fd");
+			ft_printf(2, "minishell: dup2 prev_fd: %s\n", strerror(errno));
 			cleanup_child_process(shell, NULL);
 			exit(EXIT_FAILURE);
 		}
@@ -65,7 +65,7 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 	}
 	if (pipe_write_fd != -1)
 	{
-		if (dup_fd(pipe_write_fd, STDOUT_FILENO, "pipe") == ERROR)
+		if (dup_fd(pipe_write_fd, 1, "pipe") == ERROR)
 		{
 			cleanup_child_process(shell, NULL);
 			exit(EXIT_FAILURE);
