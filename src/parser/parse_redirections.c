@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 17:11:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:55:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	r = malloc(sizeof(*r));
 	if (!r)
 	{
-		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
+		print_error(NULL, NULL, strerror(errno), 0);
 		return (NULL);
 	}
 	r->type = type;
@@ -50,7 +50,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 		if (r->original_file)
 			free(r->original_file);
 		free(r);
-		ft_printf(2, "minishell: ft_strdup error: %s\n", strerror(errno));
+		print_error(NULL, NULL, strerror(errno), 0);
 		return (NULL);
 	}
 	r->next = NULL;

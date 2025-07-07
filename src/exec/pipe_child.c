@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 22:47:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:55:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 	{
 		if (dup2(prev_fd, 0) == -1)
 		{
-			ft_printf(2, "minishell: dup2 prev_fd: %s\n", strerror(errno));
+			print_error(NULL, NULL, strerror(errno), 0);
 			cleanup_child_process(shell, NULL);
 			exit(EXIT_FAILURE);
 		}

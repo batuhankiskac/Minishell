@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 00:10:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,16 +95,10 @@ static char	*get_target(int argc, char **args, t_env **env)
 static int	change_directory(char *target, char **new_pwd)
 {
 	if (chdir(target) == -1)
-	{
-		ft_printf(2, "cd: %s: %s\n", target, strerror(errno));
-		return (ERROR);
-	}
+		return (print_error("cd", target, strerror(errno), ERROR));
 	*new_pwd = getcwd(NULL, 0);
 	if (!*new_pwd)
-	{
-		ft_printf(2, "minishell: getcwd error: %s\n", strerror(errno));
-		return (ERROR);
-	}
+		return (print_error("cd", NULL, strerror(errno), ERROR));
 	return (0);
 }
 
@@ -136,8 +130,7 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd && errno != ENOENT)
 	{
-		ft_printf(2, "minishell: getcwd error: %s\n", strerror(errno));
-		return (ERROR);
+		return (print_error("cd", NULL, strerror(errno), ERROR));
 	}
 	if (argc == 1 || (args[1] && args[1][0] == '\0'))
 	{
@@ -170,11 +163,10 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	if (update_env("OLDPWD", old_pwd, env) == ERROR
 		|| update_env("PWD", new_pwd, env) == ERROR)
 	{
-		ft_printf(2, "minishell: cd: failed to update environment\n");
 		free(old_pwd);
 		free(new_pwd);
 		free(target);
-		return (ERROR);
+		return (print_error("cd", NULL, strerror(errno), ERROR));
 	}
 	free(old_pwd);
 	free(new_pwd);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 17:11:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:58:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,25 @@ void	free_redirections(t_redir *r)
 		free(r);
 		r = next;
 	}
+}
+
+/**
+ * @brief Prints a standardized error message to STDERR.
+ * @param cmd The command that caused the error (e.g., "cd").
+ * @param arg The argument related to the error (can be NULL).
+ * @param msg The specific error message.
+ * @param err_code The error code to return. If -127, returns NULL.
+ * @return Returns the specified error code, or NULL if err_code is -127.
+ */
+int	print_error(char *cmd, char *arg, char *msg, int err_code)
+{
+	ft_printf(2, "minishell: ");
+	if (cmd)
+		ft_printf(2, "%s: ", cmd);
+	if (arg)
+		ft_printf(2, "%s: ", arg);
+	ft_printf(2, "%s\n", msg);
+	if (err_code == -127)
+		return (NULL);
+	return (err_code);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 20:06:25 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 00:08:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,7 @@ int	handle_heredoc_redir(t_shell *shell)
 	int	collect_result;
 
 	if (pipe(pipe_fd) == -1)
-	{
-		ft_printf(2, "minishell: pipe: %s\n", strerror(errno));
-		return (ERROR);
-	}
+		return (print_error(NULL, NULL, strerror(errno), ERROR));
 	collect_result = collect_heredoc(shell, pipe_fd[1], 1);
 	if (collect_result == ERROR)
 	{
@@ -186,10 +183,7 @@ int	handle_heredoc_collect_only(t_shell *shell)
 	int	collect_result;
 
 	if (pipe(pipe_fd) == -1)
-	{
-		ft_printf(2, "minishell: pipe: %s\n", strerror(errno));
-		return (ERROR);
-	}
+		return (print_error(NULL, NULL, strerror(errno), ERROR));
 	collect_result = collect_heredoc(shell, pipe_fd[1], 0);
 	if (collect_result == ERROR)
 	{

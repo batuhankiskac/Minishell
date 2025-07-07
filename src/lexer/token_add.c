@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/03 11:59:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:59:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,12 @@ int	token_add(t_token **tokens, const char *word, int len)
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-	{
-		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
-		return (0);
-	}
+		return (print_error(NULL, NULL, strerror(errno), 0));
 	new_token->str = ft_strndup(word, len);
 	if (!new_token->str)
 	{
 		free(new_token);
-		ft_printf(2, "minishell: ft_strndup error: %s\n", strerror(errno));
-		return (0);
+		return (print_error(NULL, NULL, strerror(errno), 0));
 	}
 	new_token->type = determine_token_type(word, len);
 	new_token->next = NULL;

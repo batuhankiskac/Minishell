@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:28:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 00:07:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ static t_env	*create_env_node(char *env_var)
 		return (NULL);
 	new_node = (t_env *)malloc(sizeof(t_env));
 	if (!new_node)
-	{
-		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
-		return (NULL);
-	}
+		return (print_error(NULL, NULL, strerror(errno), -127));
 	new_node->key = ft_substr(env_var, 0, equal_sign - env_var);
 	new_node->value = ft_strdup(equal_sign + 1);
 	if (!new_node->key || !new_node->value)

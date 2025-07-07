@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:25:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/07 23:47:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,15 @@ int	builtin_exit(t_shell *shell)
 		ft_printf(1, "exit\n");
 	if (shell->command->argc > 2)
 	{
-		ft_printf(2, "minishell: exit: too many arguments\n");
-		return (1);
+		return (print_error("exit", NULL, "too many arguments", 1));
 	}
 	status_code = shell->exit_status;
 	if (shell->command->argc == 2)
 	{
 		if (!is_numeric(shell->command->args[1]))
 		{
-			ft_printf(2, "minishell: exit: %s: numeric argument required\n",
-				shell->command->args[1]);
+			print_error("exit", shell->command->args[1],
+				"numeric argument required", 2);
 			status_code = 2;
 		}
 		else

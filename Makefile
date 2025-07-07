@@ -28,7 +28,7 @@ SRCS = src/main/main.c \
 	   src/env/env_update.c \
 	   src/env/env_utils.c \
 	   src/env/env_value.c \
-	   src/apply_redir.c \
+	   src/exec/apply_redir.c \
 	   src/exec/exec_builtin.c \
 	   src/exec/exec_external.c \
 	   src/exec/exec_pipe.c \
