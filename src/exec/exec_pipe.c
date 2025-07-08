@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:36:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 22:20:54 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,9 @@ int	execute_pipe(t_shell *shell)
 	int			prev_fd;
 	int			status;
 	int			ret;
+	int			exit_code;
 
+	exit_code = 0;
 	prev_fd = -1;
 	cmd = shell->command;
 	while (cmd)
@@ -151,6 +153,6 @@ int	execute_pipe(t_shell *shell)
 		cmd = cmd->next;
 	}
 	while (wait(&status) > 0)
-		;
-	return (handle_wait_status(status, NULL));
+		exit_code = handle_wait_status(status, NULL);
+	return (exit_code);
 }

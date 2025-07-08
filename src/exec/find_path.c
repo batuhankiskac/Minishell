@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 21:57:05 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 22:24:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,21 +111,29 @@ static char	*find_command_in_path(char *cmd_name, char *path_list_str)
 }
 
 /**
- * @brief Handles direct path commands (containing '/').
+ * @brief Processes command path resolution for commands without '/'.
  *
- * This function processes commands that contain a '/' character, treating
- * them as direct paths (absolute or relative). It checks if the path is
- * accessible and executable.
+ * This function handles the PATH-based command resolution. It retrieves
+ * the PATH environment variable and searches through its directories
+ * to find the executable command.
  *
- * @param cmd_name The command name that contains '/'.
- * @return A dynamically allocated string containing the command name if
- *         accessible and executable, or NULL if not accessible.
+ * @param cmd_name The extracted command name to search for.
+ * @param envp An array of strings representing the environment variables.
+ * @return A dynamically allocated string containing the full path to the
+ *         executable if found, or NULL if not found or on error.
  */
-static char	*handle_direct_path(char *cmd_name)
+static char	*process_path_resolution(char *cmd_name, char *envp[])
 {
-	if (access(cmd_name, F_OK | X_OK) == 0)
-		return (ft_strdup(cmd_name));
-	return (NULL);
+	char	*path_env_val;
+	char	*result_path;
+
+	if (!envp)
+		return (NULL);
+	path_env_val = find_in_envp("PATH", envp);
+	if (!path_env_val)
+		return (NULL);
+	result_path = find_command_in_path(cmd_name, path_env_val);
+	return (result_path);
 }
 
 /**
@@ -153,29 +161,19 @@ char	*find_path(char *cmd, char *envp[])
 {
 	char	*cmd_name;
 	char	*result_path;
-	char	*path_env_val;
 
 	cmd_name = extract_cmd_name(cmd);
 	if (!cmd_name)
 		return (NULL);
 	if (ft_strchr(cmd_name, '/'))
 	{
-		result_path = handle_direct_path(cmd_name);
-		free(cmd_name);
-		return (result_path);
+		if (access(cmd_name, F_OK | X_OK) == 0)
+			result_path = ft_strdup(cmd_name);
+		else
+			result_path = NULL;
 	}
-	if (!envp)
-	{
-		free(cmd_name);
-		return (NULL);
-	}
-	path_env_val = find_in_envp("PATH", envp);
-	if (!path_env_val)
-	{
-		free(cmd_name);
-		return (NULL);
-	}
-	result_path = find_command_in_path(cmd_name, path_env_val);
+	else
+		result_path = process_path_resolution(cmd_name, envp);
 	free(cmd_name);
 	return (result_path);
 }
