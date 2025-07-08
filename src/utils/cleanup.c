@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:59:51 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:22:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,28 @@ void	cleanup_heredoc(t_shell *shell)
 		close(shell->heredoc->pipe_fd);
 	free(shell->heredoc);
 	shell->heredoc = NULL;
+}
+
+/**
+ * @brief Cleans up memory allocated for cd command operations.
+ *
+ * This utility function frees the memory allocated for old_pwd, new_pwd,
+ * and target directory paths. Handles NULL pointers safely.
+ *
+ * @param old_pwd The old working directory path to free.
+ * @param new_pwd The new working directory path to free.
+ * @param target The target directory path to free.
+ * @param return_value The value to return after cleanup.
+ * @return The provided return_value parameter.
+ */
+int	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target,
+	int return_value)
+{
+	if (old_pwd)
+		free(old_pwd);
+	if (new_pwd)
+		free(new_pwd);
+	if (target)
+		free(target);
+	return (return_value);
 }

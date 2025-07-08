@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:45:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 16:34:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:56:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,45 @@ static int	has_redirection_tokens(t_token *t)
 }
 
 /**
- * @brief Processes a single command block from the token list.
+ * @brief Sets up a command with only redirections (no arguments).
  *
- * This function counts the number of words in the token list until a pipe
- * token is encountered, initializes the command's argument array, populates
- * the arguments, and sets the command name. If the token list contains a
- * pipe token, the pointer is advanced to the next token after the pipe.
+ * @param cmd A pointer to the command structure to populate.
+ * @return 1 on success, 0 on failure.
+ */
+static int	setup_redirection_only_command(t_command *cmd)
+{
+	if (!init_command_args(cmd, 1))
+		return (0);
+	cmd->args[0] = ft_strdup("/bin/true");
+	cmd->args[1] = NULL;
+	cmd->argc = 1;
+	cmd->cmd = cmd->args[0];
+	return (1);
+}
+
+/**
+ * @brief Sets up a regular command with arguments.
+ *
+ * @param cmd A pointer to the command structure to populate.
+ * @param t_ptr A pointer to the token pointer.
+ * @param count Number of arguments to allocate.
+ * @return 1 on success, 0 on failure.
+ */
+static int	setup_regular_command(t_command *cmd, t_token **t_ptr, int count)
+{
+	if (!init_command_args(cmd, count))
+		return (0);
+	populate_args(t_ptr, cmd);
+	set_command_name(cmd);
+	if (!cmd->cmd && cmd->argc > 0)
+		cmd->cmd = cmd->args[0];
+	else if (!cmd->cmd && count > 0)
+		cmd->cmd = "";
+	return (1);
+}
+
+/**
+ * @brief Processes a single command block from the token list.
  *
  * @param cmd A pointer to the command structure to populate.
  * @param t_ptr A pointer to the token pointer, which is updated as tokens
@@ -53,23 +86,13 @@ int	process_command_block(t_command *cmd, t_token **t_ptr)
 		return (0);
 	if (count == 0 && has_redirections)
 	{
-		if (!init_command_args(cmd, 1))
+		if (!setup_redirection_only_command(cmd))
 			return (0);
-		cmd->args[0] = ft_strdup("/bin/true");
-		cmd->args[1] = NULL;
-		cmd->argc = 1;
-		cmd->cmd = cmd->args[0];
 	}
 	else
 	{
-		if (!init_command_args(cmd, count))
+		if (!setup_regular_command(cmd, t_ptr, count))
 			return (0);
-		populate_args(t_ptr, cmd);
-		set_command_name(cmd);
-		if (!cmd->cmd && cmd->argc > 0)
-			cmd->cmd = cmd->args[0];
-		else if (!cmd->cmd && count > 0)
-			cmd->cmd = "";
 	}
 	if (*t_ptr && (*t_ptr)->type == TOKEN_PIPE)
 		*t_ptr = (*t_ptr)->next;

@@ -14,7 +14,6 @@ LDLIBS = -lreadline
 
 SRCS = src/main/main.c \
 	   src/main/process_line.c \
-	   src/main/cleanup.c \
 	   src/builtins/cd.c \
 	   src/builtins/echo.c \
 	   src/builtins/env.c \
@@ -59,7 +58,9 @@ SRCS = src/main/main.c \
 	   src/signals/signal_exec.c \
 	   src/signals/signal_flag.c \
 	   src/signals/signal_handlers.c \
-	   src/utils/utils.c
+	   src/utils/cleanup.c \
+	   src/utils/error.c \
+	   src/utils/free.c
 
 OBJS = $(SRCS:.c=.o)
 

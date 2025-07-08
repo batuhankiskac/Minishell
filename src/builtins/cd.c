@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:14:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:22:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,22 +151,13 @@ int	builtin_cd(int argc, char **args, t_env **env)
 		return (print_error("cd", NULL, strerror(errno), ERROR));
 	target = get_target(argc, args, env);
 	if (!target)
-	{
-		cleanup_cd_memory(old_pwd, NULL, NULL);
-		return (ERROR);
-	}
+		return (cleanup_cd_memory(old_pwd, NULL, NULL, ERROR));
 	if (change_directory(target, &new_pwd) == ERROR)
-	{
-		cleanup_cd_memory(old_pwd, NULL, target);
-		return (ERROR);
-	}
+		return (cleanup_cd_memory(old_pwd, NULL, target, ERROR));
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
 		ft_printf(1, "%s\n", new_pwd);
 	if (update_pwd_env(old_pwd, new_pwd, env) == ERROR)
-	{
-		cleanup_cd_memory(old_pwd, new_pwd, target);
-		return (print_error("cd", NULL, strerror(errno), ERROR));
-	}
-	cleanup_cd_memory(old_pwd, new_pwd, target);
-	return (0);
+		return (cleanup_cd_memory(old_pwd, new_pwd, target,
+				print_error("cd", NULL, strerror(errno), ERROR)));
+	return (cleanup_cd_memory(old_pwd, new_pwd, target, 0));
 }

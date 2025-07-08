@@ -6,11 +6,28 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:55:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:02:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Helper function to cleanup child process and exit with given status.
+ *
+ * @param shell A pointer to the shell structure.
+ * @param env_array A pointer to the environment array (can be NULL).
+ * @param original_head A pointer to restore the original command head.
+ * @param exit_code The exit status code.
+ */
+static void	cleanup_and_exit(t_shell *shell, char **env_array,
+	t_command *original_head, int exit_code)
+{
+	if (original_head)
+		shell->command = original_head;
+	cleanup_child_process(shell, env_array);
+	exit(exit_code);
+}
 
 /**
  * @brief Initializes the write end of the pipe for the current command.
@@ -58,18 +75,14 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 		if (dup2(prev_fd, 0) == -1)
 		{
 			print_error(NULL, NULL, strerror(errno), 0);
-			cleanup_child_process(shell, NULL);
-			exit(EXIT_FAILURE);
+			cleanup_and_exit(shell, NULL, NULL, EXIT_FAILURE);
 		}
 		close(prev_fd);
 	}
 	if (pipe_write_fd != -1)
 	{
 		if (dup_fd(pipe_write_fd, 1, "pipe") == ERROR)
-		{
-			cleanup_child_process(shell, NULL);
-			exit(EXIT_FAILURE);
-		}
+			cleanup_and_exit(shell, NULL, NULL, EXIT_FAILURE);
 	}
 }
 
@@ -100,29 +113,17 @@ static void	execute_child_cmd(t_shell *shell, t_command *original_head)
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-	{
-		shell->command = original_head;
-		cleanup_child_process(shell, NULL);
-		exit(EXIT_FAILURE);
-	}
+		cleanup_and_exit(shell, NULL, original_head, EXIT_FAILURE);
 	if (is_builtin(shell->command->cmd))
 	{
 		exit_status = exec_builtin(shell);
-		shell->command = original_head;
-		cleanup_child_process(shell, NULL);
-		exit(exit_status);
+		cleanup_and_exit(shell, NULL, original_head, exit_status);
 	}
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
-	{
-		shell->command = original_head;
-		cleanup_child_process(shell, NULL);
-		exit(EXIT_FAILURE);
-	}
+		cleanup_and_exit(shell, NULL, original_head, EXIT_FAILURE);
 	exec_external_direct(shell, env_array);
-	shell->command = original_head;
-	cleanup_child_process(shell, env_array);
-	exit(EXIT_FAILURE);
+	cleanup_and_exit(shell, env_array, original_head, EXIT_FAILURE);
 }
 
 /**

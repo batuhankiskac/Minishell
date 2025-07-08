@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 14:00:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:22:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,6 @@ char	*join_heredoc(char **lines, int count);
 void	exec_external_direct(t_shell *shell, char **env_array);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
-void	free_heredoc(char **lines, int count);
 void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
@@ -210,15 +209,13 @@ void	setup_exec_signals(void);
 /*
 ** Utils
 */
+int		print_error(char *cmd, char *arg, char *msg, int err_code);
 void	ft_free_all(char **arr);
 void	free_redirections(t_redir *r);
-void	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target);
-int		print_error(char *cmd, char *arg, char *msg, int err_code);
+void	free_heredoc(char **lines, int count);
+int	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target,
+	int return_value);
 void	*print_error_null(char *cmd, char *arg, char *msg);
-
-/*
-** Cleanup
-*/
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
 void	cleanup_heredoc(t_shell *shell);
