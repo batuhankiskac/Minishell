@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:47:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:10:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,7 @@ static int	process_export_arg(char *arg, t_env **env)
 	char	*value;
 
 	if (parse_export_arg(arg, &key, &value) == ERROR)
-	{
 		return (print_error("export", arg, "not a valid identifier", 1));
-	}
 	if (value == NULL)
 	{
 		if (!find_env(key, *env))
