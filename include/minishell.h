@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:46:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
 char	*join_heredoc(char **lines, int count);
 void	exec_external_direct(t_shell *shell, char **env_array);
+void	find_and_exec_command(t_shell *shell, char **env_array);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	write_heredoc(t_shell *shell,

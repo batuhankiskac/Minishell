@@ -6,43 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:47:25 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Executes the command using execve.
- *
- * This function finds the command's executable path and executes it using
- * execve. If the command is not found or execution fails, an error message
- * is printed and the child process exits with the appropriate status code.
- *
- * @param shell A pointer to the shell structure containing the command.
- * @param env_array An array of environment variables for the child process.
- */
-static void	find_and_exec_command(t_shell *shell, char **env_array)
-{
-	char	*path;
-
-	path = find_path(shell->command->cmd, env_array);
-	if (!path)
-	{
-		print_error(NULL, shell->command->cmd, "command not found", 127);
-		cleanup_child_and_exit(shell, env_array, NULL, 127);
-	}
-	if (execve(path, shell->command->args, env_array) == -1)
-	{
-		print_error(NULL, shell->command->cmd, strerror(errno), 0);
-		if (ft_strcmp(path, shell->command->cmd) != 0)
-			free(path);
-		cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
-	}
-	if (ft_strcmp(path, shell->command->cmd) != 0)
-		free(path);
-	exit(EXIT_SUCCESS);
-}
 
 /**
  * @brief Executes a command in the child process.
@@ -87,7 +55,7 @@ static int	fork_and_execute(t_shell *shell, char **env_array)
 	if (pid < 0)
 	{
 		ft_free_all(env_array);
-		return (print_error(NULL, NULL, strerror(errno), ERROR));
+		return (print_error(NULL, NULL, strerror(errno), 1));
 	}
 	if (pid == 0)
 		execute_child_process(shell, env_array);
@@ -118,7 +86,7 @@ int	exec_external(t_shell *shell)
 
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
-		return (print_error(NULL, NULL, strerror(errno), ERROR));
+		return (print_error(NULL, NULL, strerror(errno), 1));
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
 		return (validation_result);

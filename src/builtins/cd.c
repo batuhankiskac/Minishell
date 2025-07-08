@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:06:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ static char	*tilde_expansion(char *path, t_env **env)
 		return (ft_strdup(path));
 	home = get_env_value("HOME", *env);
 	if (!home)
-	{
-		ft_printf(2, "cd: HOME not set\n");
-		return (NULL);
-	}
+		return (print_error_null("cd", NULL, "HOME not set"));
 	if (path[1] == '\0')
 		return (ft_strdup(home));
 	if (path[1] == '/')
@@ -61,20 +58,15 @@ static char	*get_target(int argc, char **args, t_env **env)
 	{
 		raw = get_env_value("HOME", *env);
 		if (!raw)
-		{
-			ft_printf(2, "cd: HOME not set\n");
-			return (NULL);
-		}
+			return (print_error_null("cd", NULL, "HOME not set"));
 		return (ft_strdup(raw));
 	}
 	if (ft_strcmp(args[1], "-") == 0)
 	{
 		raw = get_env_value("OLDPWD", *env);
 		if (!raw)
-		{
-			ft_printf(2, "cd: OLDPWD not set\n");
-			return (NULL);
-		}
+			return (print_error_null("cd", NULL, "OLDPWD not set"));
+		ft_printf(1, "%s\n", raw);
 		return (ft_strdup(raw));
 	}
 	return (tilde_expansion(args[1], env));
@@ -98,7 +90,8 @@ static int	change_directory(char *target, char **new_pwd)
 		return (print_error("cd", target, strerror(errno), 1));
 	*new_pwd = getcwd(NULL, 0);
 	if (!*new_pwd)
-		return (print_error("cd", NULL, strerror(errno), 1));
+		return (print_error("cd", "error retrieving current directory",
+				"getcwd: cannot access parent directories", 1));
 	return (0);
 }
 
