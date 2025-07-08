@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:10:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void	free_redirections(t_redir *r)
  * @param cmd The command that caused the error (e.g., "cd").
  * @param arg The argument related to the error (can be NULL).
  * @param msg The specific error message.
- * @param err_code The error code to return. If -127, returns NULL.
- * @return Returns the specified error code, or NULL if err_code is -127.
+ * @param err_code The error code to return.
+ * @return Returns the specified error code.
  */
 int	print_error(char *cmd, char *arg, char *msg, int err_code)
 {
@@ -70,7 +70,18 @@ int	print_error(char *cmd, char *arg, char *msg, int err_code)
 	if (arg)
 		ft_printf(2, "%s: ", arg);
 	ft_printf(2, "%s\n", msg);
-	if (err_code == -127)
-		return (NULL);
 	return (err_code);
+}
+
+/**
+ * @brief Prints error message and returns NULL pointer.
+ * @param cmd The command that caused the error.
+ * @param arg The argument related to the error (can be NULL).
+ * @param msg The specific error message.
+ * @return Always returns NULL.
+ */
+void	*print_error_null(char *cmd, char *arg, char *msg)
+{
+	print_error(cmd, arg, msg, 0);
+	return (NULL);
 }

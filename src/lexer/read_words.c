@@ -6,31 +6,26 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:10:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Reads a word from the input string starting at the given position.
+ * @brief Parses word boundaries handling quotes and special characters.
  *
- * This function reads a word from the input string, handling quotes and
- * spaces. It updates the position to the end of the word and adds the word
- * to the tokens list.
+ * This function determines where a word starts and ends in the input string,
+ * properly handling quoted sections and special token characters.
  *
  * @param pos The starting position in the input string.
  * @param str The input string containing the command line.
- * @param tokens A pointer to the list of tokens where the word will be added.
- * @return The length of the word read, or ERROR if an error occurs.
+ * @return The ending position of the word, or ERROR if quote mismatch.
  */
-int	read_words(int pos, const char *str, t_token **tokens)
+static int	parse_word_boundaries(int pos, const char *str)
 {
-	int		start;
 	char	quote;
-	char	*word;
 
-	start = pos;
 	while (str[pos] && !ft_isspace(str[pos]))
 	{
 		if (str[pos] == '\'' || str[pos] == '\"')
@@ -47,12 +42,37 @@ int	read_words(int pos, const char *str, t_token **tokens)
 		else
 			pos++;
 	}
-	word = ft_substr(str, start, pos - start);
-	if (!word || !token_add(tokens, word, pos - start))
+	return (pos);
+}
+
+/**
+ * @brief Reads a word from the input string starting at the given position.
+ *
+ * This function reads a word from the input string, handling quotes and
+ * spaces. It updates the position to the end of the word and adds the word
+ * to the tokens list.
+ *
+ * @param pos The starting position in the input string.
+ * @param str The input string containing the command line.
+ * @param tokens A pointer to the list of tokens where the word will be added.
+ * @return The length of the word read, or ERROR if an error occurs.
+ */
+int	read_words(int pos, const char *str, t_token **tokens)
+{
+	int		start;
+	int		end;
+	char	*word;
+
+	start = pos;
+	end = parse_word_boundaries(pos, str);
+	if (end == ERROR)
+		return (ERROR);
+	word = ft_substr(str, start, end - start);
+	if (!word || !token_add(tokens, word, end - start))
 	{
 		free(word);
 		return (ERROR);
 	}
 	free(word);
-	return (pos - start);
+	return (end - start);
 }

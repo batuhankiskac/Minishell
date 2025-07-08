@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:10:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,7 @@ void	setup_exec_signals(void);
 void	ft_free_all(char **arr);
 void	free_redirections(t_redir *r);
 int		print_error(char *cmd, char *arg, char *msg, int err_code);
+void	*print_error_null(char *cmd, char *arg, char *msg);
 
 /*
 ** Cleanup

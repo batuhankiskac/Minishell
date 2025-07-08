@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:10:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_env	*create_env_node(char *env_var)
 		return (NULL);
 	new_node = (t_env *)malloc(sizeof(t_env));
 	if (!new_node)
-		return (print_error(NULL, NULL, strerror(errno), -127));
+		return (print_error_null(NULL, NULL, strerror(errno)));
 	new_node->key = ft_substr(env_var, 0, equal_sign - env_var);
 	new_node->value = ft_strdup(equal_sign + 1);
 	if (!new_node->key || !new_node->value)
