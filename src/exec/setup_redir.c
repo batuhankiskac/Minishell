@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:35:34 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:58:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	process_heredoc(t_shell *shell, t_redir *redir,
 	shell->redir = redir;
 	if (redir == last_heredoc)
 	{
-		ret = handle_heredoc_redir(shell);
+		ret = handle_heredoc_redir(shell, 1);
 		if (ret == 1)
 		{
 			shell->heredoc_eof = 1;
@@ -68,7 +68,7 @@ static int	process_heredoc(t_shell *shell, t_redir *redir,
 	}
 	else
 	{
-		ret = handle_heredoc_collect_only(shell);
+		ret = handle_heredoc_redir(shell, 0);
 		if (ret == ERROR)
 			return (ERROR);
 	}

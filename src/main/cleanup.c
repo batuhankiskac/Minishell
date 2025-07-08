@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 22:47:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:59:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,24 @@ void	cleanup_child_process(t_shell *shell, char **env_array)
 		free_env(shell->env);
 		shell->env = NULL;
 	}
+}
+
+/**
+ * @brief Cleans up heredoc structure and frees memory.
+ *
+ * This function frees all memory associated with the heredoc
+ * structure and resets the pointer to NULL.
+ *
+ * @param shell The shell structure containing heredoc to cleanup.
+ */
+void	cleanup_heredoc(t_shell *shell)
+{
+	if (!shell->heredoc)
+		return ;
+	if (shell->heredoc->lines)
+		free_heredoc(shell->heredoc->lines, shell->heredoc->count);
+	if (shell->heredoc->pipe_fd != -1)
+		close(shell->heredoc->pipe_fd);
+	free(shell->heredoc);
+	shell->heredoc = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:14:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:00:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,21 @@ typedef struct s_command
 	struct s_command	*next;
 }						t_command;
 
+typedef struct s_heredoc
+{
+	char	**lines;
+	int		count;
+	int		capacity;
+	int		pipe_fd;
+}			t_heredoc;
+
 typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*command;
 	t_token		*tokens;
 	t_redir		*redir;
+	t_heredoc	*heredoc;
 	char		*line;
 	int			exit_status;
 	int			heredoc_eof;
@@ -127,11 +136,11 @@ int		exec_external(t_shell *shell);
 int		open_file(char *filename, int flags, int mode);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
-int		handle_heredoc_redir(t_shell *shell);
-int		handle_heredoc_collect_only(t_shell *shell);
+int		handle_heredoc_redir(t_shell *shell, int is_last_heredoc);
 int		execute_pipe(t_shell *shell);
 int		resize_lines_buffer(char ***lines, int capacity);
 int		apply_redirection(t_shell *shell, t_redir *redir);
+int		init_heredoc(t_shell *shell);
 char	*find_path(char *cmd, char *envp[]);
 char	*join_heredoc(char **lines, int count);
 void	exec_external_direct(t_shell *shell, char **env_array);
@@ -142,6 +151,8 @@ void	write_heredoc(t_shell *shell,
 			char *full_heredoc, int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
+void	create_heredoc_history_file(t_shell *shell, char **lines, int count,
+			int eof_received);
 
 /*
 ** Expander
@@ -210,5 +221,6 @@ void	*print_error_null(char *cmd, char *arg, char *msg);
 */
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
+void	cleanup_heredoc(t_shell *shell);
 
 #endif

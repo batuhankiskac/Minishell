@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:06:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 14:16:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,16 @@ static void	update_line(t_shell *shell)
  */
 static int	handle_parsing(t_shell *shell)
 {
-	if (tokenize_line(shell->line, shell) == ERROR
-		|| !build_command_list(shell)
-		|| !parse_commands(shell)
-		|| !parse_redirections(shell)
-		|| !expander(shell))
-	{
+	if (tokenize_line(shell->line, shell) == ERROR)
 		return (1);
-	}
+	if (!build_command_list(shell))
+		return (1);
+	if (!parse_commands(shell))
+		return (1);
+	if (!parse_redirections(shell))
+		return (1);
+	if (!expander(shell))
+		return (1);
 	return (0);
 }
 
@@ -84,7 +86,7 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	{
 		shell->exit_status = 2;
 		cleanup_iteration_resources(raw_line_ptr, shell);
-		return (print_error(NULL, NULL, "syntax error", 2));
+		return (print_error(NULL, NULL, "parse error", 2));
 	}
 	else if (shell->command && !shell->heredoc_eof)
 		run_command(shell);

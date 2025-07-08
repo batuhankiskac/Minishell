@@ -6,178 +6,172 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:16:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:59:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Expands buffer capacity when needed.
- *
- * @param lines Pointer to lines array
- * @param capacity Pointer to current capacity
- * @return 0 on success, ERROR on failure
+ * @brief      Processes a single line of input during a heredoc session.
+ * @param line The line read from the user.
+ * @param shell A pointer to the shell structure.
+ * @return     1 if delimiter is found, ERROR on failure, 0 otherwise.
  */
-static int	expand_buffer_if_needed(char ***lines, int *capacity, int count)
+static int	process_heredoc_input_line(char *line, t_shell *shell)
 {
-	if (count >= *capacity)
+	if (ft_strcmp(line, shell->redir->file) == 0)
 	{
-		*capacity = resize_lines_buffer(lines, *capacity);
-		if (*capacity == 0)
-			return (ERROR);
+		free(line);
+		return (1);
 	}
+	if (shell->heredoc->count >= shell->heredoc->capacity)
+	{
+		shell->heredoc->capacity = resize_lines_buffer(&shell->heredoc->lines,
+				shell->heredoc->capacity);
+		if (shell->heredoc->capacity == 0)
+		{
+			free(line);
+			return (ERROR);
+		}
+	}
+	ft_printf(shell->heredoc->pipe_fd, "%s\n", line);
+	shell->heredoc->lines[shell->heredoc->count] = ft_strdup(line);
+	if (!shell->heredoc->lines[shell->heredoc->count])
+	{
+		free(line);
+		return (ERROR);
+	}
+	shell->heredoc->count++;
+	free(line);
 	return (0);
 }
 
 /**
- * @brief Collects input lines for heredoc until delimiter is found.
- *
- * @param shell Shell structure containing redir
- * @param lines Pointer to array to store lines
- * @param capacity Pointer to current capacity
- * @param pipe_fd Write end of pipe
- * @return Number of lines collected, or count if EOF received
+ * @brief      The main input loop for a heredoc. Reads lines from the user
+ * until the delimiter is entered or EOF is received.
+ * @param shell    The shell structure.
+ * @return         The number of lines read, with the MSB set as a flag for EOF.
  */
-static int	collect_input(t_shell *shell, char ***lines,
-				int *capacity, int pipe_fd)
+static int	heredoc_input_loop(t_shell *shell)
 {
 	char	*line;
-	int		count;
-	int		heredoc_line_count;
+	int		ret;
+	int		start_count;
 
-	count = 0;
-	heredoc_line_count = 0;
+	start_count = shell->heredoc->count;
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
 		{
-			shell->line_number = shell->line_number + heredoc_line_count;
-			return (count | 0x80000000);
+			shell->line_number += (shell->heredoc->count - start_count);
+			return (shell->heredoc->count | 0x80000000);
 		}
-		heredoc_line_count++;
-		if (ft_strcmp(line, shell->redir->file) == 0)
-		{
-			free(line);
+		shell->line_number++;
+		ret = process_heredoc_input_line(line, shell);
+		if (ret == 1)
 			break ;
-		}
-		if (expand_buffer_if_needed(lines, capacity, count) == ERROR)
-		{
-			free(line);
+		if (ret == ERROR)
 			return (ERROR);
-		}
-		ft_printf(pipe_fd, "%s\n", line);
-		(*lines)[count++] = ft_strdup(line);
-		free(line);
 	}
-	return (count);
+	return (shell->heredoc->count);
 }
 
 /**
- * @brief Collects heredoc lines and handles history.
- *
- * @param shell Shell structure containing redir and original command line
- * @param pipe_fd Write end of pipe
- * @param show_warning Whether to show EOF warning (only for last heredoc)
- * @return 0 on success, ERROR on failure, 1 if EOF received
+ * @brief      Collects user input for a heredoc, processes it, and prepares
+ * the history file.
+ * @param shell   The shell structure.
+ * @param show_warning A flag to indicate if EOF warnings should be shown.
+ * @return        0 on success, ERROR on failure.
  */
-static int	collect_heredoc(t_shell *shell, int pipe_fd, int show_warning)
+static int	collect_heredoc(t_shell *shell, int show_warning)
 {
-	char	**lines;
-	char	*full_heredoc;
-	int		count;
-	int		eof_received;
-	int		capacity;
-	int		start_line_number;
+	int	count;
+	int	eof_received;
+	int	start_line_number;
 
 	start_line_number = shell->line_number;
-	capacity = 100;
-	lines = malloc(sizeof(char *) * capacity);
-	if (!lines)
+	shell->heredoc->lines = malloc(sizeof(char *) * shell->heredoc->capacity);
+	if (!shell->heredoc->lines)
 		return (ERROR);
-	count = collect_input(shell, &lines, &capacity, pipe_fd);
+	count = heredoc_input_loop(shell);
 	if (count == ERROR)
-	{
-		free(lines);
 		return (ERROR);
-	}
 	eof_received = (count & 0x80000000) != 0;
-	count = count & 0x7FFFFFFF;
+	count &= 0x7FFFFFFF;
 	if (eof_received && show_warning)
-		ft_printf(2, "minishell: line %d: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", shell->line_number, start_line_number, shell->redir->file);
-	full_heredoc = join_heredoc(lines, count);
-	write_heredoc(shell, full_heredoc, eof_received);
-	free(full_heredoc);
-	free_heredoc(lines, count);
+		ft_printf(2, "minishell: warning: here-document at line %d "
+			"delimited by end-of-file (wanted `%s')\n",
+			start_line_number, shell->redir->file);
+	create_heredoc_history_file(shell, shell->heredoc->lines,
+		shell->heredoc->count, eof_received);
 	if (eof_received)
 		shell->heredoc_eof = 1;
 	return (0);
 }
 
 /**
- * @brief Handles a here-document redirection (`<<`).
- *
- * This function manages the input for a here-document by creating a pipe,
- * collecting user input until delimiter is reached, and redirecting to stdin.
- * All heredoc lines are collected and added as a single history entry.
- *
- * @param shell A pointer to the `t_shell` structure, which contains the
- *              redir structure with delimiter string in `shell->redir->file`.
- * @return Returns 0 on successful handling of the here-document and redirection
- *         of input. Returns `ERROR` if `pipe()` fails, or if `dup_fd()` fails.
- *         Returns 1 if EOF received (Ctrl+D).
+ * @brief      The main execution logic for any heredoc redirection.
+ * This function replaces the old `handle_heredoc_redir` and
+ * `handle_heredoc_collect_only`. It creates a pipe, collects input,
+ * and optionally redirects stdin based on the `is_last_heredoc` flag.
+ * @param shell A pointer to the t_shell structure.
+ * @param is_last_heredoc Flag to determine if stdin should be redirected.
+ * @return      0 on success, 1 on EOF, ERROR on failure.
  */
-int	handle_heredoc_redir(t_shell *shell)
+int	handle_heredoc_redir(t_shell *shell, int is_last_heredoc)
 {
 	int	pipe_fd[2];
 	int	collect_result;
 
+	if (init_heredoc(shell) == ERROR)
+		return (ERROR);
 	if (pipe(pipe_fd) == -1)
-		return (print_error(NULL, NULL, strerror(errno), ERROR));
-	collect_result = collect_heredoc(shell, pipe_fd[1], 1);
-	if (collect_result == ERROR)
+		return (print_error(NULL, "pipe", strerror(errno), ERROR));
+	shell->heredoc->pipe_fd = pipe_fd[1];
+	shell->heredoc->capacity = 100;
+	collect_result = collect_heredoc(shell, is_last_heredoc);
+	close(pipe_fd[1]);
+	shell->heredoc->pipe_fd = -1;
+	if (collect_result == ERROR || shell->heredoc_eof)
 	{
 		close(pipe_fd[0]);
-		close(pipe_fd[1]);
+		if (shell->heredoc_eof)
+			return (1);
 		return (ERROR);
 	}
-	close(pipe_fd[1]);
-	if (dup_fd(pipe_fd[0], 0, "heredoc") == ERROR)
+	if (is_last_heredoc)
 	{
-		close(pipe_fd[0]);
-		return (ERROR);
+		if (dup_fd(pipe_fd[0], STDIN_FILENO, "heredoc") == ERROR)
+		{
+			close(pipe_fd[0]);
+			return (ERROR);
+		}
 	}
 	close(pipe_fd[0]);
 	return (0);
 }
 
 /**
- * @brief Collects heredoc input without redirecting to stdin (for multiple heredocs).
+ * @brief Initializes heredoc structure in shell.
  *
- * This function handles heredoc input collection when there are multiple heredocs
- * and only the last one should be redirected to stdin. It processes the input
- * but doesn't redirect it.
+ * This function allocates and initializes the heredoc structure
+ * within the shell, setting up initial values for capacity and count.
  *
- * @param shell A pointer to the `t_shell` structure, which contains the
- *              redir structure with delimiter string in `shell->redir->file`.
- * @return Returns 0 on successful handling. Returns `ERROR` if `pipe()` fails.
+ * @param shell The shell structure to initialize heredoc for.
+ * @return 0 on success, ERROR on failure.
  */
-int	handle_heredoc_collect_only(t_shell *shell)
+int	init_heredoc(t_shell *shell)
 {
-	int	pipe_fd[2];
-	int	collect_result;
-
-	if (pipe(pipe_fd) == -1)
-		return (print_error(NULL, NULL, strerror(errno), ERROR));
-	collect_result = collect_heredoc(shell, pipe_fd[1], 0);
-	if (collect_result == ERROR)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
+	if (shell->heredoc)
+		cleanup_heredoc(shell);
+	shell->heredoc = malloc(sizeof(t_heredoc));
+	if (!shell->heredoc)
 		return (ERROR);
-	}
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
+	shell->heredoc->lines = NULL;
+	shell->heredoc->count = 0;
+	shell->heredoc->capacity = 0;
+	shell->heredoc->pipe_fd = -1;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:15:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:58:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	write_heredoc(t_shell *shell,
 /**
  * @brief Resizes the lines buffer when capacity is reached.
  *
- * @param lines Current lines array
+ * @param lines Pointer to current lines array
  * @param capacity Current capacity
  * @return New capacity, or 0 on failure
  */
@@ -97,4 +97,35 @@ int	resize_lines_buffer(char ***lines, int capacity)
 	free(*lines);
 	*lines = new_lines;
 	return (new_capacity);
+}
+
+/**
+ * @brief      Joins the collected lines and writes the full heredoc session
+ * to a temporary file for history purposes.
+ * @param shell The shell structure, containing the original command line.
+ * @param lines The array of strings collected from the user.
+ * @param count The number of lines collected.
+ * @param eof_received True if the session was terminated by EOF (Ctrl+D).
+ */
+void	create_heredoc_history_file(t_shell *shell, char **lines, int count,
+			int eof_received)
+{
+	char	*full_heredoc;
+	int		fd;
+
+	full_heredoc = join_heredoc(lines, count);
+	if (!full_heredoc)
+		return ;
+	fd = open_file("/tmp/minishell_heredoc_content",
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd != ERROR)
+	{
+		ft_putendl_fd(shell->line, fd);
+		if (*full_heredoc)
+			ft_printf(fd, "%s\n", full_heredoc);
+		if (!eof_received)
+			ft_printf(fd, "%s", shell->redir->file);
+		close(fd);
+	}
+	free(full_heredoc);
 }
