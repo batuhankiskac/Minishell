@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:17:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:15:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,6 @@ char	*join_heredoc(char **lines, int count)
 		i++;
 	}
 	return (result);
-}
-
-/**
- * @brief Frees an array of heredoc lines.
- *
- * @param lines Array of lines to free
- * @param count Number of lines
- */
-void	free_heredoc(char **lines, int count)
-{
-	int	i;
-
-	if (!lines)
-		return ;
-	i = -1;
-	while (++i < count)
-		free(lines[i]);
-	free(lines);
 }
 
 /**

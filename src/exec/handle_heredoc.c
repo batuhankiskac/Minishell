@@ -6,25 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:08:44 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:16:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Handles EOF condition for heredoc input.
- *
- * @param shell Shell structure containing redir
- * @param count Current line count
- * @return count with EOF flag set
- */
-static int	handle_heredoc_eof(t_shell *shell, int count)
-{
-	(void)shell; /* Unused - warning handled in collect_heredoc */
-	/* Just return the count with EOF flag - warning will be handled in collect_heredoc */
-	return (count | 0x80000000);
-}
 
 /**
  * @brief Expands buffer capacity when needed.
@@ -68,7 +54,7 @@ static int	collect_input(t_shell *shell, char ***lines,
 		if (!line)
 		{
 			shell->line_number = shell->line_number + heredoc_line_count;
-			return (handle_heredoc_eof(shell, count));
+			return (count | 0x80000000);
 		}
 		heredoc_line_count++;
 		if (ft_strcmp(line, shell->redir->file) == 0)

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:17:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 13:15:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,22 @@ int	is_builtin(char *cmd)
 		|| ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);
+}
+
+/**
+ * @brief Frees an array of heredoc lines.
+ *
+ * @param lines Array of lines to free
+ * @param count Number of lines
+ */
+void	free_heredoc(char **lines, int count)
+{
+	int	i;
+
+	if (!lines)
+		return ;
+	i = -1;
+	while (++i < count)
+		free(lines[i]);
+	free(lines);
 }
