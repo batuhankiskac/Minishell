@@ -6,11 +6,28 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:41:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/**
+ * @brief Maps token type to redirection type.
+ *
+ * @param tt The token type.
+ * @return The corresponding redirection type.
+ */
+static t_redir_type	get_redir_type(t_token_type tt)
+{
+	if (tt == TOKEN_REDIR_IN)
+		return (REDIR_IN);
+	if (tt == TOKEN_REDIR_OUT)
+		return (REDIR_OUT);
+	if (tt == TOKEN_REDIR_APPEND)
+		return (REDIR_APPEND);
+	return (REDIR_HEREDOC);
+}
 
 /**
  * @brief Creates a new redirection node.
@@ -24,20 +41,12 @@
  */
 static t_redir	*new_redir_node(t_token_type tt, char *file)
 {
-	t_redir			*r;
-	t_redir_type	type;
+	t_redir	*r;
 
-	type = REDIR_HEREDOC;
-	if (tt == TOKEN_REDIR_IN)
-		type = REDIR_IN;
-	else if (tt == TOKEN_REDIR_OUT)
-		type = REDIR_OUT;
-	else if (tt == TOKEN_REDIR_APPEND)
-		type = REDIR_APPEND;
 	r = malloc(sizeof(*r));
 	if (!r)
 		return (print_error_null(NULL, NULL, strerror(errno)));
-	r->type = type;
+	r->type = get_redir_type(tt);
 	r->file = ft_strdup(file);
 	r->original_file = ft_strdup(file);
 	if (!r->file || !r->original_file)

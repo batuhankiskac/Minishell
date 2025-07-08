@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:12:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:24:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,24 @@ void	*print_error_null(char *cmd, char *arg, char *msg)
 {
 	print_error(cmd, arg, msg, 0);
 	return (NULL);
+}
+
+/**
+ * @brief Cleans up memory allocated for cd command operations.
+ *
+ * This utility function frees the memory allocated for old_pwd, new_pwd,
+ * and target directory paths. Handles NULL pointers safely.
+ *
+ * @param old_pwd The old working directory path to free.
+ * @param new_pwd The new working directory path to free.
+ * @param target The target directory path to free.
+ */
+void	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target)
+{
+	if (old_pwd)
+		free(old_pwd);
+	if (new_pwd)
+		free(new_pwd);
+	if (target)
+		free(target);
 }

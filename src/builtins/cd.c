@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 11:13:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:27:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*get_target(int argc, char **args, t_env **env)
 {
 	char	*raw;
 
-	if (argc < 2)
+	if (argc < 2 || (args[1] && args[1][0] == '\0'))
 	{
 		raw = get_env_value("HOME", *env);
 		if (!raw)
@@ -65,7 +65,7 @@ static char	*get_target(int argc, char **args, t_env **env)
 			ft_printf(2, "cd: HOME not set\n");
 			return (NULL);
 		}
-		return (raw);
+		return (ft_strdup(raw));
 	}
 	if (ft_strcmp(args[1], "-") == 0)
 	{
@@ -103,6 +103,25 @@ static int	change_directory(char *target, char **new_pwd)
 }
 
 /**
+ * @brief Updates environment variables after successful directory change.
+ *
+ * Updates OLDPWD and PWD environment variables after a successful cd operation.
+ *
+ * @param old_pwd The previous working directory path.
+ * @param new_pwd The new working directory path.
+ * @param env A pointer to the environment list.
+ * @return 0 on success, ERROR on failure.
+ */
+static int	update_pwd_env(char *old_pwd, char *new_pwd, t_env **env)
+{
+	if (update_env("OLDPWD", old_pwd, env) == ERROR)
+		return (ERROR);
+	if (update_env("PWD", new_pwd, env) == ERROR)
+		return (ERROR);
+	return (0);
+}
+
+/**
  * @brief Implements the built-in cd command.
  *
  * Handles changing the current directory based on the provided arguments.
@@ -129,47 +148,25 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd && errno != ENOENT)
-	{
 		return (print_error("cd", NULL, strerror(errno), ERROR));
-	}
-	if (argc == 1 || (args[1] && args[1][0] == '\0'))
+	target = get_target(argc, args, env);
+	if (!target)
 	{
-		target = get_env_value("HOME", *env);
-		if (!target)
-		{
-			ft_printf(2, "cd: HOME not set\n");
-			free(old_pwd);
-			return (ERROR);
-		}
-		target = ft_strdup(target);
-	}
-	else
-	{
-		target = get_target(argc, args, env);
-		if (!target)
-		{
-			free(old_pwd);
-			return (ERROR);
-		}
+		cleanup_cd_memory(old_pwd, NULL, NULL);
+		return (ERROR);
 	}
 	if (change_directory(target, &new_pwd) == ERROR)
 	{
-		free(old_pwd);
-		free(target);
+		cleanup_cd_memory(old_pwd, NULL, target);
 		return (ERROR);
 	}
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
 		ft_printf(1, "%s\n", new_pwd);
-	if (update_env("OLDPWD", old_pwd, env) == ERROR
-		|| update_env("PWD", new_pwd, env) == ERROR)
+	if (update_pwd_env(old_pwd, new_pwd, env) == ERROR)
 	{
-		free(old_pwd);
-		free(new_pwd);
-		free(target);
+		cleanup_cd_memory(old_pwd, new_pwd, target);
 		return (print_error("cd", NULL, strerror(errno), ERROR));
 	}
-	free(old_pwd);
-	free(new_pwd);
-	free(target);
+	cleanup_cd_memory(old_pwd, new_pwd, target);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:35:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 23:20:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 11:38:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@
  */
 char	*expand_text_chunk(char *res, const char *s, int *i)
 {
-	int	j;
+	int	start;
+	int	end;
 
-	j = *i;
-	while (s[j] && s[j] != '$' && s[j] != '\'' && s[j] != '"')
-		j++;
-	res = append_literal(res, s, *i, j);
-	*i = j;
+	start = *i;
+	end = *i;
+	while (s[end] && s[end] != '$' && s[end] != '\'' && s[end] != '"')
+		end++;
+	res = append_literal(res, s, start, end);
+	*i = end;
 	return (res);
 }
 
@@ -42,34 +44,36 @@ char	*expand_text_chunk(char *res, const char *s, int *i)
  */
 char	*handle_single_quote(char *res, const char *s, int *i)
 {
-	int	j;
+	int	start;
+	int	end;
 
-	j = *i + 1;
-	while (s[j] && s[j] != '\'')
-		j++;
-	res = append_literal(res, s, *i + 1, j);
-	if (s[j])
-		*i = j + 1;
+	start = *i + 1;
+	end = start;
+	while (s[end] && s[end] != '\'')
+		end++;
+	res = append_literal(res, s, start, end);
+	if (s[end])
+		*i = end + 1;
 	else
-		*i = j;
+		*i = end;
 	return (res);
 }
 
 /**
- * @brief Processes content inside double quotes.
+ * @brief Processes content inside double quotes with variable expansion.
  *
- * @param inner The inner string content.
+ * @param inner The inner string content to expand.
  * @param shell_context Shell context for variable expansion.
  * @return Expanded string or NULL on failure.
  */
-static char	*expand_inner_content(char *inner, t_shell *shell_context)
+static char	*process_quoted_content(char *inner, t_shell *shell_context)
 {
-	char	*expanded;
+	char	*result;
 
-	expanded = expand_string(inner, shell_context->env,
+	result = expand_string(inner, shell_context->env,
 			shell_context->exit_status);
 	free(inner);
-	return (expanded);
+	return (result);
 }
 
 /**
@@ -84,32 +88,28 @@ static char	*expand_inner_content(char *inner, t_shell *shell_context)
 char	*handle_double_quote(char *res, const char *s, int *i,
 						t_shell *shell_context)
 {
-	int		j;
+	int		start;
+	int		end;
 	char	*inner;
 	char	*expanded;
-	char	*tmp;
+	char	*result;
 
-	j = *i + 1;
-	while (s[j] && s[j] != '"')
-		j++;
-	inner = ft_substr(s, *i + 1, j - (*i + 1));
+	start = *i + 1;
+	end = start;
+	while (s[end] && s[end] != '"')
+		end++;
+	inner = ft_substr(s, start, end - start);
 	if (!inner)
-	{
-		free(res);
-		return (NULL);
-	}
-	expanded = expand_inner_content(inner, shell_context);
+		return (free(res), NULL);
+	expanded = process_quoted_content(inner, shell_context);
 	if (!expanded)
-	{
-		free(res);
-		return (NULL);
-	}
-	tmp = ft_strjoin(res, expanded);
+		return (free(res), NULL);
+	result = ft_strjoin(res, expanded);
 	free(res);
 	free(expanded);
-	if (s[j])
-		*i = j + 1;
+	if (s[end])
+		*i = end + 1;
 	else
-		*i = j;
-	return (tmp);
+		*i = end;
+	return (result);
 }
