@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 14:16:48 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:02:27 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ static void	update_line(t_shell *shell)
  */
 static int	handle_parsing(t_shell *shell)
 {
-	if (tokenize_line(shell->line, shell) == ERROR)
-		return (1);
 	if (!build_command_list(shell))
 		return (1);
 	if (!parse_commands(shell))
@@ -57,6 +55,42 @@ static int	handle_parsing(t_shell *shell)
 	if (!expander(shell))
 		return (1);
 	return (0);
+}
+
+/**
+ * @brief Initializes the shell for processing a new line.
+ *
+ * @param raw_line_ptr A pointer to the raw line string
+ * @param shell A pointer to the shell structure
+ * @return 0 on success, 1 on failure
+ */
+static int	initialize_shell_line(char *raw_line_ptr, t_shell *shell)
+{
+	shell->line_number++;
+	shell->heredoc_eof = 0;
+	if (shell->line)
+		free(shell->line);
+	shell->line = ft_strdup(raw_line_ptr);
+	if (!shell->line)
+	{
+		free(raw_line_ptr);
+		return (print_error(NULL, NULL, strerror(errno), 1));
+	}
+	return (0);
+}
+
+/**
+ * @brief Handles parsing and tokenization errors and cleanup.
+ *
+ * @param raw_line_ptr A pointer to the raw line string
+ * @param shell A pointer to the shell structure
+ * @return Error code
+ */
+static int	handle_parse_error(char *raw_line_ptr, t_shell *shell)
+{
+	shell->exit_status = 2;
+	cleanup_iteration_resources(raw_line_ptr, shell);
+	return (print_error(NULL, NULL, "parse error", 2));
 }
 
 /**
@@ -72,22 +106,17 @@ static int	handle_parsing(t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
-	shell->line_number++;
-	shell->heredoc_eof = 0;
-	if (shell->line)
-		free(shell->line);
-	shell->line = ft_strdup(raw_line_ptr);
-	if (!shell->line)
+	if (initialize_shell_line(raw_line_ptr, shell))
+		return (1);
+	if (tokenize_line(shell->line, shell) == ERROR)
+		return (handle_parse_error(raw_line_ptr, shell));
+	if (shell->tokens == NULL)
 	{
-		free(raw_line_ptr);
-		return (print_error(NULL, NULL, strerror(errno), 1));
+		cleanup_iteration_resources(raw_line_ptr, shell);
+		return (0);
 	}
 	if (handle_parsing(shell))
-	{
-		shell->exit_status = 2;
-		cleanup_iteration_resources(raw_line_ptr, shell);
-		return (print_error(NULL, NULL, "parse error", 2));
-	}
+		return (handle_parse_error(raw_line_ptr, shell));
 	else if (shell->command && !shell->heredoc_eof)
 		run_command(shell);
 	update_line(shell);

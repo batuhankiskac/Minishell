@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 16:06:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:41:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,14 @@ void	run_command(t_shell *shell)
 	setup_exec_signals();
 	if (!shell->command->next)
 	{
-		if (is_builtin(shell->command->cmd))
+		if (!shell->command->cmd || shell->command->cmd[0] == '\0')
+		{
+			if (setup_redir(shell) == ERROR)
+				shell->exit_status = 1;
+			else
+				shell->exit_status = 0;
+		}
+		else if (is_builtin(shell->command->cmd))
 			shell->exit_status = exec_builtin(shell);
 		else
 			shell->exit_status = exec_external(shell);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:04:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:33:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,9 +130,25 @@ int	exec_external(t_shell *shell)
 	if (pid == 0)
 		execute_child_process(shell, env_array);
 	else
+	{
 		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGINT)
+				ft_printf(2, "\n");
+			else if (WTERMSIG(status) == SIGQUIT)
+				ft_printf(2, "Quit: %d\n", WTERMSIG(status));
+			ft_free_all(env_array);
+			return (128 + WTERMSIG(status));
+		}
+		else if (WIFEXITED(status))
+		{
+			ft_free_all(env_array);
+			return (WEXITSTATUS(status));
+		}
+	}
 	ft_free_all(env_array);
-	return (WEXITSTATUS(status));
+	return (status);
 }
 
 /**

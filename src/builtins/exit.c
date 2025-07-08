@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 23:47:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:54:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,7 @@ int	builtin_exit(t_shell *shell)
 	if (isatty(1))
 		ft_printf(1, "exit\n");
 	if (shell->command->argc > 2)
-	{
 		return (print_error("exit", NULL, "too many arguments", 1));
-	}
 	status_code = shell->exit_status;
 	if (shell->command->argc == 2)
 	{
@@ -82,7 +80,9 @@ int	builtin_exit(t_shell *shell)
 		{
 			print_error("exit", shell->command->args[1],
 				"numeric argument required", 2);
-			status_code = 2;
+			free_shell(shell);
+			rl_clear_history();
+			exit(2);
 		}
 		else
 			status_code = ft_atoi(shell->command->args[1]);

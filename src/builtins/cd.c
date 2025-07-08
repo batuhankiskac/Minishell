@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:22:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:06:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,10 @@ static char	*get_target(int argc, char **args, t_env **env)
 static int	change_directory(char *target, char **new_pwd)
 {
 	if (chdir(target) == -1)
-		return (print_error("cd", target, strerror(errno), ERROR));
+		return (print_error("cd", target, strerror(errno), 1));
 	*new_pwd = getcwd(NULL, 0);
 	if (!*new_pwd)
-		return (print_error("cd", NULL, strerror(errno), ERROR));
+		return (print_error("cd", NULL, strerror(errno), 1));
 	return (0);
 }
 
@@ -115,9 +115,9 @@ static int	change_directory(char *target, char **new_pwd)
 static int	update_pwd_env(char *old_pwd, char *new_pwd, t_env **env)
 {
 	if (update_env("OLDPWD", old_pwd, env) == ERROR)
-		return (ERROR);
+		return (1);
 	if (update_env("PWD", new_pwd, env) == ERROR)
-		return (ERROR);
+		return (1);
 	return (0);
 }
 
@@ -144,20 +144,20 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	if (argc > 2)
 	{
 		ft_printf(2, "cd: too many arguments\n");
-		return (ERROR);
+		return (1);
 	}
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd && errno != ENOENT)
-		return (print_error("cd", NULL, strerror(errno), ERROR));
+		return (print_error("cd", NULL, strerror(errno), 1));
 	target = get_target(argc, args, env);
 	if (!target)
-		return (cleanup_cd_memory(old_pwd, NULL, NULL, ERROR));
-	if (change_directory(target, &new_pwd) == ERROR)
-		return (cleanup_cd_memory(old_pwd, NULL, target, ERROR));
+		return (cleanup_cd_memory(old_pwd, NULL, NULL, 1));
+	if (change_directory(target, &new_pwd) == 1)
+		return (cleanup_cd_memory(old_pwd, NULL, target, 1));
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
 		ft_printf(1, "%s\n", new_pwd);
-	if (update_pwd_env(old_pwd, new_pwd, env) == ERROR)
+	if (update_pwd_env(old_pwd, new_pwd, env) == 1)
 		return (cleanup_cd_memory(old_pwd, new_pwd, target,
-				print_error("cd", NULL, strerror(errno), ERROR)));
+				print_error("cd", NULL, strerror(errno), 1)));
 	return (cleanup_cd_memory(old_pwd, new_pwd, target, 0));
 }

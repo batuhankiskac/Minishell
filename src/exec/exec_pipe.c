@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 00:03:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:33:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,5 +152,15 @@ int	execute_pipe(t_shell *shell)
 	}
 	while (wait(&status) > 0)
 		;
-	return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			ft_printf(2, "\n");
+		else if (WTERMSIG(status) == SIGQUIT)
+			ft_printf(2, "Quit: %d\n", WTERMSIG(status));
+		return (128 + WTERMSIG(status));
+	}
+	else if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (status);
 }

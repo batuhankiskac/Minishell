@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:45:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 14:56:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 16:41:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,11 @@ static int	has_redirection_tokens(t_token *t)
  */
 static int	setup_redirection_only_command(t_command *cmd)
 {
-	if (!init_command_args(cmd, 1))
+	if (!init_command_args(cmd, 0))
 		return (0);
-	cmd->args[0] = ft_strdup("/bin/true");
-	cmd->args[1] = NULL;
-	cmd->argc = 1;
-	cmd->cmd = cmd->args[0];
+	cmd->args = NULL;
+	cmd->argc = 0;
+	cmd->cmd = NULL;
 	return (1);
 }
 

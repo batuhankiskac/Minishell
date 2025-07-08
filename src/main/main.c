@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 17:40:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:14:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,24 @@ static void	input_loop(t_shell *shell)
 }
 
 /**
+ * @brief Handles command-line execution mode (-c flag).
+ *
+ * @param command The command string to execute
+ * @param shell A pointer to the shell structure
+ * @return Exit status of the executed command
+ */
+static int	execute_command_string(char *command, t_shell *shell)
+{
+	char	*command_copy;
+
+	command_copy = ft_strdup(command);
+	if (!command_copy)
+		return (1);
+	process_line(command_copy, shell);
+	return (shell->exit_status);
+}
+
+/**
  * @brief The entry point of the minishell program.
  *
  * This function initializes the shell's state, sets up signal handlers,
@@ -68,18 +86,28 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
 
-	(void)argc;
-	(void)argv;
 	init_signals();
 	shell.env = env_init(envp);
 	shell.command = NULL;
 	shell.tokens = NULL;
+	shell.redir = NULL;
+	shell.heredoc = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
 	shell.heredoc_eof = 0;
 	shell.line_number = 0;
-	input_loop(&shell);
+
+	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
+	{
+		shell.exit_status = execute_command_string(argv[2], &shell);
+	}
+	else
+	{
+		input_loop(&shell);
+	}
+
 	reset_signals();
+	rl_clear_history();
 	free(shell.line);
 	free_env(shell.env);
 	return (shell.exit_status);

@@ -1,7 +1,6 @@
 {
    <readline_suppressions>
    Memcheck:Leak
-   match-and-suppress:readline
    fun:readline
    fun:rl_initialize
    fun:_rl_init_terminal_io
@@ -28,7 +27,6 @@
 {
    <libtinfo_suppressions>
    Memcheck:Leak
-   match-and-suppress:libtinfo
    fun:_nc_trim_sgr0
    fun:tgetent_sp
    fun:_nc_setupterm
