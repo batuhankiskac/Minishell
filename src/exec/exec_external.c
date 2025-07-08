@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:37:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:47:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,36 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 }
 
 /**
- * @brief Validates the command structure before execution.
+ * @brief Forks the process and executes the command in the child.
  *
- * This function checks if the command structure in the shell is valid.
- * It ensures that the command and its arguments are not NULL and that
- * the command string is not empty. If validation fails, an error message
- * is printed, and an appropriate error code is returned.
+ * This function forks the current process. The child process executes the
+ * command, and the parent process waits for the child to complete.
+ * The exit status of the child is handled and returned.
  *
- * @param shell A pointer to the shell structure containing the command.
- * @param env_array An array of environment variables for cleanup if needed.
- * @return 0 if the command is valid, or an error code if validation fails.
+ * @param shell A pointer to the shell structure.
+ * @param env_array An array of environment variables.
+ * @return The exit status of the command.
  */
-static int	validate_command(t_shell *shell, char **env_array)
+static int	fork_and_execute(t_shell *shell, char **env_array)
 {
-	if (!shell->command || !shell->command->cmd || !shell->command->args)
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	pid = fork();
+	if (pid < 0)
 	{
 		ft_free_all(env_array);
-		return (print_error(NULL, NULL, "command not found", 127));
+		return (print_error(NULL, NULL, strerror(errno), ERROR));
 	}
-	if (shell->command->cmd[0] == '\0')
+	if (pid == 0)
+		execute_child_process(shell, env_array);
+	else
 	{
-		ft_free_all(env_array);
-		return (print_error(NULL, NULL, "command not found", 127));
+		waitpid(pid, &status, 0);
+		return (handle_wait_status(status, env_array));
 	}
-	return (0);
+	return (status);
 }
 
 /**
@@ -107,33 +113,16 @@ static int	validate_command(t_shell *shell, char **env_array)
  */
 int	exec_external(t_shell *shell)
 {
-	int		status;
-	char	**env_array;
-	pid_t	pid;
 	int		validation_result;
+	char	**env_array;
 
-	status = 0;
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
 		return (print_error(NULL, NULL, strerror(errno), ERROR));
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
 		return (validation_result);
-	pid = fork();
-	if (pid < 0)
-	{
-		ft_free_all(env_array);
-		return (print_error(NULL, NULL, strerror(errno), ERROR));
-	}
-	if (pid == 0)
-		execute_child_process(shell, env_array);
-	else
-	{
-		waitpid(pid, &status, 0);
-		return (handle_wait_status(status, env_array));
-	}
-	ft_free_all(env_array);
-	return (status);
+	return (fork_and_execute(shell, env_array));
 }
 
 /**
