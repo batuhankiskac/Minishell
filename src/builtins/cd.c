@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 21:48:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	target = get_target(argc, args, env);
 	if (!target)
 		return (cleanup_cd_memory(old_pwd, NULL, NULL, 1));
-	if (change_directory(target, &new_pwd) == 1)
+	if (change_directory(target, &new_pwd) != 0)
 		return (cleanup_cd_memory(old_pwd, NULL, target, 1));
 	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
 		ft_printf(1, "%s\n", new_pwd);

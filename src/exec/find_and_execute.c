@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:56:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 20:52:16 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 22:05:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ static void	handle_exec_error(char *path, t_shell *shell, char **env_array)
 	print_error(NULL, shell->command->cmd, strerror(errno), 0);
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
-	if (errno == EACCES || errno == ENOEXEC)
-		cleanup_child_and_exit(shell, env_array, NULL, 126);
 	cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
 }
 
@@ -40,15 +38,25 @@ static void	handle_exec_error(char *path, t_shell *shell, char **env_array)
 void	find_and_exec_command(t_shell *shell, char **env_array)
 {
 	char	*path;
+	char	*shell_path;
+	char	*sh_args[3];
 
 	path = find_path(shell->command->cmd, env_array);
 	if (!path)
-	{
-		print_error(NULL, shell->command->cmd, "command not found", 127);
-		cleanup_child_and_exit(shell, env_array, NULL, 127);
-	}
+		cleanup_child_and_exit(shell, env_array, NULL,
+			print_error(NULL, shell->command->cmd, "command not found", 127));
 	if (execve(path, shell->command->args, env_array) == -1)
+	{
+		if (errno == ENOEXEC)
+		{
+			shell_path = "/bin/sh";
+			sh_args[0] = "sh";
+			sh_args[1] = path;
+			sh_args[2] = NULL;
+			execve(shell_path, sh_args, env_array);
+		}
 		handle_exec_error(path, shell, env_array);
+	}
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
 	exit(EXIT_SUCCESS);

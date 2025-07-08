@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 20:56:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 21:49:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ int	builtin_exit(t_shell *shell)
 	if (shell->command->argc >= 2 && !is_numeric(shell->command->args[1]))
 	{
 		print_error("exit", shell->command->args[1],
-			"numeric argument required", 2);
+			"numeric argument required", 255);
 		free_shell(shell);
 		rl_clear_history();
-		exit(2);
+		exit(255);
 	}
 	if (shell->command->argc > 2)
 		return (print_error("exit", NULL, "too many arguments", 1));
