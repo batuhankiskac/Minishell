@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:56:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 19:05:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 20:52:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	handle_exec_error(char *path, t_shell *shell, char **env_array)
  * @param shell The main shell structure.
  * @param env_array The environment variables for execve.
  */
-void	find_and_execute(t_shell *shell, char **env_array)
+void	find_and_exec_command(t_shell *shell, char **env_array)
 {
 	char	*path;
 
