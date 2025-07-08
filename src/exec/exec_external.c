@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 16:33:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:37:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,14 @@ static void	find_and_exec_command(t_shell *shell, char **env_array)
 	if (!path)
 	{
 		print_error(NULL, shell->command->cmd, "command not found", 127);
-		cleanup_child_process(shell, env_array);
-		exit(127);
+		cleanup_child_and_exit(shell, env_array, NULL, 127);
 	}
 	if (execve(path, shell->command->args, env_array) == -1)
 	{
 		print_error(NULL, shell->command->cmd, strerror(errno), 0);
 		if (ft_strcmp(path, shell->command->cmd) != 0)
 			free(path);
-		cleanup_child_process(shell, env_array);
-		exit(EXIT_FAILURE);
+		cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
 	}
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
@@ -63,7 +61,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 	if (setup_redir(shell) == ERROR)
 	{
 		print_error(NULL, NULL, "redirection setup failed", 1);
-		exit(1);
+		cleanup_child_and_exit(shell, env_array, NULL, 1);
 	}
 	find_and_exec_command(shell, env_array);
 }
@@ -132,20 +130,7 @@ int	exec_external(t_shell *shell)
 	else
 	{
 		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			if (WTERMSIG(status) == SIGINT)
-				ft_printf(2, "\n");
-			else if (WTERMSIG(status) == SIGQUIT)
-				ft_printf(2, "Quit: %d\n", WTERMSIG(status));
-			ft_free_all(env_array);
-			return (128 + WTERMSIG(status));
-		}
-		else if (WIFEXITED(status))
-		{
-			ft_free_all(env_array);
-			return (WEXITSTATUS(status));
-		}
+		return (handle_wait_status(status, env_array));
 	}
 	ft_free_all(env_array);
 	return (status);
@@ -169,11 +154,7 @@ void	exec_external_direct(t_shell *shell, char **env_array)
 
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
-	{
-		cleanup_child_process(shell, env_array);
-		exit(validation_result);
-	}
+		cleanup_child_and_exit(shell, env_array, NULL, validation_result);
 	find_and_exec_command(shell, env_array);
-	cleanup_child_process(shell, env_array);
-	exit(EXIT_FAILURE);
+	cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
 }

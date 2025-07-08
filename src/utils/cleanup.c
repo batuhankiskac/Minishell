@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:22:09 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:19:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,4 +132,21 @@ int	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target,
 	if (target)
 		free(target);
 	return (return_value);
+}
+
+/**
+ * @brief Helper function to cleanup child process and exit with given status.
+ *
+ * @param shell A pointer to the shell structure.
+ * @param env_array A pointer to the environment array (can be NULL).
+ * @param original_head A pointer to restore the original command head.
+ * @param exit_code The exit status code.
+ */
+void	cleanup_child_and_exit(t_shell *shell, char **env_array,
+	t_command *original_head, int exit_code)
+{
+	if (original_head)
+		shell->command = original_head;
+	cleanup_child_process(shell, env_array);
+	exit(exit_code);
 }

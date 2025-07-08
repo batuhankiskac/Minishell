@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:28:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 17:36:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,5 +220,8 @@ void	*print_error_null(char *cmd, char *arg, char *msg);
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
 void	cleanup_heredoc(t_shell *shell);
+void	cleanup_child_and_exit(t_shell *shell, char **env_array,
+			t_command *original_head, int exit_code);
+int		handle_wait_status(int status, char **env_array);
 
 #endif
