@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:12:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/08 15:28:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,29 @@ int	is_builtin(char *cmd)
 		|| ft_strcmp(cmd, "env") == 0
 		|| ft_strcmp(cmd, "exit") == 0)
 		return (1);
+	return (0);
+}
+
+/**
+ * @brief Initializes heredoc structure in shell.
+ *
+ * This function allocates and initializes the heredoc structure
+ * within the shell, setting up initial values for capacity and count.
+ *
+ * @param shell The shell structure to initialize heredoc for.
+ * @return 0 on success, ERROR on failure.
+ */
+int	init_heredoc(t_shell *shell)
+{
+	if (shell->heredoc)
+		cleanup_heredoc(shell);
+	shell->heredoc = malloc(sizeof(t_heredoc));
+	if (!shell->heredoc)
+		return (ERROR);
+	shell->heredoc->lines = NULL;
+	shell->heredoc->count = 0;
+	shell->heredoc->capacity = 0;
+	shell->heredoc->pipe_fd = -1;
+	shell->heredoc->eof_received = 0;
 	return (0);
 }
