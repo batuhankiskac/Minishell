@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:12:49 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/09 14:40:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/09 15:05:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ char	*find_path(char *cmd, char *envp[])
 			if (access(cmd_name, X_OK) == 0)
 				result_path = ft_strdup(cmd_name);
 			else
-				result_path = ft_strdup(cmd_name); // İzin hatası için yol döndür
+				result_path = ft_strdup(cmd_name);
 		}
 		else
 			result_path = NULL;

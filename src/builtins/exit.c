@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/09 14:40:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/09 15:05:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	builtin_exit(t_shell *shell)
 
 	if (isatty(1))
 		ft_printf(1, "exit\n");
-	// Bash ile uyumlu olmayan durum: numeric argument error için 255 döndür
 	if (shell->command->argc >= 2 && !is_numeric(shell->command->args[1]))
 	{
 		print_error("exit", shell->command->args[1],
