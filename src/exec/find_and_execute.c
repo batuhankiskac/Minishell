@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:56:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 22:05:41 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/09 14:40:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static void	handle_exec_error(char *path, t_shell *shell, char **env_array)
 	print_error(NULL, shell->command->cmd, strerror(errno), 0);
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
+	if (errno == EACCES)
+		cleanup_child_and_exit(shell, env_array, NULL, 126);
 	cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
 }
 
