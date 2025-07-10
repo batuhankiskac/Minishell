@@ -191,6 +191,13 @@ void	populate_args(t_token **t_ptr, t_command *cmd);
 void	set_command_name(t_command *cmd);
 
 /*
+** Redirection Parsing
+*/
+t_redir_type	get_redir_type(t_token_type tt);
+int		set_heredoc_properties(t_redir *r, const char *file);
+int		set_redir_file(t_redir *r, const char *file);
+
+/*
 ** Signal Handling
 */
 int		get_signal_flag(void);

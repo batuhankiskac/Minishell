@@ -6,13 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 11:35:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 11:17:51 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 12:15:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 /**
  * @brief Expands variables in a single redirection.
