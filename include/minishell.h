@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 09:02:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:38:20 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,6 @@ typedef struct s_command
 
 typedef struct s_heredoc
 {
-	char	**lines;
-	int		count;
-	int		capacity;
 	int		pipe_fd;
 	int		eof_received;
 }			t_heredoc;
@@ -138,18 +135,14 @@ int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_shell *shell, int is_last_heredoc);
 int		execute_pipe(t_shell *shell);
-int		resize_lines_buffer(char ***lines, int capacity);
 int		apply_redirection(t_redir *redir);
 int		init_heredoc(t_shell *shell);
 int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
-char	*join_heredoc(char **lines, int count);
 void	exec_external_direct(t_shell *shell, char **env_array);
 void	find_and_exec_command(t_shell *shell, char **env_array);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
-void	write_heredoc(t_shell *shell, char **lines, int count,
-			int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
 
@@ -210,17 +203,16 @@ void	setup_exec_signals(void);
 ** Utils
 */
 int		print_error(char *cmd, char *arg, char *msg, int err_code);
-void	ft_free_all(char **arr);
-void	free_redirections(t_redir *r);
-void	free_heredoc(char **lines, int count);
 int		cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target,
 			int return_value);
+int		handle_wait_status(int status, char **env_array);
+void	ft_free_all(char **arr);
+void	free_redirections(t_redir *r);
 void	*print_error_null(char *cmd, char *arg, char *msg);
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
 void	cleanup_heredoc(t_shell *shell);
 void	cleanup_child_and_exit(t_shell *shell, char **env_array,
 			t_command *original_head, int exit_code);
-int		handle_wait_status(int status, char **env_array);
 
 #endif

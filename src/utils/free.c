@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:28:48 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:44:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,4 @@ void	free_redirections(t_redir *r)
 		free(r);
 		r = next;
 	}
-}
-
-/**
- * @brief Safely frees an array of heredoc lines.
- *
- * This function frees each line in the array and then frees the array itself.
- * Includes safety checks to prevent double-free, validates count parameter,
- * and handles NULL pointers gracefully.
- *
- * @param lines Array of lines to free
- * @param count Number of lines (must be >= 0)
- */
-void	free_heredoc(char **lines, int count)
-{
-	int	i;
-
-	if (!lines || count < 0)
-		return ;
-	i = 0;
-	while (i < count && lines[i])
-	{
-		free(lines[i]);
-		lines[i] = NULL;
-		i++;
-	}
-	free(lines);
 }

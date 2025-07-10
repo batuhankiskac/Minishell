@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:19:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:42:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell)
 		clear_token_list(&shell->tokens);
 		shell->tokens = NULL;
 	}
+	if (shell->heredoc)
+		cleanup_heredoc(shell);
 	if (raw_line_ptr)
 		free(raw_line_ptr);
 }
@@ -102,8 +104,6 @@ void	cleanup_heredoc(t_shell *shell)
 {
 	if (!shell->heredoc)
 		return ;
-	if (shell->heredoc->lines)
-		free_heredoc(shell->heredoc->lines, shell->heredoc->count);
 	if (shell->heredoc->pipe_fd != -1)
 		close(shell->heredoc->pipe_fd);
 	free(shell->heredoc);

@@ -4,7 +4,7 @@ NAME = minishell
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline
+CFLAGS = -Wall -Wextra -Werror -I include -I /usr/include/readline -g
 
 LIBFT_DIR = ./libft
 
@@ -37,7 +37,6 @@ SRCS = src/main/main.c \
 	   src/exec/execute.c \
 	   src/exec/find_path.c \
 	   src/exec/handle_heredoc.c \
-	   src/exec/heredoc_utils.c \
 	   src/exec/validate_command.c \
 	   src/exec/find_and_execute.c \
 	   src/expander/expander.c \
@@ -94,6 +93,10 @@ fclean: clean
 re: fclean all
 
 main: all clean
+
+val: all
+	@echo "Running valgrind..."
+	@valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --log-file="valgrind_log.txt" ./$(NAME)
 
 .PHONY: all clean fclean re main val
 .SILENT: all clean fclean re main val

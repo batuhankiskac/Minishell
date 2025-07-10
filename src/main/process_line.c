@@ -6,37 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:02:27 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:34:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Updates shell line from heredoc content file if it exists.
- *
- * @param shell A pointer to the shell structure
- */
-static void	update_line(t_shell *shell)
-{
-	int		fd;
-	char	buffer[4096];
-	int		bytes_read;
-
-	fd = open("/tmp/minishell_heredoc_content", O_RDONLY);
-	if (fd != -1)
-	{
-		bytes_read = read(fd, buffer, sizeof(buffer) - 1);
-		close(fd);
-		unlink("/tmp/minishell_heredoc_content");
-		if (bytes_read > 0)
-		{
-			buffer[bytes_read] = '\0';
-			free(shell->line);
-			shell->line = ft_strdup(buffer);
-		}
-	}
-}
 
 /**
  * @brief Handles the parsing phase of command processing.
@@ -119,7 +93,6 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		return (handle_parse_error(raw_line_ptr, shell));
 	else if (shell->command && !shell->heredoc_eof)
 		run_command(shell);
-	update_line(shell);
 	if (*shell->line)
 		add_history(shell->line);
 	cleanup_iteration_resources(raw_line_ptr, shell);

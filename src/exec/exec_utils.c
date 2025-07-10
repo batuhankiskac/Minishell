@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:28:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:39:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,6 @@ int	init_heredoc(t_shell *shell)
 	shell->heredoc = malloc(sizeof(t_heredoc));
 	if (!shell->heredoc)
 		return (ERROR);
-	shell->heredoc->lines = NULL;
-	shell->heredoc->count = 0;
-	shell->heredoc->capacity = 0;
 	shell->heredoc->pipe_fd = -1;
 	shell->heredoc->eof_received = 0;
 	return (0);

@@ -5,33 +5,64 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 16:41:48 by bkiskac          ###   ########.fr       */
+/*   Created: 2025/07/10 09:58:05 by bkiskac           #+#    #+#             */
+/*   Updated: 2025/07/10 09:58:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Determines and initiates the execution of a command or pipeline.
+ * @brief Handles the execution of a command that only contains redirections.
  *
- * This function serves as the main entry point for command execution after
- * parsing. It first checks if there is any command to execute
- * (`shell->command`). If not, it returns.
+ * This function is a specialist for cases like "> out" or "<< EOF". It
+ * safely backs up and restores STDIN/STDOUT while applying the redirections.
+ * @param shell A pointer to the t_shell structure.
+ * @return Returns 1 on redirection error, 0 on success.
+ */
+static int	execute_redir_only(t_shell *shell)
+{
+	int	status;
+	int	original_stdin;
+	int	original_stdout;
+
+	status = 0;
+	original_stdin = dup(STDIN_FILENO);
+	original_stdout = dup(STDOUT_FILENO);
+	if (setup_redir(shell) == ERROR)
+		status = 1;
+	dup2(original_stdin, STDIN_FILENO);
+	close(original_stdin);
+	dup2(original_stdout, STDOUT_FILENO);
+	close(original_stdout);
+	return (status);
+}
+
+/**
+ * @brief Dispatches a single (non-piped) command to the correct executor.
  *
- * If there is a single command (`!shell->command->next`):
- *   - It checks if the command is a built-in using `is_builtin()`.
- *   - If it's a built-in, `exec_builtin()` is called.
- *   - Otherwise (it's an external command), `exec_external()` is called.
- *   The exit status from these functions is stored in `shell->exit_status`.
+ * This function determines if the command is a redirection-only command,
+ * a built-in, or an external command, and calls the appropriate function.
+ * @param shell A pointer to the t_shell structure.
+ * @return The exit status of the executed command.
+ */
+static int	execute_single_command(t_shell *shell)
+{
+	if (!shell->command->cmd || shell->command->cmd[0] == '\0')
+		return (execute_redir_only(shell));
+	else if (is_builtin(shell->command->cmd))
+		return (exec_builtin(shell));
+	else
+		return (exec_external(shell));
+}
+
+/**
+ * @brief The main entry point for command execution.
  *
- * If there are multiple commands
- * (i.e., a pipeline, `shell->command->next` is true):
- *   - `execute_pipe()` is called to handle the pipeline execution.
- *   The exit status from `execute_pipe()` is stored in `shell->exit_status`.
+ * This function acts as a high-level dispatcher. It sets up signals for
+ * execution and decides whether to run a pipeline or a single command.
  *
- * @param shell A pointer to the `t_shell` structure, which contains the
- *              parsed command(s) and other shell state information.
+ * @param shell A pointer to the `t_shell` structure.
  */
 void	run_command(t_shell *shell)
 {
@@ -39,19 +70,7 @@ void	run_command(t_shell *shell)
 		return ;
 	setup_exec_signals();
 	if (!shell->command->next)
-	{
-		if (!shell->command->cmd || shell->command->cmd[0] == '\0')
-		{
-			if (setup_redir(shell) == ERROR)
-				shell->exit_status = 1;
-			else
-				shell->exit_status = 0;
-		}
-		else if (is_builtin(shell->command->cmd))
-			shell->exit_status = exec_builtin(shell);
-		else
-			shell->exit_status = exec_external(shell);
-	}
+		shell->exit_status = execute_single_command(shell);
 	else
 		shell->exit_status = execute_pipe(shell);
 	init_signals();
