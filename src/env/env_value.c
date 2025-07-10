@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 15:07:51 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:02:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,6 @@
 int	is_env_char(char c)
 {
 	return (ft_isalnum(c) || c == '_');
-}
-
-/**
- * @brief Calculates the length of the value part of an environment string.
- *
- * This function takes a string in the format "KEY=VALUE" and calculates
- * the length of the VALUE part. If the string does not contain an '=',
- * the length is considered 0.
- *
- * @param str The environment string to parse.
- * @return The length of the value part of the string.
- */
-int	env_value_len(char *str)
-{
-	int	len;
-	int	i;
-
-	len = 0;
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	while (str[++i])
-		len++;
-	return (len);
 }
 
 /**

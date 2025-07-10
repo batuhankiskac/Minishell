@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 16:22:40 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:58:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 08:56:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,31 +47,6 @@ char	*join_heredoc(char **lines, int count)
 }
 
 /**
- * @brief Writes heredoc content to file for history.
- *
- * @param shell Shell structure containing line and redir
- * @param full_heredoc The complete heredoc content
- * @param eof_received Whether EOF was received (no delimiter)
- */
-void	write_heredoc(t_shell *shell,
-			char *full_heredoc, int eof_received)
-{
-	int	fd;
-
-	fd = open_file("/tmp/minishell_heredoc_content",
-			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd != ERROR)
-	{
-		ft_printf(1, "%s\n", shell->line);
-		if (full_heredoc && ft_strlen(full_heredoc) > 0)
-			ft_printf(fd, "%s\n", full_heredoc);
-		if (!eof_received)
-			ft_printf(fd, "%s", shell->redir->file);
-		close(fd);
-	}
-}
-
-/**
  * @brief Resizes the lines buffer when capacity is reached.
  *
  * @param lines Pointer to current lines array
@@ -107,7 +82,7 @@ int	resize_lines_buffer(char ***lines, int capacity)
  * @param count The number of lines collected.
  * @param eof_received True if the session was terminated by EOF (Ctrl+D).
  */
-void	create_heredoc_history_file(t_shell *shell, char **lines, int count,
+void	write_heredoc(t_shell *shell, char **lines, int count,
 			int eof_received)
 {
 	char	*full_heredoc;
@@ -120,7 +95,7 @@ void	create_heredoc_history_file(t_shell *shell, char **lines, int count,
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd != ERROR)
 	{
-		ft_putendl_fd(shell->line, fd);
+		ft_printf(fd, "%s\n", shell->line);
 		if (*full_heredoc)
 			ft_printf(fd, "%s\n", full_heredoc);
 		if (!eof_received)

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 08:14:47 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 09:02:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ int		builtin_cd(int argc, char **args, t_env **env);
 */
 t_env	*env_init(char *envp[]);
 t_env	*find_env(char *key, t_env *env);
-int		env_value_len(char *str);
 int		is_env_char(char c);
 int		is_valid_identifier(char *str);
 int		update_env(char *key, char *value, t_env **env);
@@ -149,12 +148,10 @@ void	exec_external_direct(t_shell *shell, char **env_array);
 void	find_and_exec_command(t_shell *shell, char **env_array);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
-void	write_heredoc(t_shell *shell,
-			char *full_heredoc, int eof_received);
+void	write_heredoc(t_shell *shell, char **lines, int count,
+			int eof_received);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
-void	create_heredoc_history_file(t_shell *shell, char **lines, int count,
-			int eof_received);
 
 /*
 ** Expander

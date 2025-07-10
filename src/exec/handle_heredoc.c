@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 15:28:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 08:56:12 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ static int	collect_heredoc(t_shell *shell, int show_warning)
 		ft_printf(2, "minishell: warning: here-document at line %d "
 			"delimited by end-of-file (wanted `%s')\n",
 			start_line_number, shell->redir->file);
-	create_heredoc_history_file(shell, shell->heredoc->lines,
+	write_heredoc(shell, shell->heredoc->lines,
 		shell->heredoc->count, shell->heredoc->eof_received);
 	if (shell->heredoc->eof_received)
 		shell->heredoc_eof = 1;
