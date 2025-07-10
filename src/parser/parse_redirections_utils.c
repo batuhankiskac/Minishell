@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 12:05:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 12:21:44 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 21:57:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
  * @brief Sets properties for a heredoc redirection.
  *
  * This function checks if the heredoc delimiter is quoted. If it is,
- * it disables content expansion and removes the quotes from the delimiter string.
+ * it disables content expansion and removes the quotes from the delimiter
+ * string.
  * Otherwise, it sets the delimiter as is and enables expansion.
  *
  * @param r The redirection node to modify.

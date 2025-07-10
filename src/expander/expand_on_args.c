@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 21:37:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 22:14:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,18 @@
 int	expand_on_args(t_command *cmd, t_env *env, int exit_status)
 {
 	int		i;
-	int		arg_len;
 	char	*new_val;
 
 	i = 0;
 	while (cmd->args && cmd->args[i])
 	{
-		arg_len = ft_strlen(cmd->args[i]);
-		if (arg_len >= 2 && cmd->args[i][0] == '\''
-				&& cmd->args[i][arg_len - 1] == '\'')
-			new_val = ft_strndup(cmd->args[i] + 1, arg_len - 2);
-		else
-			new_val = expand_string(cmd->args[i], env, exit_status);
+		new_val = expand_string(cmd->args[i], env, exit_status);
 		if (!new_val)
 			return (0);
 		free(cmd->args[i]);
 		cmd->args[i] = new_val;
 		if (i == 0)
-		{
 			cmd->cmd = cmd->args[0];
-		}
 		i++;
 	}
 	return (1);

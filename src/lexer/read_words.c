@@ -6,41 +6,64 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:14:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 23:26:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Parses word boundaries handling quotes and special characters.
+ * @brief      A helper function to find the end of a quoted section.
  *
- * This function determines where a word starts and ends in the input string,
- * properly handling quoted sections and special token characters.
+ * It starts right after an opening quote and scans until it finds the
+ * matching closing quote, then returns the position after the closing quote.
+ * @param pos  The starting position (the index of the opening quote).
+ * @param str  The input string.
+ * @return     The position after the closing quote, or ERROR if not found.
+ */
+static int	handle_quoted_section(int pos, const char *str)
+{
+	char	quote_char;
+
+	quote_char = str[pos];
+	pos++;
+	while (str[pos] && str[pos] != quote_char)
+	{
+		pos++;
+	}
+	if (str[pos] != quote_char)
+		return (ERROR);
+	pos++;
+	return (pos);
+}
+
+/**
+ * @brief      Parses word boundaries handling quotes and special characters.
  *
- * @param pos The starting position in the input string.
- * @param str The input string containing the command line.
- * @return The ending position of the word, or ERROR if quote mismatch.
+ * This function determines where a word starts and ends in the input string.
+ * It uses a helper function to manage quoted sections, which simplifies
+ * the main loop and makes it more robust against parsing errors.
+ * @param pos  The starting position in the input string.
+ * @param str  The input string containing the command line.
+ * @return     The ending position of the word, or ERROR if quote mismatch.
  */
 static int	parse_word_boundaries(int pos, const char *str)
 {
-	char	quote;
+	int	new_pos;
 
-	while (str[pos] && !ft_isspace(str[pos]))
+	while (str[pos] && !ft_isspace(str[pos]) && !check_token(str[pos]))
 	{
 		if (str[pos] == '\'' || str[pos] == '\"')
 		{
-			quote = str[pos++];
-			while (str[pos] && str[pos] != quote)
-				pos++;
-			if (str[pos] != quote)
+			new_pos = handle_quoted_section(pos, str);
+			if (new_pos == ERROR)
 				return (ERROR);
+			pos = new_pos;
+		}
+		else
+		{
 			pos++;
 		}
-		else if (check_token(str[pos]))
-			break ;
-		else
-			pos++;
 	}
 	return (pos);
 }
