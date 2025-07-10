@@ -6,23 +6,23 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 12:05:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 12:15:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 12:21:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_redir_type	get_redir_type(t_token_type tt)
-{
-	if (tt == TOKEN_REDIR_IN)
-		return (REDIR_IN);
-	if (tt == TOKEN_REDIR_OUT)
-		return (REDIR_OUT);
-	if (tt == TOKEN_REDIR_APPEND)
-		return (REDIR_APPEND);
-	return (REDIR_HEREDOC);
-}
-
+/**
+ * @brief Sets properties for a heredoc redirection.
+ *
+ * This function checks if the heredoc delimiter is quoted. If it is,
+ * it disables content expansion and removes the quotes from the delimiter string.
+ * Otherwise, it sets the delimiter as is and enables expansion.
+ *
+ * @param r The redirection node to modify.
+ * @param file The raw delimiter string from the token.
+ * @return 0 on success, -1 on memory allocation failure.
+ */
 int	set_heredoc_properties(t_redir *r, const char *file)
 {
 	size_t	len;
@@ -42,6 +42,18 @@ int	set_heredoc_properties(t_redir *r, const char *file)
 	return (0);
 }
 
+/**
+ * @brief Sets the file or delimiter for a redirection node.
+ *
+ * This function handles setting the `file` member of a `t_redir` struct.
+ * If the redirection is a heredoc, it calls `set_heredoc_properties` to
+ * handle special quoting rules. For other redirection types, it simply
+ * duplicates the provided filename.
+ *
+ * @param r The redirection node to modify.
+ * @param file The filename or delimiter string.
+ * @return 0 on success, -1 on memory allocation failure.
+ */
 int	set_redir_file(t_redir *r, const char *file)
 {
 	if (r->type == REDIR_HEREDOC)

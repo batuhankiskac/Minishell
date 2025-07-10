@@ -6,12 +6,38 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 12:15:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 12:26:37 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Converts a token type to its corresponding redirection type.
+ * @param tt The token type (e.g., TOKEN_REDIR_IN).
+ * @return The corresponding t_redir_type enum value.
+ */
+static t_redir_type	get_redir_type(t_token_type tt)
+{
+	if (tt == TOKEN_REDIR_IN)
+		return (REDIR_IN);
+	if (tt == TOKEN_REDIR_OUT)
+		return (REDIR_OUT);
+	if (tt == TOKEN_REDIR_APPEND)
+		return (REDIR_APPEND);
+	return (REDIR_HEREDOC);
+}
+
+/**
+ * @brief Creates a new redirection node.
+ *
+ * Allocates and initializes a new t_redir node with the given type and
+ * filename. It duplicates the filename for storage.
+ *
+ * @param tt The token type of the redirection.
+ * @param file The filename associated with the redirection.
+ * @return A pointer to the newly created t_redir node, or NULL on failure.
+ */
 static t_redir	*new_redir_node(t_token_type tt, char *file)
 {
 	t_redir	*r;
@@ -35,6 +61,17 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	return (r);
 }
 
+/**
+ * @brief Appends a new redirection node to a command's redirection list.
+ *
+ * Creates a new redirection node and appends it to the end of the
+ * command's redirection list.
+ *
+ * @param c The command to which the redirection is added.
+ * @param t_ptr A pointer to the current token pointer, which will be advanced.
+ * @param last A pointer to the last redirection node in the list.
+ * @return 1 on success, 0 on failure.
+ */
 static int	append_redir_node(t_command *c, t_token **t_ptr, t_redir **last)
 {
 	t_redir	*node;
@@ -53,6 +90,16 @@ static int	append_redir_node(t_command *c, t_token **t_ptr, t_redir **last)
 	return (1);
 }
 
+/**
+ * @brief Parses all redirections for a single command block.
+ *
+ * Iterates through the tokens of a command block (until a pipe is found)
+ * and creates redirection nodes for any redirection tokens encountered.
+ *
+ * @param c The command structure to populate with redirections.
+ * @param t_ptr A pointer to the current token pointer.
+ * @return 1 on success, 0 on failure.
+ */
 static int	parse_cmd_redirs(t_command *c, t_token **t_ptr)
 {
 	t_redir	*last;
@@ -74,6 +121,15 @@ static int	parse_cmd_redirs(t_command *c, t_token **t_ptr)
 	return (1);
 }
 
+/**
+ * @brief Parses redirections for all commands in the shell.
+ *
+ * Iterates through the command list and calls parse_cmd_redirs for each
+ * command to handle its specific redirections.
+ *
+ * @param shell The main shell structure.
+ * @return 1 on success, 0 on failure.
+ */
 int	parse_redirections(t_shell *shell)
 {
 	t_token		*t;
