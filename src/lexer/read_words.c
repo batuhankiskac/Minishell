@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 23:26:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 23:30:39 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,7 @@ static int	parse_word_boundaries(int pos, const char *str)
 			pos = new_pos;
 		}
 		else
-		{
 			pos++;
-		}
 	}
 	return (pos);
 }
