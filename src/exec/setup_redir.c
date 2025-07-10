@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:58:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 08:12:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static int	process_single_redir(t_shell *shell, t_redir *redir,
 	}
 	else
 	{
-		ret = apply_redirection(shell, redir);
+		ret = apply_redirection(redir);
 		if (ret == ERROR)
 			return (ERROR);
 	}

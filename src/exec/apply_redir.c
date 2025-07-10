@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 23:31:39 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:58:30 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 08:12:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,16 @@ static int	handle_append_redir(t_redir *redir)
 /**
  * @brief Processes a single redirection based on its type.
  *
- * @param shell Shell structure (needed for HEREDOC)
  * @param redir The redirection to process
  * @return 0 on success, ERROR on failure
  */
-int	apply_redirection(t_shell *shell, t_redir *redir)
+int	apply_redirection(t_redir *redir)
 {
-	int	result;
-
 	if (redir->type == REDIR_IN)
 		return (handle_input_redir(redir));
 	else if (redir->type == REDIR_OUT)
 		return (handle_output_redir(redir));
 	else if (redir->type == REDIR_APPEND)
 		return (handle_append_redir(redir));
-	else if (redir->type == REDIR_HEREDOC)
-	{
-		shell->redir = redir;
-		result = handle_heredoc_redir(shell, 1);
-		if (result == 1)
-		{
-			shell->heredoc_eof = 1;
-			return (ERROR);
-		}
-		return (result);
-	}
 	return (0);
 }

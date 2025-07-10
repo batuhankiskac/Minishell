@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 08:14:47 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_shell *shell, int is_last_heredoc);
 int		execute_pipe(t_shell *shell);
 int		resize_lines_buffer(char ***lines, int capacity);
-int		apply_redirection(t_shell *shell, t_redir *redir);
+int		apply_redirection(t_redir *redir);
 int		init_heredoc(t_shell *shell);
 int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
