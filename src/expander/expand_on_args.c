@@ -37,11 +37,13 @@ int	expand_on_args(t_command *cmd, t_env *env, int exit_status)
 	while (cmd->args && cmd->args[i])
 	{
 		arg_len = ft_strlen(cmd->args[i]);
-		if (arg_len >= 2 && cmd->args[i][0] == '\''
-				&& cmd->args[i][arg_len - 1] == '\'')
-			new_val = ft_strndup(cmd->args[i] + 1, arg_len - 2);
-		else
-			new_val = expand_string(cmd->args[i], env, exit_status);
+               if (arg_len >= 2 && cmd->args[i][0] == '\''
+                               && cmd->args[i][arg_len - 1] == '\''
+                               && ft_strchr(cmd->args[i] + 1, '\'')
+                                       == cmd->args[i] + arg_len - 1)
+                       new_val = ft_strndup(cmd->args[i] + 1, arg_len - 2);
+               else
+                       new_val = expand_string(cmd->args[i], env, exit_status);
 		if (!new_val)
 			return (0);
 		free(cmd->args[i]);
