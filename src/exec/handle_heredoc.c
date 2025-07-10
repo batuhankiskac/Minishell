@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 09:44:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 11:18:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,27 @@
  */
 static int	process_heredoc_input_line(char *line, t_shell *shell)
 {
+	char	*expanded_line;
+
 	if (ft_strcmp(line, shell->redir->file) == 0)
 	{
 		free(line);
 		return (1);
 	}
-	ft_printf(shell->heredoc->pipe_fd, "%s\n", line);
-	free(line);
+	if (shell->redir->expand_content)
+	{
+		expanded_line = expand_string(line, shell->env, shell->exit_status);
+		free(line);
+		if (!expanded_line)
+			return (ERROR);
+		ft_printf(shell->heredoc->pipe_fd, "%s\n", expanded_line);
+		free(expanded_line);
+	}
+	else
+	{
+		ft_printf(shell->heredoc->pipe_fd, "%s\n", line);
+		free(line);
+	}
 	return (0);
 }
 

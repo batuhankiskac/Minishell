@@ -6,35 +6,13 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 11:35:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 14:08:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 11:17:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * @brief Checks if a redirection should be skipped during expansion.
- *
- * This function determines whether a redirection should be excluded from
- * variable expansion based on its type and delimiters.
- *
- * @param redir The redirection node to check.
- * @return 1 if the redirection should be skipped, 0 otherwise.
- */
-static int	should_skip_expansion(t_redir *redir)
-{
-	char	*file;
 
-	if (redir->type != REDIR_HEREDOC)
-		return (0);
-	file = redir->original_file;
-	if (!file)
-		return (0);
-	if ((file[0] == '\'' && file[ft_strlen(file) - 1] == '\'')
-		|| (file[0] == '\"' && file[ft_strlen(file) - 1] == '\"'))
-		return (1);
-	return (0);
-}
 
 /**
  * @brief Expands variables in a single redirection.
@@ -51,7 +29,7 @@ static int	expand_single_redir(t_redir *redir, t_env *env, int exit_status)
 {
 	char	*expanded;
 
-	if (should_skip_expansion(redir))
+	if (redir->type == REDIR_HEREDOC)
 		return (1);
 	expanded = expand_string(redir->file, env, exit_status);
 	if (!expanded)

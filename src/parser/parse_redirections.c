@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 13:14:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 11:51:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,46 @@ static t_redir_type	get_redir_type(t_token_type tt)
 }
 
 /**
+ * @brief Sets the file and expansion properties for a heredoc redirection.
+ *
+ * Checks if the delimiter is quoted. If so, it disables content expansion
+ * and strips the quotes from the delimiter string. Otherwise, it uses the
+ * delimiter as is.
+ * @param r The redirection node to modify.
+ * @param file The raw delimiter string from the token.
+ * @return 0 on success, -1 on allocation failure.
+ */
+static int	set_heredoc_properties(t_redir *r, const char *file)
+{
+	size_t	len;
+
+	len = ft_strlen(file);
+	if ((file[0] == '\'' && file[len - 1] == '\'')
+		|| (file[0] == '"' && file[len - 1] == '"'))
+	{
+		r->expand_content = 0;
+		r->file = ft_substr(file, 1, len - 2);
+	}
+	else
+	{
+		r->expand_content = 1;
+		r->file = ft_strdup(file);
+	}
+	if (!r->file)
+		return (-1);
+	return (0);
+}
+
+/**
  * @brief Creates a new redirection node.
  *
  * This function allocates memory for a new redirection node, sets its
  * type based on the token type, and assigns the specified file name.
+ * It delegates special heredoc logic to a helper function.
  *
  * @param tt The token type representing the redirection type.
  * @param file The file name associated with the redirection.
- * @return A pointer to the newly created redirection node.
+ * @return A pointer to the newly created redirection node, or NULL on failure.
  */
 static t_redir	*new_redir_node(t_token_type tt, char *file)
 {
@@ -47,14 +79,22 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	if (!r)
 		return (print_error_null(NULL, NULL, strerror(errno)));
 	r->type = get_redir_type(tt);
-	r->file = ft_strdup(file);
 	r->original_file = ft_strdup(file);
-	if (!r->file || !r->original_file)
+	if (tt == TOKEN_HEREDOC)
 	{
-		if (r->file)
-			free(r->file);
-		if (r->original_file)
+		if (set_heredoc_properties(r, file) == -1)
+		{
 			free(r->original_file);
+			free(r);
+			return (print_error_null(NULL, NULL, strerror(errno)));
+		}
+	}
+	else
+		r->file = ft_strdup(file);
+	if (!r->original_file || !r->file)
+	{
+		free(r->original_file);
+		free(r->file);
 		free(r);
 		return (print_error_null(NULL, NULL, strerror(errno)));
 	}
@@ -71,7 +111,7 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
  *
  * @param c A pointer to the command structure to update.
  * @param t A pointer to the token pointer, which is updated as tokens
- *          are processed.
+ * are processed.
  * @return 1 if the redirections are successfully parsed, 0 otherwise.
  */
 static int	parse_cmd_redirs(t_command *c, t_token **t)
@@ -110,7 +150,7 @@ static int	parse_cmd_redirs(t_command *c, t_token **t)
  * as tokens are processed.
  *
  * @param shell A pointer to the shell structure containing the command list
- *              and token list.
+ * and token list.
  * @return 1 if all redirections are successfully parsed, 0 otherwise.
  */
 int	parse_redirections(t_shell *shell)

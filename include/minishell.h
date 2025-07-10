@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 09:38:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/10 11:18:16 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_redir
 	t_redir_type	type;
 	char			*file;
 	char			*original_file;
+	int				expand_content;
 	struct s_redir	*next;
 }					t_redir;
 
