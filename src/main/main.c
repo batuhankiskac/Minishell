@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:38:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 11:45:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ static void	input_loop(t_shell *shell)
 		if (!raw_line_ptr)
 		{
 			if (get_signal_flag() == SIGINT)
+			{
+				shell->exit_status = 130;
 				continue ;
+			}
 			if (isatty(0))
 				ft_printf(1, "exit\n");
 			break ;

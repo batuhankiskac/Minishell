@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 21:48:46 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 11:28:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ static char	*get_target(int argc, char **args, t_env **env)
 		raw = get_env_value("OLDPWD", *env);
 		if (!raw)
 			return (print_error_null("cd", NULL, "OLDPWD not set"));
-		ft_printf(1, "%s\n", raw);
 		return (ft_strdup(raw));
 	}
 	return (tilde_expansion(args[1], env));

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 09:58:05 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 09:58:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 11:48:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static int	execute_redir_only(t_shell *shell)
 	original_stdout = dup(STDOUT_FILENO);
 	if (setup_redir(shell) == ERROR)
 		status = 1;
-	dup2(original_stdin, STDIN_FILENO);
-	close(original_stdin);
-	dup2(original_stdout, STDOUT_FILENO);
-	close(original_stdout);
+	if (original_stdin != -1)
+		dup_fd(original_stdin, STDIN_FILENO, "stdin");
+	if (original_stdout != -1)
+		dup_fd(original_stdout, STDOUT_FILENO, "stdout");
 	return (status);
 }
 
