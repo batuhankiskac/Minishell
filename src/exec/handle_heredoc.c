@@ -57,12 +57,14 @@ static int	heredoc_input_loop(t_shell *shell)
 
 	while (1)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			shell->heredoc->eof_reached = 1;
-			return (0);
-		}
+               line = readline("> ");
+               if (!line)
+               {
+                       if (get_signal_flag() == SIGINT)
+                               return (ERROR);
+                       shell->heredoc->eof_reached = 1;
+                       return (0);
+               }
 		shell->line_number++;
 		ret = process_heredoc_input_line(line, shell);
 		if (ret == 1)
@@ -84,8 +86,11 @@ static int	collect_heredoc(t_shell *shell, int show_warning)
 	int	start_line_number;
 
 	start_line_number = shell->line_number;
-	if (heredoc_input_loop(shell) == ERROR)
-		return (ERROR);
+       if (heredoc_input_loop(shell) == ERROR)
+       {
+               shell->heredoc_interrupted = 1;
+               return (ERROR);
+       }
 	if (shell->heredoc->eof_reached && show_warning)
 		ft_printf(2, "minishell: warning: here-document at line %d "
 			"delimited by end-of-file (wanted `%s')\n",
@@ -112,17 +117,23 @@ static int	setup_and_collect_heredoc(t_shell *shell, int is_last_heredoc,
 	if (pipe(pipe_fd) == -1)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
 	shell->heredoc->pipe_fd = pipe_fd[1];
+        setup_heredoc_signals();
+        reset_signal_flag();
 	collect_result = collect_heredoc(shell, is_last_heredoc);
+        init_signals();
 	close(pipe_fd[1]);
 	shell->heredoc->pipe_fd = -1;
-	if (collect_result == ERROR || shell->heredoc_interrupted)
-	{
-		close(pipe_fd[0]);
-		if (shell->heredoc_interrupted)
-			return (1);
-		return (ERROR);
-	}
-	return (0);
+       if (collect_result == ERROR || shell->heredoc_interrupted)
+       {
+               close(pipe_fd[0]);
+               if (shell->heredoc_interrupted)
+               {
+                       shell->exit_status = 130;
+                       return (1);
+               }
+               return (ERROR);
+       }
+       return (0);
 }
 
 /**

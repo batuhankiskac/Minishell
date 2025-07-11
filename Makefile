@@ -59,8 +59,9 @@ SRCS = src/main/main.c \
 	   src/parser/parse_redirections_utils.c \
 	   src/signals/signal_exec.c \
 	   src/signals/signal_flag.c \
-	   src/signals/signal_handlers.c \
-	   src/utils/cleanup.c \
+           src/signals/signal_handlers.c \
+           src/signals/signal_heredoc.c \
+           src/utils/cleanup.c \
 	   src/utils/error.c \
 	   src/utils/free.c \
 	   src/utils/wait_utils.c

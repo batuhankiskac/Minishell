@@ -201,6 +201,7 @@ void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
 void	setup_exec_signals(void);
+void    setup_heredoc_signals(void);
 
 /*
 ** Utils
