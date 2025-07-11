@@ -58,11 +58,12 @@ static int	heredoc_input_loop(t_shell *shell)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
-		{
-			shell->heredoc->eof_reached = 1;
-			return (0);
-		}
+               if (!line)
+               {
+                       shell->heredoc->eof_reached = 1;
+                       shell->exit_status = 130;
+                       return (0);
+               }
 		shell->line_number++;
 		ret = process_heredoc_input_line(line, shell);
 		if (ret == 1)
@@ -83,16 +84,23 @@ static int	collect_heredoc(t_shell *shell, int show_warning)
 {
 	int	start_line_number;
 
-	start_line_number = shell->line_number;
-	if (heredoc_input_loop(shell) == ERROR)
-		return (ERROR);
-	if (shell->heredoc->eof_reached && show_warning)
-		ft_printf(2, "minishell: warning: here-document at line %d "
-			"delimited by end-of-file (wanted `%s')\n",
-			start_line_number, shell->redir->file);
-	if (shell->heredoc->eof_reached)
-		shell->heredoc_interrupted = 1;
-	return (0);
+       start_line_number = shell->line_number;
+       if (heredoc_input_loop(shell) == ERROR)
+               return (ERROR);
+       if (get_signal_flag() == SIGINT)
+       {
+               shell->exit_status = 130;
+               shell->heredoc_interrupted = 1;
+               reset_signal_flag();
+               return (0);
+       }
+       if (shell->heredoc->eof_reached && show_warning)
+               ft_printf(2, "minishell: warning: here-document at line %d "
+                       "delimited by end-of-file (wanted `%s')\n",
+                       start_line_number, shell->redir->file);
+       if (shell->heredoc->eof_reached)
+               shell->heredoc_interrupted = 1;
+       return (0);
 }
 
 /**
