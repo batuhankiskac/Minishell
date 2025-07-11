@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 19:40:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 21:03:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_redir
 	char			*file;
 	char			*original_file;
 	int				expand_content;
+	int				heredoc_fd;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -80,19 +81,12 @@ typedef struct s_command
 	struct s_command	*next;
 }						t_command;
 
-typedef struct s_heredoc
-{
-	int		pipe_fd;
-	int		eof_reached;
-}			t_heredoc;
-
 typedef struct s_shell
 {
 	t_env		*env;
 	t_command	*command;
 	t_token		*tokens;
 	t_redir		*redir;
-	t_heredoc	*heredoc;
 	char		*line;
 	int			exit_status;
 	int			heredoc_interrupted;
@@ -135,11 +129,9 @@ int		exec_external(t_shell *shell);
 int		open_file(char *filename, int flags, int mode);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
-int		handle_heredoc_redir(t_shell *shell, t_redir *redir,
-			int is_last_heredoc);
+int		handle_heredoc_redir(t_shell *shell);
 int		execute_pipe(t_shell *shell);
 int		apply_redirection(t_redir *redir);
-int		init_heredoc(t_shell *shell);
 int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
 void	exec_external_direct(t_shell *shell, char **env_array);
@@ -148,6 +140,8 @@ void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
+void	heredoc_child_routine(t_shell *shell, t_redir *redir,
+			int pipe_write_fd);
 
 /*
 ** Expander
@@ -217,7 +211,6 @@ void	free_redirections(t_redir *r);
 void	*print_error_null(char *cmd, char *arg, char *msg);
 void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
-void	cleanup_heredoc(t_shell *shell);
 void	cleanup_child_and_exit(t_shell *shell, char **env_array,
 			t_command *original_head, int exit_code);
 

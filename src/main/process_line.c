@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 20:52:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,12 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	}
 	if (handle_parsing(shell))
 		return (handle_parse_error(raw_line_ptr, shell));
-	else if (shell->command && !shell->heredoc_interrupted)
+	if (handle_heredoc_redir(shell) == ERROR)
+	{
+		cleanup_iteration_resources(raw_line_ptr, shell);
+		return (shell->exit_status = 130, 1);
+	}
+	if (shell->command && !shell->heredoc_interrupted)
 		run_command(shell);
 	if (*shell->line)
 		add_history(shell->line);

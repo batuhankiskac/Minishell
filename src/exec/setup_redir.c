@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 19:24:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 21:05:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,15 @@ static t_redir	*find_last_heredoc(t_redir *redir)
  * here-documents or `apply_redirection` for standard file redirections
  * (`<`, `>`, `>>`).
  */
-static int	process_single_redir(t_shell *shell, t_redir *redir,
-		t_redir *last_heredoc)
+static int	process_single_redir(t_redir *redir, t_redir *last_heredoc)
 {
-
 	if (redir->type == REDIR_HEREDOC)
 	{
-		if (handle_heredoc_redir(shell, redir,
-				(last_heredoc == redir)) == ERROR)
-			return (ERROR);
+		if (redir == last_heredoc)
+		{
+			if (dup_fd(redir->heredoc_fd, STDIN_FILENO, "heredoc") == ERROR)
+				return (ERROR);
+		}
 	}
 	else
 	{
@@ -95,7 +95,7 @@ int	setup_redir(t_shell *shell)
 	last_heredoc = find_last_heredoc(redir);
 	while (redir)
 	{
-		if (process_single_redir(shell, redir, last_heredoc) == ERROR)
+		if (process_single_redir(redir, last_heredoc) == ERROR)
 			return (ERROR);
 		redir = redir->next;
 	}

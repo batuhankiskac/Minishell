@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 14:08:14 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 21:03:54 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int	main(int argc, char **argv, char **envp)
 	shell.command = NULL;
 	shell.tokens = NULL;
 	shell.redir = NULL;
-	shell.heredoc = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
 	shell.heredoc_interrupted = 0;
