@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 14:08:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,23 @@ static void	input_loop(t_shell *shell)
 
 	while (1)
 	{
-		reset_signal_flag();
 		raw_line_ptr = readline("minishell> ");
+		if (get_signal_flag() == SIGINT)
+			shell->exit_status = 130;
+		reset_signal_flag();
 		if (!raw_line_ptr)
 		{
-			if (get_signal_flag() == SIGINT)
-			{
-				shell->exit_status = 130;
-				continue ;
-			}
 			if (isatty(0))
 				ft_printf(1, "exit\n");
 			break ;
 		}
-		if (process_line(raw_line_ptr, shell))
-			continue ;
+		if (*raw_line_ptr)
+		{
+			if (process_line(raw_line_ptr, shell))
+				continue ;
+		}
+		else
+			free(raw_line_ptr);
 	}
 }
 
