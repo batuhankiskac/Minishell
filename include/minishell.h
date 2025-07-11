@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 19:40:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -134,7 +135,8 @@ int		exec_external(t_shell *shell);
 int		open_file(char *filename, int flags, int mode);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
-int		handle_heredoc_redir(t_shell *shell, int is_last_heredoc);
+int		handle_heredoc_redir(t_shell *shell, t_redir *redir,
+			int is_last_heredoc);
 int		execute_pipe(t_shell *shell);
 int		apply_redirection(t_redir *redir);
 int		init_heredoc(t_shell *shell);
@@ -201,6 +203,7 @@ void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
 void	setup_exec_signals(void);
+void	heredoc_child_sigint_handler(int sig);
 
 /*
 ** Utils

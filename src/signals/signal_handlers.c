@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 11:41:20 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 19:59:39 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,18 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+/**
+ * @brief Signal handler for SIGINT within the heredoc child process.
+ * @param sig The signal number (SIGINT).
+ * * @details This handler is specifically for the child process forked to read
+ * heredoc input. When Ctrl+C (SIGINT) is pressed, the child's only job is
+ * to exit with status 130, which is the standard exit code for termination
+ * by SIGINT. This allows the parent process to detect the interruption.
+ */
+void	heredoc_child_sigint_handler(int sig)
+{
+	(void)sig;
+	set_signal_flag(SIGINT);
 }
