@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 09:39:58 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:28:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,6 @@ int	init_heredoc(t_shell *shell)
 	if (!shell->heredoc)
 		return (ERROR);
 	shell->heredoc->pipe_fd = -1;
-	shell->heredoc->eof_received = 0;
+	shell->heredoc->eof_reached = 0;
 	return (0);
 }

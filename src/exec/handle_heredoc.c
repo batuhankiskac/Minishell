@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 11:18:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	heredoc_input_loop(t_shell *shell)
 		line = readline("> ");
 		if (!line)
 		{
-			shell->heredoc->eof_received = 1;
+			shell->heredoc->eof_reached = 1;
 			return (0);
 		}
 		shell->line_number++;
@@ -86,12 +86,12 @@ static int	collect_heredoc(t_shell *shell, int show_warning)
 	start_line_number = shell->line_number;
 	if (heredoc_input_loop(shell) == ERROR)
 		return (ERROR);
-	if (shell->heredoc->eof_received && show_warning)
+	if (shell->heredoc->eof_reached && show_warning)
 		ft_printf(2, "minishell: warning: here-document at line %d "
 			"delimited by end-of-file (wanted `%s')\n",
 			start_line_number, shell->redir->file);
-	if (shell->heredoc->eof_received)
-		shell->heredoc_eof = 1;
+	if (shell->heredoc->eof_reached)
+		shell->heredoc_interrupted = 1;
 	return (0);
 }
 
@@ -115,10 +115,10 @@ static int	setup_and_collect_heredoc(t_shell *shell, int is_last_heredoc,
 	collect_result = collect_heredoc(shell, is_last_heredoc);
 	close(pipe_fd[1]);
 	shell->heredoc->pipe_fd = -1;
-	if (collect_result == ERROR || shell->heredoc_eof)
+	if (collect_result == ERROR || shell->heredoc_interrupted)
 	{
 		close(pipe_fd[0]);
-		if (shell->heredoc_eof)
+		if (shell->heredoc_interrupted)
 			return (1);
 		return (ERROR);
 	}

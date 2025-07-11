@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 23:37:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	handle_parsing(t_shell *shell)
 static int	initialize_shell_line(char *raw_line_ptr, t_shell *shell)
 {
 	shell->line_number++;
-	shell->heredoc_eof = 0;
+	shell->heredoc_interrupted = 0;
 	if (shell->line)
 		free(shell->line);
 	shell->line = ft_strdup(raw_line_ptr);
@@ -91,7 +91,7 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	}
 	if (handle_parsing(shell))
 		return (handle_parse_error(raw_line_ptr, shell));
-	else if (shell->command && !shell->heredoc_eof)
+	else if (shell->command && !shell->heredoc_interrupted)
 		run_command(shell);
 	if (*shell->line)
 		add_history(shell->line);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 08:12:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	process_heredoc(t_shell *shell, t_redir *redir,
 		ret = handle_heredoc_redir(shell, 1);
 		if (ret == 1)
 		{
-			shell->heredoc_eof = 1;
+			shell->heredoc_interrupted = 1;
 			return (ERROR);
 		}
 		if (ret == ERROR)

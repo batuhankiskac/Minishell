@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 12:21:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/11 12:29:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_command
 typedef struct s_heredoc
 {
 	int		pipe_fd;
-	int		eof_received;
+	int		eof_reached;
 }			t_heredoc;
 
 typedef struct s_shell
@@ -94,7 +94,7 @@ typedef struct s_shell
 	t_heredoc	*heredoc;
 	char		*line;
 	int			exit_status;
-	int			heredoc_eof;
+	int			heredoc_interrupted;
 	int			line_number;
 }				t_shell;
 
