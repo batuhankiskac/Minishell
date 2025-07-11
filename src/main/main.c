@@ -28,24 +28,29 @@ static void	input_loop(t_shell *shell)
 {
 	char	*raw_line_ptr;
 
-	while (1)
-	{
-		reset_signal_flag();
-		raw_line_ptr = readline("minishell> ");
-		if (!raw_line_ptr)
-		{
-			if (get_signal_flag() == SIGINT)
-			{
-				shell->exit_status = 130;
-				continue ;
-			}
-			if (isatty(0))
-				ft_printf(1, "exit\n");
-			break ;
-		}
-		if (process_line(raw_line_ptr, shell))
-			continue ;
-	}
+    while (1)
+    {
+            reset_signal_flag();
+            raw_line_ptr = readline("minishell> ");
+            if (get_signal_flag() == SIGINT)
+            {
+                    shell->exit_status = 130;
+                    reset_signal_flag();
+                    if (!raw_line_ptr || *raw_line_ptr == '\0')
+                    {
+                            free(raw_line_ptr);
+                            continue ;
+                    }
+            }
+            if (!raw_line_ptr)
+            {
+                    if (isatty(0))
+                            ft_printf(1, "exit\n");
+                    break ;
+            }
+            if (process_line(raw_line_ptr, shell))
+                    continue ;
+    }
 }
 
 /**
@@ -88,6 +93,7 @@ static int	execute_command_string(char *command, t_shell *shell)
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
+        rl_catch_signals = 0;
 
 	init_signals();
 	shell.env = env_init(envp);
