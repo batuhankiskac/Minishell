@@ -37,6 +37,7 @@ SRCS = src/main/main.c \
 	   src/exec/execute.c \
 	   src/exec/find_path.c \
 	   src/exec/handle_heredoc.c \
+           src/exec/collect_heredocs.c \
 	   src/exec/validate_command.c \
 	   src/exec/find_and_execute.c \
 	   src/expander/expander.c \

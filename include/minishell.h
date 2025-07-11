@@ -60,6 +60,7 @@ typedef struct s_redir
 	char			*file;
 	char			*original_file;
 	int				expand_content;
+	int	here_fd;
 	struct s_redir	*next;
 }					t_redir;
 
@@ -135,9 +136,11 @@ int		open_file(char *filename, int flags, int mode);
 int		dup_fd(int old_fd, int new_fd, char *type);
 int		setup_redir(t_shell *shell);
 int		handle_heredoc_redir(t_shell *shell, int is_last_heredoc);
+int		collect_heredoc_fd(t_shell *shell, t_redir *redir);
 int		execute_pipe(t_shell *shell);
 int		apply_redirection(t_redir *redir);
 int		init_heredoc(t_shell *shell);
+int		collect_all_heredocs(t_shell *shell);
 int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
 void	exec_external_direct(t_shell *shell, char **env_array);

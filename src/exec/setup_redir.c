@@ -55,6 +55,17 @@ static int	process_heredoc(t_shell *shell, t_redir *redir,
 	int	ret;
 
 	shell->redir = redir;
+    if (redir->here_fd != -1) {
+        if (redir == last_heredoc) {
+            if (dup_fd(redir->here_fd, STDIN_FILENO, "heredoc") == ERROR) {
+                close(redir->here_fd);
+                return (ERROR);
+            }
+        }
+        close(redir->here_fd);
+        redir->here_fd = -1;
+        return (0);
+    }
 	if (redir == last_heredoc)
 	{
 		ret = handle_heredoc_redir(shell, 1);

@@ -45,8 +45,9 @@ static t_redir	*new_redir_node(t_token_type tt, char *file)
 	r = ft_calloc(1, sizeof(t_redir));
 	if (!r)
 		return (print_error_null(NULL, NULL, strerror(errno)));
-	r->type = get_redir_type(tt);
-	r->original_file = ft_strdup(file);
+       r->type = get_redir_type(tt);
+       r->here_fd = -1;
+       r->original_file = ft_strdup(file);
 	if (!r->original_file)
 	{
 		free(r);

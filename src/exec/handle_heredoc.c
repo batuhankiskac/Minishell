@@ -149,6 +149,19 @@ int	handle_heredoc_redir(t_shell *shell, int is_last_heredoc)
 			return (ERROR);
 		}
 	}
-	close(pipe_fd[0]);
-	return (0);
+       close(pipe_fd[0]);
+       return (0);
+}
+
+int     collect_heredoc_fd(t_shell *shell, t_redir *redir)
+{
+       int     pipe_fd[2];
+       int     result;
+
+       shell->redir = redir;
+       result = setup_and_collect_heredoc(shell, 1, pipe_fd);
+       if (result != 0)
+               return (result);
+       redir->here_fd = pipe_fd[0];
+       return (0);
 }

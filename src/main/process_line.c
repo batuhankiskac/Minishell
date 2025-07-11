@@ -89,10 +89,12 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		cleanup_iteration_resources(raw_line_ptr, shell);
 		return (0);
 	}
-	if (handle_parsing(shell))
-		return (handle_parse_error(raw_line_ptr, shell));
-	else if (shell->command && !shell->heredoc_eof)
-		run_command(shell);
+       if (handle_parsing(shell))
+               return (handle_parse_error(raw_line_ptr, shell));
+       if (collect_all_heredocs(shell) == ERROR)
+               return (handle_parse_error(raw_line_ptr, shell));
+       else if (shell->command && !shell->heredoc_eof)
+               run_command(shell);
 	if (*shell->line)
 		add_history(shell->line);
 	cleanup_iteration_resources(raw_line_ptr, shell);

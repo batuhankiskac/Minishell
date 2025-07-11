@@ -63,12 +63,14 @@ void	free_redirections(t_redir *r)
 			free(r->file);
 			r->file = NULL;
 		}
-		if (r->original_file)
-		{
-			free(r->original_file);
-			r->original_file = NULL;
-		}
-		free(r);
-		r = next;
-	}
+               if (r->original_file)
+               {
+                       free(r->original_file);
+                       r->original_file = NULL;
+               }
+               if (r->here_fd != -1)
+                       close(r->here_fd);
+               free(r);
+               r = next;
+       }
 }
