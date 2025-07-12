@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:30:58 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:50:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,11 +192,11 @@ void	set_command_name(t_command *cmd);
 ** Signal Handling
 */
 int		get_signal_flag(void);
-void	init_signals(void);
+void	set_interactive_signals(void);
 void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
-void	setup_exec_signals(void);
+void	set_exec_signals(void);
 void	heredoc_child_sigint_handler(int sig);
 void	init_heredoc_signals(void);
 

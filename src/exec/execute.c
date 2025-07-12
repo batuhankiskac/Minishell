@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 09:58:05 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 11:48:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:50:40 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ void	run_command(t_shell *shell)
 {
 	if (!shell->command)
 		return ;
-	setup_exec_signals();
+	set_exec_signals();
 	if (!shell->command->next)
 		shell->exit_status = execute_single_command(shell);
 	else
 		shell->exit_status = execute_pipe(shell);
-	init_signals();
+	set_interactive_signals();
 }

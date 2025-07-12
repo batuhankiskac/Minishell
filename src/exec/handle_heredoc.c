@@ -58,7 +58,7 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
 	signal(SIGINT, SIG_IGN);
 	status = fork_and_run_heredoc(shell, redir, pipe_fd);
-	init_signals();
+	set_interactive_signals();
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &saved_termios);
 	if (WEXITSTATUS(status) == 130)
 	{

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 14:14:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:50:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	sigint_handler(int sig)
  * This function sets up the signal handlers for SIGINT and SIGQUIT.
  * SIGINT is handled by `sigint_handler`, while SIGQUIT is ignored.
  */
-void	init_signals(void)
+void	set_interactive_signals(void)
 {
 	struct sigaction	sa;
 
