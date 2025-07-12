@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 19:59:39 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 14:14:49 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,26 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+/**
+ * @brief Signal handler for the heredoc child process.
+ *
+ * This function sets up the SIGINT handler specifically for the heredoc
+ * child process. Crucially, it does NOT use the SA_RESTART flag. This ensures
+ * that when SIGINT interrupts the `read` system call inside `readline`,
+ * the call fails with EINTR instead of being automatically restarted.
+ * This allows the readline loop to terminate upon Ctrl+C.
+ */
+void	init_heredoc_signals(void)
+{
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = heredoc_child_sigint_handler;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 /**

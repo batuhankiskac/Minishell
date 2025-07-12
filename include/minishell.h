@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 21:03:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 14:13:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 # include <errno.h>
 # include <termios.h>
 # include <readline/readline.h>
@@ -198,6 +199,7 @@ void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
 void	setup_exec_signals(void);
 void	heredoc_child_sigint_handler(int sig);
+void	init_heredoc_signals(void);
 
 /*
 ** Utils

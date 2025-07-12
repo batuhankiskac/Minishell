@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 20:40:34 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 20:55:57 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 14:01:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,7 @@ void	heredoc_child_routine(t_shell *shell, t_redir *redir, int pipe_write_fd)
 {
 	char	*line;
 
-	signal(SIGINT, heredoc_child_sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	init_heredoc_signals();
 	while (1)
 	{
 		line = readline("> ");
