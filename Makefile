@@ -1,5 +1,3 @@
-SHELL = /bin/bash
-
 NAME = minishell
 
 CC = cc
@@ -76,7 +74,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "Linking $(NAME)..."
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) $(LDLIBS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDLIBS) $(LIBFT)
 
 $(LIBFT):
 	@echo "Building libft..."

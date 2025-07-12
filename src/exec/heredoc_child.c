@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 20:40:34 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 14:01:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:15:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,29 @@ static void	write_heredoc_line(char *line, t_shell *shell, t_redir *redir,
 int	process_heredoc_line(char *line, t_shell *shell, t_redir *redir,
 	int pipe_write_fd)
 {
-	if (get_signal_flag() == SIGINT)
+	char	*trimmed_line;
+
+	if (get_signal_flag() == SIGINT || !line)
 	{
-		free(line);
+		if (!line && get_signal_flag() != SIGINT)
+			ft_printf(2, "minishell: warning: here-document at line %d "
+				"delimited by end-of-file (wanted `%s')\n",
+				shell->line_number, redir->file);
+		if (line)
+			free(line);
 		return (0);
 	}
-	if (!line)
+	if (ft_strlen(line) > 0 && line[ft_strlen(line) - 1] == '\n')
+		trimmed_line = ft_substr(line, 0, ft_strlen(line) - 1);
+	else
+		trimmed_line = ft_strdup(line);
+	free(line);
+	if (ft_strcmp(trimmed_line, redir->file) == 0)
 	{
-		ft_printf(2, "minishell: warning: here-document at line %d "
-			"delimited by end-of-file (wanted `%s')\n",
-			shell->line_number, redir->file);
+		free(trimmed_line);
 		return (0);
 	}
-	if (ft_strcmp(line, redir->file) == 0)
-	{
-		free(line);
-		return (0);
-	}
-	write_heredoc_line(line, shell, redir, pipe_write_fd);
+	write_heredoc_line(trimmed_line, shell, redir, pipe_write_fd);
 	return (1);
 }
 
@@ -86,7 +91,8 @@ void	heredoc_child_routine(t_shell *shell, t_redir *redir, int pipe_write_fd)
 	init_heredoc_signals();
 	while (1)
 	{
-		line = readline("> ");
+		write(1, "> ", 2);
+		line = get_next_line(0);
 		if (!process_heredoc_line(line, shell, redir, pipe_write_fd))
 			break ;
 	}

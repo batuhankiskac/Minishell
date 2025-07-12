@@ -64,6 +64,7 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	{
 		shell->heredoc_interrupted = 1;
 		close(pipe_fd[0]);
+		write(1, "\n", 1);
 		return (ERROR);
 	}
 	redir->heredoc_fd = pipe_fd[0];
