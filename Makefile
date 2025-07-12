@@ -62,7 +62,8 @@ SRCS = src/main/main.c \
 	   src/utils/cleanup.c \
 	   src/utils/error.c \
 	   src/utils/free.c \
-	   src/utils/wait_utils.c
+	   src/utils/wait_utils.c \
+	   src/utils/debug.c
 
 OBJS = $(SRCS:.c=.o)
 

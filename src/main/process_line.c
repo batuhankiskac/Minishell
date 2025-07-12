@@ -6,11 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 21:23:53 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 21:35:00 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 /**
  * @brief Handles the parsing phase of command processing.
@@ -92,11 +93,17 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		return (handle_parse_error(raw_line_ptr, shell));
 	if (handle_heredoc_redir(shell) == ERROR)
 	{
+		printf("DEBUG: [PROCESS_LINE] handle_heredoc_redir HATA dondurdu.\n");
 		shell->exit_status = 130;
 		cleanup_iteration_resources(raw_line_ptr, shell);
+
+		printf("DEBUG: [PROCESS_LINE] Readline durumu sifirlaniyor...\n");
 		write(1, "\n", 1);
+		ioctl(STDIN_FILENO, TIOCSTI, "");
 		rl_on_new_line();
 		rl_replace_line("", 0);
+		rl_redisplay(); // çağrısını burada yapmayalım, belki sorun odur.
+
 		return (1);
 	}
 	if (shell->command)

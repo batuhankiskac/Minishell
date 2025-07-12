@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:50:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 21:28:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,5 +214,6 @@ void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell);
 void	cleanup_child_process(t_shell *shell, char **env_array);
 void	cleanup_child_and_exit(t_shell *shell, char **env_array,
 			t_command *original_head, int exit_code);
+void debug_print_termios_flags(const char *label);
 
 #endif

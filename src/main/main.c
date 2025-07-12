@@ -6,11 +6,12 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 21:23:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 21:28:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 
 /**
  * @brief The main interactive loop of the shell.
@@ -30,6 +31,8 @@ static void	input_loop(t_shell *shell)
 
 	while (1)
 	{
+		printf("\nDEBUG: [MAIN_LOOP] Dongu basi. Guncel exit_status: %d\n", shell->exit_status);
+		debug_print_termios_flags("readline cagirmadan hemen once"); // SON KONTROL
 		raw_line_ptr = readline("minishell> ");
 		if (get_signal_flag() == SIGINT)
 		{
@@ -38,6 +41,7 @@ static void	input_loop(t_shell *shell)
 		reset_signal_flag();
 		if (!raw_line_ptr)
 		{
+			printf("DEBUG: [MAIN_LOOP] >>> readline NULL dondurdu! Dongu kiriliyor. <<<\n");
 			if (isatty(0))
 				ft_printf(1, "exit\n");
 			break ;
@@ -50,6 +54,7 @@ static void	input_loop(t_shell *shell)
 		else
 			free(raw_line_ptr);
 	}
+	printf("DEBUG: [MAIN_LOOP] Dongu sonlandi.\n");
 }
 
 /**
