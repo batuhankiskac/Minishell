@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 21:03:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:30:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	main(int argc, char **argv, char **envp)
 	shell.redir = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
-	shell.heredoc_interrupted = 0;
 	shell.line_number = 0;
 	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
 		shell.exit_status = execute_command_string(argv[2], &shell);

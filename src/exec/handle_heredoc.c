@@ -62,7 +62,6 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &saved_termios);
 	if (WEXITSTATUS(status) == 130)
 	{
-		shell->heredoc_interrupted = 1;
 		close(pipe_fd[0]);
 		write(1, "\n", 1);
 		return (ERROR);
@@ -90,8 +89,6 @@ int	handle_heredoc_redir(t_shell *shell)
 			if (redir->type == REDIR_HEREDOC)
 			{
 				if (execute_single_heredoc(shell, redir) == ERROR)
-					return (ERROR);
-				if (shell->heredoc_interrupted)
 					return (ERROR);
 			}
 			redir = redir->next;
