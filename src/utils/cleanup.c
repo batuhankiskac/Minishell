@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 21:03:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 21:57:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	cleanup_iteration_resources(char *raw_line_ptr, t_shell *shell)
 	}
 	if (raw_line_ptr)
 		free(raw_line_ptr);
+	unlink(".heredoc_temp");
 }
 
 /**
