@@ -56,14 +56,11 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	tcgetattr(STDIN_FILENO, &saved_termios);
 	if (pipe(pipe_fd) == -1)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
-	signal(SIGINT, SIG_IGN);
 	status = fork_and_run_heredoc(shell, redir, pipe_fd);
-	set_interactive_signals();
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &saved_termios);
 	if (WEXITSTATUS(status) == 130)
 	{
 		close(pipe_fd[0]);
-		write(1, "\n", 1);
 		return (ERROR);
 	}
 	redir->heredoc_fd = pipe_fd[0];
@@ -81,6 +78,7 @@ int	handle_heredoc_redir(t_shell *shell)
 	t_redir		*redir;
 
 	cmd = shell->command;
+	signal(SIGINT, SIG_IGN);
 	while (cmd)
 	{
 		redir = cmd->redir;
@@ -89,11 +87,15 @@ int	handle_heredoc_redir(t_shell *shell)
 			if (redir->type == REDIR_HEREDOC)
 			{
 				if (execute_single_heredoc(shell, redir) == ERROR)
+				{
+					set_interactive_signals();
 					return (ERROR);
+				}
 			}
 			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
+	set_interactive_signals();
 	return (0);
 }

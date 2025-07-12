@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:31:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/12 21:23:53 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static int	handle_parse_error(char *raw_line_ptr, t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
-	if (initialize_shell_line(raw_line_ptr, shell))
+		if (initialize_shell_line(raw_line_ptr, shell))
 		return (1);
 	if (tokenize_line(shell->line, shell) == ERROR)
 		return (handle_parse_error(raw_line_ptr, shell));
@@ -92,8 +92,12 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		return (handle_parse_error(raw_line_ptr, shell));
 	if (handle_heredoc_redir(shell) == ERROR)
 	{
+		shell->exit_status = 130;
 		cleanup_iteration_resources(raw_line_ptr, shell);
-		return (shell->exit_status = 130, 1);
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		return (1);
 	}
 	if (shell->command)
 		run_command(shell);
