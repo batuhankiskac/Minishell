@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:50:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 12:27:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 static void	sigint_handler(int sig)
 {
 	(void)sig;
+	printf("DEBUG: sigint_handler: SIGINT received in parent\n");
 	set_signal_flag(SIGINT);
 	write(1, "\n", 1);
 	rl_on_new_line();
@@ -91,5 +92,6 @@ void	init_heredoc_signals(void)
 void	heredoc_child_sigint_handler(int sig)
 {
 	(void)sig;
+	printf("DEBUG: heredoc_child_sigint_handler: SIGINT received in child\n");
 	set_signal_flag(SIGINT);
 }

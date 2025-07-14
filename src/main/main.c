@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:50:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 12:35:52 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,29 @@ static void	input_loop(t_shell *shell)
 
 	while (1)
 	{
+		printf("DEBUG: input_loop: signal_flag=%d, calling readline()...\n", get_signal_flag());
 		raw_line_ptr = readline("minishell> ");
+		printf("DEBUG: input_loop: readline returned %s, signal_flag=%d\n", raw_line_ptr ? "valid" : "NULL", get_signal_flag());
 		if (get_signal_flag() == SIGINT)
 			shell->exit_status = 130;
 		reset_signal_flag();
-		if (!raw_line_ptr)
-		{
-			if (isatty(0))
-				ft_printf(1, "exit\n");
-			break ;
-		}
+	   if (!raw_line_ptr)
+	   {
+		   printf("DEBUG: input_loop: readline returned NULL, resetting terminal and continuing...\n");
+		   set_interactive_signals();
+		   continue;
+	   }
 		if (*raw_line_ptr)
 		{
-			if (process_line(raw_line_ptr, shell))
+			int res = process_line(raw_line_ptr, shell);
+			printf("DEBUG: input_loop: process_line returned %d, exit_status=%d\n", res, shell->exit_status);
+			if (shell->exit_status == 130)
+			{
+				char c;
+				printf("DEBUG: input_loop: heredoc interrupted, cleaning stdin...\n");
+				while (read(0, &c, 1) > 0 && c != '\n');
+			}
+			if (res)
 				continue ;
 		}
 		else
