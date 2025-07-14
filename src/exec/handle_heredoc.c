@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 18:34:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 18:51:54 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,12 @@
 /**
  * @brief Expands a heredoc line if required and writes it to the pipe.
  *
- * If expand_content is set, expands environment variables in the line before
- * writing. Otherwise, writes the line as is. A newline is appended after
- * the content is written.
- * @param line The line read from the user (without newline).
+ * This function handles variable expansion on the given line and writes the
+ * result, followed by a newline, to the specified pipe.
+ * @param line The line read from the user.
  * @param shell The main shell structure for context.
- * @param redir The redirection structure containing expansion settings.
- * @param pipe_write_fd The file descriptor for the write-end of the pipe.
+ * @param redir The redirection structure.
+ * @param pipe_write_fd The file descriptor for the pipe's write-end.
  */
 static void	write_expanded_line(char *line, t_shell *shell, t_redir *redir,
 		int pipe_write_fd)
@@ -45,29 +44,24 @@ static void	write_expanded_line(char *line, t_shell *shell, t_redir *redir,
 /**
  * @brief Reads heredoc input until the delimiter or EOF is found.
  *
- * This function reads from standard input. Since the controlling function
- * sets SIGINT to be ignored, this loop will not be interrupted by Ctrl+C.
- * It will only terminate upon reading the delimiter or encountering an EOF.
- * @return Always returns 0, indicating completion.
+ * This loop reads lines from stdin. If SIGINT is received, the global signal
+ * flag is checked, and the loop continues, effectively restarting the prompt
+ * on a new line. It terminates on EOF or when the delimiter is matched.
+ * @return 0 on successful completion, ERROR if setup fails.
  */
 static int	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd)
 {
 	char	*line;
-	size_t	len;
 
 	while (1)
 	{
-		write(STDERR_FILENO, "> ", 2);
-		line = get_next_line(STDIN_FILENO);
+		line = readline("> ");
 		if (!line)
 		{
 			ft_printf(2, "minishell: warning: heredoc delimited by EOF "
 				"(wanted `%s')\n", redir->file);
 			break ;
 		}
-		len = ft_strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-			line[len - 1] = '\0';
 		if (ft_strcmp(line, redir->file) == 0)
 		{
 			free(line);
@@ -81,26 +75,27 @@ static int	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd)
 /**
  * @brief Manages the execution of a single here-document.
  *
- * This function sets the disposition of SIGINT and SIGQUIT to SIG_IGN (ignore)
- * for the duration of the heredoc input. After the input is complete, it
- * restores the standard interactive signal handlers.
+ * This function sets up a temporary signal handler for SIGINT that allows
+ * line-by-line interruption without exiting the heredoc. After the heredoc
+ * input is complete, it restores the standard interactive signal handlers.
  * @param shell The main shell structure.
  * @param redir The heredoc redirection to process.
- * @return Always returns 0, as interruptions are ignored.
+ * @return 0 on success, ERROR on failure.
  */
 static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 {
 	int	pipe_fd[2];
+	int	stdin_backup;
 
 	redir->heredoc_fd = -1;
 	if (pipe(pipe_fd) == -1)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	stdin_backup = dup(STDIN_FILENO);
 	heredoc_read_loop(shell, redir, pipe_fd[1]);
-	set_interactive_signals();
 	close(pipe_fd[1]);
 	redir->heredoc_fd = pipe_fd[0];
+	dup2(stdin_backup, STDIN_FILENO);
+	close(stdin_backup);
 	return (0);
 }
 
