@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 12:27:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 12:39:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,33 +79,27 @@ static int	handle_parse_error(char *raw_line_ptr, t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
-	printf("DEBUG: process_line: called with line='%s'\n", raw_line_ptr);
 	if (initialize_shell_line(raw_line_ptr, shell))
 		return (1);
 	if (tokenize_line(shell->line, shell) == ERROR)
 		return (handle_parse_error(raw_line_ptr, shell));
 	if (shell->tokens == NULL)
 	{
-		printf("DEBUG: process_line: no tokens, cleaning up\n");
 		cleanup_iteration_resources(raw_line_ptr, shell);
 		return (0);
 	}
 	if (handle_parsing(shell))
 		return (handle_parse_error(raw_line_ptr, shell));
-	printf("DEBUG: process_line: before handle_heredoc_redir\n");
 	if (handle_heredoc_redir(shell) == ERROR)
 	{
-		shell->exit_status = 130;
-		printf("DEBUG: process_line: heredoc error, exit_status=%d\n", shell->exit_status);
 		cleanup_iteration_resources(raw_line_ptr, shell);
+		shell->exit_status = 130;
 		return (1);
 	}
-	printf("DEBUG: process_line: after handle_heredoc_redir\n");
 	if (shell->command)
 		run_command(shell);
 	if (*shell->line)
 		add_history(shell->line);
 	cleanup_iteration_resources(raw_line_ptr, shell);
-	printf("DEBUG: process_line: finished, exit_status=%d\n", shell->exit_status);
 	return (0);
 }

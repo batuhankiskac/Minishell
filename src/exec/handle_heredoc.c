@@ -24,7 +24,6 @@ static int	fork_and_run_heredoc(t_shell *shell, t_redir *redir, int pipe_fd[2])
 	pid_t	pid;
 	int		status;
 
-	printf("DEBUG: fork_and_run_heredoc: forking...\n");
 	pid = fork();
 	if (pid == -1)
 	{
@@ -33,14 +32,11 @@ static int	fork_and_run_heredoc(t_shell *shell, t_redir *redir, int pipe_fd[2])
 	}
 	if (pid == 0)
 	{
-		printf("DEBUG: fork_and_run_heredoc: in child, calling heredoc_child_routine\n");
 		close(pipe_fd[0]);
 		heredoc_child_routine(shell, redir, pipe_fd[1]);
 	}
 	close(pipe_fd[1]);
-	printf("DEBUG: fork_and_run_heredoc: waiting for child...\n");
 	waitpid(pid, &status, 0);
-	printf("DEBUG: fork_and_run_heredoc: child exited, status=%d\n", status);
 	return (status);
 }
 
@@ -61,22 +57,18 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	if (pipe(pipe_fd) == -1)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
 
-	printf("DEBUG: execute_single_heredoc: starting heredoc for delimiter '%s'\n", redir->file);
 	signal(SIGINT, SIG_IGN);
 	status = fork_and_run_heredoc(shell, redir, pipe_fd);
 	set_interactive_signals();
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &saved_termios);
 
-	printf("DEBUG: execute_single_heredoc: heredoc child status=%d\n", status);
 	if (WEXITSTATUS(status) == 130)
 	{
-		printf("DEBUG: execute_single_heredoc: heredoc interrupted, closing fd\n");
 		close(pipe_fd[0]);
 		write(1, "\n", 1);
 		return (ERROR);
 	}
 	redir->heredoc_fd = pipe_fd[0];
-	printf("DEBUG: execute_single_heredoc: heredoc_fd set to %d\n", redir->heredoc_fd);
 	return (0);
 }
 
@@ -93,20 +85,13 @@ int	handle_heredoc_redir(t_shell *shell)
 	cmd = shell->command;
 	while (cmd)
 	{
-		printf("DEBUG: handle_heredoc_redir: processing command %p\n", (void*)cmd);
 		redir = cmd->redir;
 		while (redir)
 		{
-			printf("DEBUG: handle_heredoc_redir: processing redir %p, type=%d\n", (void*)redir, redir->type);
 			if (redir->type == REDIR_HEREDOC)
 			{
-				int res = execute_single_heredoc(shell, redir);
-				printf("DEBUG: handle_heredoc_redir: execute_single_heredoc returned %d\n", res);
-				if (res == ERROR)
-				{
-					printf("DEBUG: handle_heredoc_redir: ERROR, breaking heredoc loop\n");
+				if (execute_single_heredoc(shell, redir) == ERROR)
 					return (ERROR);
-				}
 			}
 			redir = redir->next;
 		}
