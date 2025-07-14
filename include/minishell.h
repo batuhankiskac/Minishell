@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 11:16:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 13:42:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,6 @@ void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
-void	heredoc_child_routine(t_shell *shell, t_redir *redir,
-			int pipe_write_fd);
 
 /*
 ** Expander
@@ -197,8 +195,6 @@ void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
 void	set_exec_signals(void);
-void	heredoc_child_sigint_handler(int sig);
-void	init_heredoc_signals(void);
 
 /*
 ** Utils

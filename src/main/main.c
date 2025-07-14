@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 12:39:32 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 13:44:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ static int	execute_command_string(char *command, t_shell *shell)
  * This function initializes the shell's state, sets up signal handlers,
  * and starts the main interactive loop.
  * - It ignores the command-line arguments `argc` and `argv`.
- * - `set_interactive_signals()` sets up handlers for signals like SIGINT and SIGQUIT.
+ * - `set_interactive_signals()` sets up handlers for signals like
+ * SIGINT and SIGQUIT.
  * - `env_init(envp)` creates a linked list to store environment variables.
  * - The `t_shell` struct is initialized with default values.
  * - `input_loop()` is called to start the shell's main interactive loop.

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 12:39:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 13:42:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,38 +58,4 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-}
-
-/**
- * @brief Signal handler for the heredoc child process.
- *
- * This function sets up the SIGINT handler specifically for the heredoc
- * child process. Crucially, it does NOT use the SA_RESTART flag. This ensures
- * that when SIGINT interrupts the `read` system call inside `readline`,
- * the call fails with EINTR instead of being automatically restarted.
- * This allows the readline loop to terminate upon Ctrl+C.
- */
-void	init_heredoc_signals(void)
-{
-	struct sigaction	sa;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = heredoc_child_sigint_handler;
-	sigaction(SIGINT, &sa, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-/**
- * @brief Signal handler for SIGINT within the heredoc child process.
- * @param sig The signal number (SIGINT).
- * * @details This handler is specifically for the child process forked to read
- * heredoc input. When Ctrl+C (SIGINT) is pressed, the child's only job is
- * to exit with status 130, which is the standard exit code for termination
- * by SIGINT. This allows the parent process to detect the interruption.
- */
-void	heredoc_child_sigint_handler(int sig)
-{
-	(void)sig;
-	set_signal_flag(SIGINT);
 }
