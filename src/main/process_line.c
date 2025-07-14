@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:31:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/13 11:42:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	if (handle_heredoc_redir(shell) == ERROR)
 	{
 		cleanup_iteration_resources(raw_line_ptr, shell);
-		return (shell->exit_status = 130, 1);
+		shell->exit_status = 130;
+		return (1);
 	}
 	if (shell->command)
 		run_command(shell);
