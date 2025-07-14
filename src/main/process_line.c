@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 12:39:31 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 18:37:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static int	handle_parsing(t_shell *shell)
  */
 static int	initialize_shell_line(char *raw_line_ptr, t_shell *shell)
 {
-	shell->line_number++;
 	if (shell->line)
 		free(shell->line);
 	shell->line = ft_strdup(raw_line_ptr);
