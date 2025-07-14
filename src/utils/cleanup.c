@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 21:03:07 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 19:02:04 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	close_heredoc_pipes(t_shell *shell)
 		redir = cmd->redir;
 		while (redir)
 		{
-			if (redir->type == REDIR_HEREDOC && redir->heredoc_fd != -1)
+			if (redir->type == REDIR_HEREDOC && redir->heredoc_fd > 2)
 			{
 				close(redir->heredoc_fd);
 				redir->heredoc_fd = -1;

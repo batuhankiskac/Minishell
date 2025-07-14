@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 19:03:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/14 19:02:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 {
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-	{
-		print_error(NULL, NULL, "redirection setup failed", 1);
 		cleanup_child_and_exit(shell, env_array, NULL, 1);
-	}
 	find_and_exec_command(shell, env_array);
 }
 
