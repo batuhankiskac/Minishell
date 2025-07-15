@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/15 10:44:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 10:46:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_shell	shell;
 
+	(void)argc;
+	(void)argv;
 	set_interactive_signals();
 	shell.env = env_init(envp);
 	shell.command = NULL;
