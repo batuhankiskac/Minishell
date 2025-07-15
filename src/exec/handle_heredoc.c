@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 18:51:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 10:56:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	heredoc_read_loop(shell, redir, pipe_fd[1]);
 	close(pipe_fd[1]);
 	redir->heredoc_fd = pipe_fd[0];
-	dup2(stdin_backup, STDIN_FILENO);
-	close(stdin_backup);
+	if (dup_fd(stdin_backup, STDIN_FILENO, "heredoc") == ERROR)
+		return (ERROR);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 10:58:06 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,9 @@ static int	execute_builtin_command(t_shell *shell)
 static void	restore_builtin_fds(int original_stdout, int original_stdin)
 {
 	if (original_stdout != -1)
-	{
-		dup2(original_stdout, 1);
-		close(original_stdout);
-	}
+		dup_fd(original_stdout, 1, "stdout");
 	if (original_stdin != -1)
-	{
-		dup2(original_stdin, 0);
-		close(original_stdin);
-	}
+		dup_fd(original_stdin, 0, "stdin");
 }
 
 /**

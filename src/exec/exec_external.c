@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 19:02:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 11:03:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  *
  * This function is called in the child process after a fork. It sets up
  * redirections and then executes the command. If redirection setup fails,
- * the child process exits with an error code.
+ * the child process exits with code 1.
  *
  * @param shell A pointer to the shell structure containing the command
  *              and its arguments.
@@ -110,5 +110,5 @@ void	exec_external_direct(t_shell *shell, char **env_array)
 	if (validation_result != 0)
 		cleanup_child_and_exit(shell, env_array, NULL, validation_result);
 	find_and_exec_command(shell, env_array);
-	cleanup_child_and_exit(shell, env_array, NULL, EXIT_FAILURE);
+	cleanup_child_and_exit(shell, env_array, NULL, 1);
 }

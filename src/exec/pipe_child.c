@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 17:19:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 10:59:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	init_pipe_write_fd(t_command *cmd, int pipe_fd[2])
  *   to this process's stdin using `dup2`.
  * - If `pipe_write_fd` is valid (not -1), it redirects this process's stdout
  *   to the next command's input using `dup_fd`.
- * If any redirection fails, the child process exits with `EXIT_FAILURE`.
+ * If any redirection fails, the child process exits with `1`.
  *
  * @param prev_fd The read end of the pipe from the previous command.
  *                A value of -1 indicates no input pipe (first command).
@@ -55,17 +55,13 @@ static void	handle_pipe_redir(int prev_fd, int pipe_write_fd, t_shell *shell)
 {
 	if (prev_fd != -1)
 	{
-		if (dup2(prev_fd, 0) == -1)
-		{
-			print_error(NULL, NULL, strerror(errno), 0);
-			cleanup_child_and_exit(shell, NULL, NULL, EXIT_FAILURE);
-		}
-		close(prev_fd);
+		if (dup_fd(prev_fd, 0, "pipe_in") == ERROR)
+			cleanup_child_and_exit(shell, NULL, NULL, 1);
 	}
 	if (pipe_write_fd != -1)
 	{
 		if (dup_fd(pipe_write_fd, 1, "pipe") == ERROR)
-			cleanup_child_and_exit(shell, NULL, NULL, EXIT_FAILURE);
+			cleanup_child_and_exit(shell, NULL, NULL, 1);
 	}
 }
 
@@ -96,7 +92,7 @@ static void	execute_child_cmd(t_shell *shell, t_command *original_head)
 
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
-		cleanup_child_and_exit(shell, NULL, original_head, EXIT_FAILURE);
+		cleanup_child_and_exit(shell, NULL, original_head, 1);
 	if (is_builtin(shell->command->cmd))
 	{
 		exit_status = exec_builtin(shell);
@@ -104,9 +100,9 @@ static void	execute_child_cmd(t_shell *shell, t_command *original_head)
 	}
 	env_array = env_list_to_array(shell->env);
 	if (!env_array)
-		cleanup_child_and_exit(shell, NULL, original_head, EXIT_FAILURE);
+		cleanup_child_and_exit(shell, NULL, original_head, 1);
 	exec_external_direct(shell, env_array);
-	cleanup_child_and_exit(shell, env_array, original_head, EXIT_FAILURE);
+	cleanup_child_and_exit(shell, env_array, original_head, 1);
 }
 
 /**
