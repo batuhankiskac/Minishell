@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 18:37:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/15 10:44:49 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,24 +51,6 @@ static void	input_loop(t_shell *shell)
 }
 
 /**
- * @brief Handles command-line execution mode (-c flag).
- *
- * @param command The command string to execute
- * @param shell A pointer to the shell structure
- * @return Exit status of the executed command
- */
-static int	execute_command_string(char *command, t_shell *shell)
-{
-	char	*command_copy;
-
-	command_copy = ft_strdup(command);
-	if (!command_copy)
-		return (1);
-	process_line(command_copy, shell);
-	return (shell->exit_status);
-}
-
-/**
  * @brief The entry point of the minishell program.
  *
  * This function initializes the shell's state, sets up signal handlers,
@@ -99,10 +81,7 @@ int	main(int argc, char **argv, char **envp)
 	shell.redir = NULL;
 	shell.line = NULL;
 	shell.exit_status = 0;
-	if (argc == 3 && ft_strcmp(argv[1], "-c") == 0)
-		shell.exit_status = execute_command_string(argv[2], &shell);
-	else
-		input_loop(&shell);
+	input_loop(&shell);
 	reset_signals();
 	rl_clear_history();
 	free(shell.line);
