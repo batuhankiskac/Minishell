@@ -6,121 +6,46 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 22:35:25 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 23:02:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Expands a heredoc line if required and writes it to the pipe.
+ * @brief The main logic for the child process created to handle a heredoc.
  *
- * This function handles variable expansion on the given line and writes the
- * result, followed by a newline, to the specified pipe.
- * @param line The line read from the user.
- * @param shell The main shell structure for context.
- * @param redir The redirection structure.
- * @param pipe_write_fd The file descriptor for the pipe's write-end.
- */
-static void	write_expanded_line(char *line, t_shell *shell, t_redir *redir,
-		int pipe_write_fd)
-{
-	char	*expanded_line;
-
-	if (redir->expand_content)
-	{
-		expanded_line = expand_string(line, shell->env, shell->exit_status);
-		if (expanded_line)
-		{
-			ft_putendl_fd(expanded_line, pipe_write_fd);
-			free(expanded_line);
-		}
-	}
-	else
-		ft_putendl_fd(line, pipe_write_fd);
-	free(line);
-}
-
-/**
- * @brief Signal handler for heredoc process
- *
- * Shell değişkenine erişemediğimiz için burada cleanup_child_and_exit
- * kullanamıyoruz, sadece exit ile çıkış yapıyoruz. Child process'in
- * temizliği execute_single_heredoc içinde yapılıyor.
- */
-static void	heredoc_sigint_handler(int sig)
-{
-	(void)sig;
-	// Newline yazmayı kaldırdık, bu gereksiz prompt'a neden oluyordu
-	cleanup_child_and_exit(NULL, NULL, NULL, 130);
-}
-
-/**
- * @brief Reads heredoc input until the delimiter or EOF is found.
- *
- * This loop reads lines from stdin. If SIGINT is received, the global signal
- * flag is checked, and the loop continues, effectively restarting the prompt
- * on a new line. It terminates on EOF or when the delimiter is matched.
- * @return 0 on successful completion, ERROR if setup fails.
- */
-static int	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			ft_printf(2, "minishell: warning: heredoc delimited by EOF "
-				"(wanted `%s')\n", redir->file);
-			break ;
-		}
-		if (ft_strcmp(line, redir->file) == 0)
-		{
-			free(line);
-			break ;
-		}
-		write_expanded_line(line, shell, redir, pipe_write_fd);
-	}
-	return (0);
-}
-
-/**
- * @brief Manages the execution of a single here-document using fork.
- *
- * This function forks a child process to handle heredoc input. The child
- * process sets up its own signal handler for SIGINT that exits cleanly,
- * while the parent waits and handles the child's exit status.
+ * This function is executed after a fork. It sets up signal handlers for
+ * the child, calls the read loop to get input, and then cleans up and exits.
  * @param shell The main shell structure.
- * @param redir The heredoc redirection to process.
- * @return 0 on success, ERROR on failure, 1 if interrupted by SIGINT.
+ * @param redir The heredoc redirection being processed.
+ * @param pipe_fd The file descriptors for the pipe.
  */
-static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
+static void	heredoc_child_process(t_shell *shell, t_redir *redir,
+	int pipe_fd[2])
 {
-	int		pipe_fd[2];
-	pid_t	pid;
-	int		status;
+	close(pipe_fd[0]);
+	signal(SIGINT, heredoc_sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+	heredoc_read_loop(shell, redir, pipe_fd[1]);
+	close(pipe_fd[1]);
+	cleanup_child_and_exit(shell, NULL, NULL, 0);
+}
 
-	redir->heredoc_fd = -1;
-	if (pipe(pipe_fd) == -1)
-		return (print_error(NULL, "pipe", strerror(errno), ERROR));
-	pid = fork();
-	if (pid == -1)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return (print_error(NULL, "fork", strerror(errno), ERROR));
-	}
-	if (pid == 0)
-	{
-		close(pipe_fd[0]);
-		signal(SIGINT, heredoc_sigint_handler);
-		signal(SIGQUIT, SIG_IGN);
-		heredoc_read_loop(shell, redir, pipe_fd[1]);
-		close(pipe_fd[1]);
-		cleanup_child_and_exit(shell, NULL, NULL, 0);
-	}
+/**
+ * @brief The main logic for the parent process after forking for a heredoc.
+ *
+ * This function waits for the child process to complete, checks its exit
+ * status for interruptions (Ctrl+C), and sets up the heredoc file descriptor.
+ * @param pid The process ID of the child.
+ * @param pipe_fd The file descriptors for the pipe.
+ * @param redir The heredoc redirection being processed.
+ * @return 0 on success, 1 if the child was interrupted by SIGINT.
+ */
+static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
+{
+	int	status;
+
 	close(pipe_fd[1]);
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
@@ -133,12 +58,44 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 }
 
 /**
+ * @brief Manages a single here-document by forking and delegating tasks.
+ *
+ * This function orchestrates the creation of a heredoc. It creates a pipe,
+ * forks, and then calls the appropriate child or parent handler function.
+ * @param shell The main shell structure.
+ * @param redir The heredoc redirection to process.
+ * @return 0 on success, ERROR on pipe/fork failure, 1 if interrupted.
+ */
+static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+
+	redir->heredoc_fd = -1;
+	if (pipe(pipe_fd) == -1)
+		return (print_error(NULL, "pipe", strerror(errno), ERROR));
+	pid = fork();
+	if (pid == -1)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (print_error(NULL, "fork", strerror(errno), ERROR));
+	}
+	if (pid == 0)
+		heredoc_child_process(shell, redir, pipe_fd);
+	else
+		return (heredoc_parent_process(pid, pipe_fd, redir));
+	return (0);
+}
+
+/**
  * @brief Processes all here-documents in the command line before execution.
  *
- * Iterates through all commands and their redirections, calling
- * execute_single_heredoc for each heredoc found.
+ * This function serves as the main entry point for heredoc processing. It
+ * iterates through all commands and their redirections, calling
+ * `execute_single_heredoc` for each heredoc found.
  * @param shell The main shell structure containing the command list.
- * @return 0 on success, ERROR if a pipe fails, 1 if interrupted by SIGINT.
+ * @return 0 on success, ERROR if a pipe/fork fails, 1 if interrupted.
  */
 int	handle_heredoc_redir(t_shell *shell)
 {
@@ -155,12 +112,11 @@ int	handle_heredoc_redir(t_shell *shell)
 			if (redir->type == REDIR_HEREDOC)
 			{
 				result = execute_single_heredoc(shell, redir);
-				if (result == ERROR)
-					return (ERROR);
-				if (result == 1)
+				if (result != 0)
 				{
-					shell->exit_status = 130;
-					return (1);
+					if (result == 1)
+						shell->exit_status = 130;
+					return (result);
 				}
 			}
 			redir = redir->next;
