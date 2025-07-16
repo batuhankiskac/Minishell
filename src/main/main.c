@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 22:11:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 22:35:48 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,7 @@ static void	input_loop(t_shell *shell)
 		{
 			result = process_line(raw_line_ptr, shell);
 			if (result)
-			{
-				if (result == 130)
-				{
-					rl_on_new_line();
-					rl_replace_line("", 0);
-				}
 				continue ;
-			}
 		}
 		else
 			free(raw_line_ptr);

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 21:58:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 22:35:25 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	write_expanded_line(char *line, t_shell *shell, t_redir *redir,
 static void	heredoc_sigint_handler(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
+	// Newline yazmayı kaldırdık, bu gereksiz prompt'a neden oluyordu
 	cleanup_child_and_exit(NULL, NULL, NULL, 130);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 22:12:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 22:36:03 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 		if (heredoc_result == 1)
 		{
 			shell->exit_status = 130;
-			rl_on_new_line();
-			rl_replace_line("", 0);
 			return (130);
 		}
 		return (1);
