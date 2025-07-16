@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/15 10:56:26 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 21:58:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,20 @@ static void	write_expanded_line(char *line, t_shell *shell, t_redir *redir,
 }
 
 /**
+ * @brief Signal handler for heredoc process
+ *
+ * Shell değişkenine erişemediğimiz için burada cleanup_child_and_exit
+ * kullanamıyoruz, sadece exit ile çıkış yapıyoruz. Child process'in
+ * temizliği execute_single_heredoc içinde yapılıyor.
+ */
+static void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	cleanup_child_and_exit(NULL, NULL, NULL, 130);
+}
+
+/**
  * @brief Reads heredoc input until the delimiter or EOF is found.
  *
  * This loop reads lines from stdin. If SIGINT is received, the global signal
@@ -73,29 +87,48 @@ static int	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd)
 }
 
 /**
- * @brief Manages the execution of a single here-document.
+ * @brief Manages the execution of a single here-document using fork.
  *
- * This function sets up a temporary signal handler for SIGINT that allows
- * line-by-line interruption without exiting the heredoc. After the heredoc
- * input is complete, it restores the standard interactive signal handlers.
+ * This function forks a child process to handle heredoc input. The child
+ * process sets up its own signal handler for SIGINT that exits cleanly,
+ * while the parent waits and handles the child's exit status.
  * @param shell The main shell structure.
  * @param redir The heredoc redirection to process.
- * @return 0 on success, ERROR on failure.
+ * @return 0 on success, ERROR on failure, 1 if interrupted by SIGINT.
  */
 static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 {
-	int	pipe_fd[2];
-	int	stdin_backup;
+	int		pipe_fd[2];
+	pid_t	pid;
+	int		status;
 
 	redir->heredoc_fd = -1;
 	if (pipe(pipe_fd) == -1)
 		return (print_error(NULL, "pipe", strerror(errno), ERROR));
-	stdin_backup = dup(STDIN_FILENO);
-	heredoc_read_loop(shell, redir, pipe_fd[1]);
+	pid = fork();
+	if (pid == -1)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return (print_error(NULL, "fork", strerror(errno), ERROR));
+	}
+	if (pid == 0)
+	{
+		close(pipe_fd[0]);
+		signal(SIGINT, heredoc_sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
+		heredoc_read_loop(shell, redir, pipe_fd[1]);
+		close(pipe_fd[1]);
+		cleanup_child_and_exit(shell, NULL, NULL, 0);
+	}
 	close(pipe_fd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	{
+		close(pipe_fd[0]);
+		return (1);
+	}
 	redir->heredoc_fd = pipe_fd[0];
-	if (dup_fd(stdin_backup, STDIN_FILENO, "heredoc") == ERROR)
-		return (ERROR);
 	return (0);
 }
 
@@ -105,12 +138,13 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
  * Iterates through all commands and their redirections, calling
  * execute_single_heredoc for each heredoc found.
  * @param shell The main shell structure containing the command list.
- * @return 0 on success, ERROR if a pipe fails.
+ * @return 0 on success, ERROR if a pipe fails, 1 if interrupted by SIGINT.
  */
 int	handle_heredoc_redir(t_shell *shell)
 {
 	t_command	*cmd;
 	t_redir		*redir;
+	int			result;
 
 	cmd = shell->command;
 	while (cmd)
@@ -120,8 +154,14 @@ int	handle_heredoc_redir(t_shell *shell)
 		{
 			if (redir->type == REDIR_HEREDOC)
 			{
-				if (execute_single_heredoc(shell, redir) == ERROR)
+				result = execute_single_heredoc(shell, redir);
+				if (result == ERROR)
 					return (ERROR);
+				if (result == 1)
+				{
+					shell->exit_status = 130;
+					return (1);
+				}
 			}
 			redir = redir->next;
 		}

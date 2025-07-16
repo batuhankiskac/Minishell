@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 15:16:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 18:37:03 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 21:49:58 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static int	handle_parse_error(char *raw_line_ptr, t_shell *shell)
  */
 int	process_line(char *raw_line_ptr, t_shell *shell)
 {
+	int heredoc_result;
+
 	if (initialize_shell_line(raw_line_ptr, shell))
 		return (1);
 	if (tokenize_line(shell->line, shell) == ERROR)
@@ -89,10 +91,21 @@ int	process_line(char *raw_line_ptr, t_shell *shell)
 	}
 	if (handle_parsing(shell))
 		return (handle_parse_error(raw_line_ptr, shell));
-	if (handle_heredoc_redir(shell) == ERROR)
+
+	heredoc_result = handle_heredoc_redir(shell);
+	if (heredoc_result != 0)
 	{
 		cleanup_iteration_resources(raw_line_ptr, shell);
-		shell->exit_status = 130;
+		if (heredoc_result == 1)
+		{
+			/* SIGINT durumu - ekstra prompt göstermeyi engelle */
+			shell->exit_status = 130;
+			/* Readline'ı temel düzeyde sıfırla (yasaklı fonksiyonlar olmadan) */
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			/* Ekstra prompt göstermeyi engelle */
+			return (130);  /* Özel dönüş kodu */
+		}
 		return (1);
 	}
 	if (shell->command)

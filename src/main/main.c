@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/15 10:46:17 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 21:50:17 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,18 @@ static void	input_loop(t_shell *shell)
 		}
 		if (*raw_line_ptr)
 		{
-			if (process_line(raw_line_ptr, shell))
-				continue ;
+			int result = process_line(raw_line_ptr, shell);
+			if (result)
+			{
+				/* Heredoc içinde SIGINT durumunda ekstra prompt göstermeyi engelle */
+				if (result == 130)
+				{
+					/* Readline'ı temel düzeyde sıfırla (yasaklı fonksiyonlar olmadan) */
+					rl_on_new_line();
+					rl_replace_line("", 0);
+				}
+				continue;
+			}
 		}
 		else
 			free(raw_line_ptr);
