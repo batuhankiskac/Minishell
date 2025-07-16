@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 18:54:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/16 20:59:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <sys/ioctl.h>
 # include <errno.h>
-# include <termios.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
