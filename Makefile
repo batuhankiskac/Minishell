@@ -96,7 +96,8 @@ main: all clean
 
 val: all
 	@echo "Running valgrind..."
-	@valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --log-file="valgrind_log.txt" ./$(NAME)
+	@valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes \
+	--suppressions=readline.supp --log-file="valgrind_log.txt" ./$(NAME)
 
 .PHONY: all clean fclean re main val
 .SILENT: all clean fclean re main val
