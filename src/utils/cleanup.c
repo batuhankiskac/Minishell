@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/14 19:02:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:27:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * @brief Closes all file descriptors associated with here-documents.
  * @param shell A pointer to the `t_shell` structure containing the command list.
  */
-static void	close_heredoc_pipes(t_shell *shell)
+void	close_heredoc_pipes(t_shell *shell)
 {
 	t_command	*cmd;
 	t_redir		*redir;

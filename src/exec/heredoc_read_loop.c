@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 23:02:30 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 23:04:45 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:19:18 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,9 @@ static int	process_heredoc_line(char *line, t_shell *shell, t_redir *redir,
 /**
  * @brief Reads input for a here-document until a delimiter is found.
  *
- * This function manages the loop for reading heredoc input. It calls
- * readline to get input and delegates the processing of each line to
- * a helper function. The loop terminates when the delimiter is entered
- * or when EOF is reached.
+ * This function manages the loop for reading heredoc input. It now
+ * distinguishes between an EOF (Ctrl+D) and an interruption (Ctrl+C)
+ * by checking the global signal flag after `readline` returns NULL.
  *
  * @param shell The main shell structure for context.
  * @param redir The redirection structure containing the delimiter.
@@ -70,6 +69,8 @@ void	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd)
 		line = readline("> ");
 		if (!line)
 		{
+			if (get_signal_flag() == SIGINT)
+				break ;
 			ft_printf(2, "minishell: warning: heredoc delimited by EOF "
 				"(wanted `%s')\n", redir->file);
 			break ;

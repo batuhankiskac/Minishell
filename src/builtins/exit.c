@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/09 15:05:18 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:27:11 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	is_numeric(char *str)
 
 static void	free_shell(t_shell *shell)
 {
+	close_heredoc_pipes(shell);
 	if (shell->line)
 	{
 		free(shell->line);
