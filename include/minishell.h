@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:00:33 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:08:14 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ void	reset_signals(void);
 void	set_signal_flag(int sig);
 void	reset_signal_flag(void);
 void	set_exec_signals(void);
+void	heredoc_sigint_handler(int sig);
 
 /*
 ** Utils

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:00:36 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:07:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,21 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+/**
+ * @brief Signal handler specifically for the heredoc child process.
+ *
+ * This handler sets the global signal flag to indicate that SIGINT was
+ * received. It then closes the standard input file descriptor. This action
+ * causes the blocking `readline` call in the child process to fail and
+ * return NULL, effectively breaking the input loop and allowing for a
+ * controlled shutdown and cleanup.
+ * @param sig The signal number.
+ */
+void	heredoc_sigint_handler(int sig)
+{
+	(void)sig;
+	set_signal_flag(SIGINT);
+	close(STDIN_FILENO);
 }
