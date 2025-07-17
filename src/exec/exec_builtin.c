@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/15 10:58:06 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 21:31:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,10 @@ int	exec_builtin(t_shell *shell)
 	int	result;
 
 	if (setup_builtin_redir(shell, &original_stdout, &original_stdin) == ERROR)
-		return (ERROR);
+	{
+		restore_builtin_fds(original_stdout, original_stdin);
+		return (1);
+	}
 	result = execute_builtin_command(shell);
 	restore_builtin_fds(original_stdout, original_stdin);
 	return (result);
