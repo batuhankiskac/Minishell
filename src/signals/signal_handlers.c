@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 23:10:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 18:00:36 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,4 @@ void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-}
-
-/**
- * @brief Signal handler for heredoc process
- * @note We cannot access the shell variable here, so we cannot use
- * cleanup_child_and_exit with proper context. We simply exit with code 130.
- * The cleanup for the child process is handled inside execute_single_heredoc.
- */
-void	heredoc_sigint_handler(int sig)
-{
-	(void)sig;
-	cleanup_child_and_exit(NULL, NULL, NULL, 130);
 }

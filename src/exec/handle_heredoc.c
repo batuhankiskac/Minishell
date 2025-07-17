@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 10:18:39 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 17:56:30 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	heredoc_child_process(t_shell *shell, t_redir *redir,
 	int pipe_fd[2])
 {
 	close(pipe_fd[0]);
-	signal(SIGINT, heredoc_sigint_handler);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	heredoc_read_loop(shell, redir, pipe_fd[1]);
 	close(pipe_fd[1]);
@@ -36,11 +36,12 @@ static void	heredoc_child_process(t_shell *shell, t_redir *redir,
  * @brief The main logic for the parent process after forking for a heredoc.
  *
  * This function waits for the child process to complete, checks its exit
- * status for interruptions (Ctrl+C), and sets up the heredoc file descriptor.
+ * status for interruptions (e.g., Ctrl+C), and sets up the heredoc
+ * file descriptor.
  * @param pid The process ID of the child.
  * @param pipe_fd The file descriptors for the pipe.
  * @param redir The heredoc redirection being processed.
- * @return 0 on success, 1 if the child was interrupted by SIGINT.
+ * @return Returns 0 on success, or 1 if the child was interrupted by SIGINT.
  */
 static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
 {
@@ -50,7 +51,7 @@ static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
 	close(pipe_fd[1]);
 	waitpid(pid, &status, 0);
 	set_interactive_signals();
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		close(pipe_fd[0]);
 		write(1, "\n", 1);
@@ -67,7 +68,7 @@ static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
  * forks, and then calls the appropriate child or parent handler function.
  * @param shell The main shell structure.
  * @param redir The heredoc redirection to process.
- * @return 0 on success, ERROR on pipe/fork failure, 1 if interrupted.
+ * @return Returns 0 on success, ERROR on pipe/fork failure, 1 if interrupted.
  */
 static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 {
@@ -98,7 +99,7 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
  * iterates through all commands and their redirections, calling
  * `execute_single_heredoc` for each heredoc found.
  * @param shell The main shell structure containing the command list.
- * @return 0 on success, ERROR if a pipe/fork fails, 1 if interrupted.
+ * @return Returns 0 on success, ERROR on failure, or 1 if interrupted.
  */
 int	handle_heredoc_redir(t_shell *shell)
 {
