@@ -6,11 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/07/17 14:08:50 by bkiskac          ###   ########.fr       */
-=======
-/*   Updated: 2025/07/17 18:07:29 by bkiskac          ###   ########.fr       */
->>>>>>> kiro-heredoc-try
+/*   Updated: 2025/07/17 18:35:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,5 +73,6 @@ void	reset_signals(void)
 void	heredoc_sigint_handler(int sig)
 {
 	(void)sig;
-	exit(130);
+	set_signal_flag(SIGINT);
+	close(STDIN_FILENO);
 }
