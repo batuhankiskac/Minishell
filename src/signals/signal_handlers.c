@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 23:10:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/17 14:08:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,5 @@ void	reset_signals(void)
 void	heredoc_sigint_handler(int sig)
 {
 	(void)sig;
-	cleanup_child_and_exit(NULL, NULL, NULL, 130);
+	exit(130);
 }
