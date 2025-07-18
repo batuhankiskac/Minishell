@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/08 22:20:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/18 14:10:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ static void	update_parent_pipe(int *prev_fd, int pipe_fd[2], t_command *cmd)
  *                read end of the pipe from the previous command.
  * @return Returns 0 on success, `ERROR` on failure (e.g., fork or pipe error).
  */
-static int	fork_pipeline_command(t_shell *shell, t_command *cmd, int *prev_fd)
+static pid_t	fork_pipeline_command(t_shell *shell, t_command *cmd,
+	int *prev_fd)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -109,7 +110,34 @@ static int	fork_pipeline_command(t_shell *shell, t_command *cmd, int *prev_fd)
 		pipe_child_process(shell, cmd, *prev_fd, pipe_fd);
 	else
 		update_parent_pipe(prev_fd, pipe_fd, cmd);
-	return (0);
+	return (pid);
+}
+
+/**
+ * @brief Waits for all child processes in a pipeline and returns the exit code.
+ *
+ * This function waits for all child processes to complete and returns the exit
+ * code of the last command in the pipeline, matching bash's behavior.
+ *
+ * @param last_pid The PID of the last command in the pipeline.
+ * @return The exit code of the last command in the pipeline.
+ */
+static int	wait_for_pipeline(pid_t last_pid)
+{
+	int		status;
+	int		exit_code;
+	pid_t	current_pid;
+
+	exit_code = 0;
+	while (1)
+	{
+		current_pid = wait(&status);
+		if (current_pid <= 0)
+			break ;
+		if (current_pid == last_pid)
+			exit_code = handle_wait_status(status, NULL);
+	}
+	return (exit_code);
 }
 
 /**
@@ -117,42 +145,36 @@ static int	fork_pipeline_command(t_shell *shell, t_command *cmd, int *prev_fd)
  *
  * This function iterates through a list of commands (`shell->command`)
  * and executes them as a pipeline. For each command, it calls
- * `handle_pipe_iteration` to set up pipes and fork a child process for
- * execution. The parent process waits for all child processes to complete
- * using a `while (wait(&status) > 0)` loop. If any step in
- * `handle_pipe_iteration` fails, it closes the `prev_fd` if it's open and
- * returns `ERROR`. Otherwise, it returns the exit status of the last command
- * in the pipeline.
+ * `fork_pipeline_command` to set up pipes and fork a child process.
+ * Then it waits for all child processes to complete and returns the
+ * exit status of the last command in the pipeline.
  *
- * @param shell A pointer to the `t_shell` structure, containing the linked
- *              list of commands to be executed in the pipeline.
- * @return Returns the exit status of the last command in the pipeline (obtained
- *         via `WEXITSTATUS(status)`). Returns `ERROR` if any part of the
- *         pipeline setup or execution fails.
+ * @param shell A pointer to the `t_shell` structure.
+ * @return Returns the exit status of the last command in the pipeline.
+ *         Returns `ERROR` if any part of the pipeline setup fails.
  */
 int	execute_pipe(t_shell *shell)
 {
 	t_command	*cmd;
 	int			prev_fd;
-	int			status;
-	int			ret;
-	int			exit_code;
+	pid_t		pid;
+	pid_t		last_pid;
 
-	exit_code = 0;
 	prev_fd = -1;
 	cmd = shell->command;
+	last_pid = -1;
 	while (cmd)
 	{
-		ret = fork_pipeline_command(shell, cmd, &prev_fd);
-		if (ret == ERROR)
+		pid = fork_pipeline_command(shell, cmd, &prev_fd);
+		if (pid == ERROR)
 		{
 			if (prev_fd != -1)
 				close(prev_fd);
 			return (ERROR);
 		}
+		if (!cmd->next)
+			last_pid = pid;
 		cmd = cmd->next;
 	}
-	while (wait(&status) > 0)
-		exit_code = handle_wait_status(status, NULL);
-	return (exit_code);
+	return (wait_for_pipeline(last_pid));
 }
