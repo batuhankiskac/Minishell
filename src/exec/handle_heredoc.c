@@ -6,12 +6,26 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/18 14:21:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/18 14:37:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Handles the child process for heredoc input.
+ *
+ * This function is executed in the child process created for handling heredoc
+ * input. It closes the read end of the pipe, sets up signal handlers for
+ * SIGINT and SIGQUIT, and calls heredoc_read_loop to read input until the
+ * delimiter is encountered. After reading is complete, it closes the write end
+ * of the pipe and exits with the appropriate exit code. If a SIGINT signal was
+ * received during input, it exits with code 130 (standard for interrupt).
+ *
+ * @param shell A pointer to the t_shell structure.
+ * @param redir A pointer to t_redir structure containing heredoc information.
+ * @param pipe_fd An array of two int representing the pipe file descriptors.
+ */
 static void	heredoc_child_process(t_shell *shell, t_redir *redir,
 	int pipe_fd[2])
 {
@@ -29,6 +43,22 @@ static void	heredoc_child_process(t_shell *shell, t_redir *redir,
 	cleanup_child_and_exit(shell, NULL, NULL, exit_code);
 }
 
+/**
+ * @brief Handles the parent process for heredoc input.
+ *
+ * This function is executed in the parent process after forking for heredoc
+ * handling. It ignores SIGINT signals, closes the write end of the pipe,
+ * and waits for the child process to complete. If the child process exits
+ * with status 130 (indicating it was interrupted by SIGINT), it closes the
+ * read end of the pipe, sets heredoc_fd to -1, and returns 1 to indicate
+ * interruption. Otherwise, it sets the heredoc_fd to the read end of the pipe
+ * and returns 0 for normal completion.
+ *
+ * @param pid The process ID of the child process.
+ * @param pipe_fd An array of two int representing the pipe file descriptors.
+ * @param redir A pointer to the t_redir structure to store the heredoc fd.
+ * @return Returns 1 if the heredoc was interrupted, 0 otherwise.
+ */
 static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
 {
 	int	status;
@@ -48,6 +78,22 @@ static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Executes a single heredoc redirection.
+ *
+ * This function handles the execution of a single heredoc redirection by
+ * creating
+ * a pipe and forking a child process. The child process reads input until the
+ * delimiter is encountered, while the parent process waits for the child to
+ * complete. If pipe creation or fork fails, appropriate error messages are
+ * printed and an error code is returned. The heredoc_fd in the redir structure
+ * is initialized to -1 and updated in the parent process if successful.
+ *
+ * @param shell A pointer to the t_shell structure.
+ * @param redir A pointer to the t_redir structure for the heredoc redirection.
+ * @return Returns 0 on success, ERROR on pipe or fork failure, or 1
+ * if interrupted.
+ */
 static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 {
 	int		pipe_fd[2];
@@ -70,6 +116,20 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 	return (0);
 }
 
+/**
+ * @brief Handles all heredoc redirections in the command list.
+ *
+ * This function iterates through all commands and their redirections to find
+ * and process heredoc redirections. For each heredoc redirection found, it
+ * calls execute_single_heredoc to handle the input. If any heredoc processing
+ * fails or is interrupted, the function returns immediately with the appropriate
+ * error code. If a heredoc is interrupted by a signal (result == 1), the shell's
+ * exit status is set to 130 to indicate interruption by SIGINT.
+ *
+ * @param shell A pointer to the t_shell structure containing the command list.
+ * @return Returns 0 on success, ERROR on pipe or fork failure, or 1
+ * if interrupted.
+ */
 int	handle_heredoc_redir(t_shell *shell)
 {
 	t_command	*cmd;

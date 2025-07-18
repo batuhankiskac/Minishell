@@ -6,12 +6,23 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:27:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/18 14:44:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Checks if a string represents a valid numeric value.
+ *
+ * This function verifies if the given string is a valid numeric value that
+ * can be used as an exit status. It checks for an optional sign (+ or -),
+ * followed by one or more digits. Empty strings, strings with non-digit
+ * characters, or strings with only a sign are considered non-numeric.
+ *
+ * @param str The string to check.
+ * @return 1 if the string is a valid numeric value, 0 otherwise.
+ */
 static int	is_numeric(char *str)
 {
 	int	i;
@@ -35,6 +46,16 @@ static int	is_numeric(char *str)
 	return (has_digits);
 }
 
+/**
+ * @brief Frees all resources allocated by the shell.
+ *
+ * This function performs a complete cleanup of all resources allocated by
+ * the shell, including heredoc pipes, input line, tokens, commands, and
+ * environment variables. It's typically called before exiting the shell
+ * to ensure proper cleanup and prevent memory leaks.
+ *
+ * @param shell A pointer to the t_shell structure containing all resources.
+ */
 static void	free_shell(t_shell *shell)
 {
 	close_heredoc_pipes(shell);

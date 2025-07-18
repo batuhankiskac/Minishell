@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:31:28 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:27:11 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/18 14:38:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 /**
  * @brief Closes all file descriptors associated with here-documents.
+ *
+ * This function iterates through all commands and their redirections to find
+ * and close any open heredoc file descriptors. It sets the heredoc_fd to -1
+ * after closing to prevent double-closing. Only file descriptors greater than 2
+ * (i.e., not stdin, stdout, or stderr) are closed.
+ *
  * @param shell A pointer to the `t_shell` structure containing the command list.
  */
 void	close_heredoc_pipes(t_shell *shell)
@@ -42,6 +48,12 @@ void	close_heredoc_pipes(t_shell *shell)
 
 /**
  * @brief Frees all resources used during a single iteration of the command loop.
+ *
+ * This function cleans up resources allocated during a single command execution
+ * cycle, including heredoc pipes, command structures, and token lists. It's
+ * typically called at the end of each iteration of the main shell loop to
+ * prepare for the next command input.
+ *
  * @param raw_line_ptr A pointer to the raw input string read from `readline`.
  * @param shell A pointer to the `t_shell` structure.
  */
@@ -129,6 +141,13 @@ int	cleanup_cd_memory(char *old_pwd, char *new_pwd, char *target,
 
 /**
  * @brief Helper function to cleanup child process and exit with given status.
+ *
+ * This function provides a convenient way to clean up resources in a child
+ * process and exit with a specified status code. It first restores the original
+ * command head if provided, then calls cleanup_child_process to free all
+ * allocated resources, and finally exits the process with the given exit code.
+ * This is typically used in forked child processes to ensure proper cleanup
+ * before termination.
  *
  * @param shell A pointer to the shell structure.
  * @param env_array A pointer to the environment array (can be NULL).
