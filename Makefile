@@ -94,7 +94,7 @@ re: fclean all
 
 main: all clean
 
-val: all
+val: all clean
 	@echo "Running valgrind..."
 	@valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes \
 	--suppressions=readline.supp --log-file="valgrind_log.txt" ./$(NAME)

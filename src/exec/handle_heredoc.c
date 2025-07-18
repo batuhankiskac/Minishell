@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:20:04 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/18 14:21:15 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
 	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
 	{
 		close(pipe_fd[0]);
+		redir->heredoc_fd = -1;
 		write(1, "\n", 1);
 		return (1);
 	}
