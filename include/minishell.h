@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 06:58:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 07:26:31 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ char	*expand_text_chunk(char *res, const char *s, int *i);
 char	*handle_single_quote(char *res, const char *s, int *i);
 char	*handle_double_quote(char *res, const char *s, int *i,
 			t_shell *shell_context);
+int		rebuild_command_args(t_command *cmd);
 
 /*
 ** Lexer
