@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:30:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 17:28:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 17:30:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	handle_wait_status(int status, char **env_array)
 	{
 		if (WTERMSIG(status) == SIGINT)
 			ft_printf(2, "\n");
-		else if (WTERMSIG(status) == SIGQUIT)
-			ft_printf(2, "Quit (core dumped)\n");
 		if (env_array)
 			ft_free_all(env_array);
 		return (128 + WTERMSIG(status));

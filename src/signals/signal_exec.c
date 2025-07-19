@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/06 11:52:07 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 17:29:00 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 17:30:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static void	sigint_handler_exec(int sig)
 static void	sigquit_handler_exec(int sig)
 {
 	(void)sig;
+	ft_printf(2, "Quit (core dumped)\n");
 }
 
 /**
