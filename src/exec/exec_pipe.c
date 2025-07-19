@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/18 14:10:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 19:21:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,9 @@ static int	wait_for_pipeline(pid_t last_pid)
 	while (1)
 	{
 		current_pid = wait(&status);
-		if (current_pid <= 0)
+		if (current_pid == -1 && errno == EINTR)
+			continue ;
+		else if (current_pid <= 0)
 			break ;
 		if (current_pid == last_pid)
 			exit_code = handle_wait_status(status, NULL);

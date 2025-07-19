@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/15 11:03:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 19:23:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  * the child process exits with code 1.
  *
  * @param shell A pointer to the shell structure containing the command
- *              and its arguments.
+ * and its arguments.
  * @param env_array An array of environment variables for the child process.
  */
 static void	execute_child_process(t_shell *shell, char **env_array)
@@ -32,11 +32,40 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 }
 
 /**
+ * @brief Waits for the child process and handles its exit status.
+ *
+ * This function contains the parent's logic after a fork. It waits for the
+ * specified child process to terminate, handling potential interruptions
+ * from signals, and then returns the child's final exit status.
+ *
+ * @param pid The process ID of the child to wait for.
+ * @param env_array The environment array to be freed after waiting.
+ * @return The final exit status of the child command.
+ */
+static int	wait_for_child(pid_t pid, char **env_array)
+{
+	int		status;
+	pid_t	waited_pid;
+
+	status = 0;
+	waited_pid = 0;
+	while (waited_pid != pid)
+	{
+		waited_pid = waitpid(pid, &status, 0);
+		if (waited_pid == -1 && errno == EINTR)
+			continue ;
+		else if (waited_pid == -1)
+			break ;
+	}
+	return (handle_wait_status(status, env_array));
+}
+
+/**
  * @brief Forks the process and executes the command in the child.
  *
  * This function forks the current process. The child process executes the
- * command, and the parent process waits for the child to complete.
- * The exit status of the child is handled and returned.
+ * command by calling execute_child_process, and the parent process waits
+ * for the child to complete by calling wait_for_child.
  *
  * @param shell A pointer to the shell structure.
  * @param env_array An array of environment variables.
@@ -45,9 +74,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 static int	fork_and_execute(t_shell *shell, char **env_array)
 {
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -57,24 +84,19 @@ static int	fork_and_execute(t_shell *shell, char **env_array)
 	if (pid == 0)
 		execute_child_process(shell, env_array);
 	else
-	{
-		waitpid(pid, &status, 0);
-		return (handle_wait_status(status, env_array));
-	}
-	return (status);
+		return (wait_for_child(pid, env_array));
+	return (1);
 }
 
 /**
  * @brief Executes an external command.
  *
  * This function handles the execution of external commands by forking
- * a child process. The child process attempts to execute the command
- * using execve, while the parent process waits for the child to finish.
+ * a child process. It validates the command and then calls the main
+ * forking and execution logic.
  *
- * @param shell A pointer to the shell structure containing the command
- *              and its arguments.
- * @return The exit status of the executed command, or an error code if
- *         the execution fails.
+ * @param shell A pointer to the shell structure.
+ * @return The exit status of the executed command.
  */
 int	exec_external(t_shell *shell)
 {
@@ -95,11 +117,9 @@ int	exec_external(t_shell *shell)
  *
  * This function is used by pipeline child processes to execute external
  * commands directly using execve without creating another child process.
- * It validates the command, converts environment, finds the path,
- * and calls execve.
- * Memory cleanup is handled before exit on error cases.
+ * It validates the command, finds the path, and calls execve.
  *
- * @param shell A pointer to the shell structure containing the command.
+ * @param shell A pointer to the shell structure.
  * @param env_array An array of environment variables for the process.
  */
 void	exec_external_direct(t_shell *shell, char **env_array)
