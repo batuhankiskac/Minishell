@@ -6,43 +6,11 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 21:31:46 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 07:15:24 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/**
- * @brief Sets up redirection for built-in commands.
- *
- * This function backs up the original file descriptors and applies
- * redirections if they exist for the command.
- *
- * @param shell A pointer to the shell structure.
- * @param original_stdout Pointer to store the backup of stdout.
- * @param original_stdin Pointer to store the backup of stdin.
- * @return 0 on success, ERROR on failure.
- */
-static int	setup_builtin_redir(t_shell *shell, int *original_stdout,
-									int *original_stdin)
-{
-	*original_stdout = -1;
-	*original_stdin = -1;
-	if (shell->command && shell->command->redir)
-	{
-		*original_stdout = dup(1);
-		*original_stdin = dup(0);
-		if (setup_redir(shell) == ERROR)
-		{
-			if (*original_stdout != -1)
-				close(*original_stdout);
-			if (*original_stdin != -1)
-				close(*original_stdin);
-			return (ERROR);
-		}
-	}
-	return (0);
-}
 
 /**
  * @brief Executes the appropriate built-in command.
@@ -76,34 +44,18 @@ static int	execute_builtin_command(t_shell *shell)
 }
 
 /**
- * @brief Restores original file descriptors after built-in execution.
+ * @brief Executes a built-in command with robust redirection and cleanup.
  *
- * This function restores the original stdout and stdin file descriptors
- * that were backed up before redirection was applied.
+ * This function orchestrates the execution of built-in commands. It handles
+ * redirection by safely backing up original file descriptors (stdin/stdout),
+ * attempting to apply the command's redirections, and *always* restoring
+ * the original descriptors using the dup_fd helper, regardless of whether
+ * the redirection succeeded or failed. This prevents the main shell's file
+ * descriptors from being left in a corrupted state after a redirection error.
  *
- * @param original_stdout The backup of the original stdout.
- * @param original_stdin The backup of the original stdin.
- */
-static void	restore_builtin_fds(int original_stdout, int original_stdin)
-{
-	if (original_stdout != -1)
-		dup_fd(original_stdout, 1, "stdout");
-	if (original_stdin != -1)
-		dup_fd(original_stdin, 0, "stdin");
-}
-
-/**
- * @brief Executes a built-in command with redirection support.
- *
- * This function orchestrates the execution of built-in commands by
- * setting up redirections, executing the command, and restoring
- * file descriptors.
- *
- * @param shell A pointer to the `t_shell` structure, which contains the
- *              command to be executed, its arguments, and the shell's
- *              environment.
- * @return Returns the exit status of the executed built-in command. If the
- *         command is not a recognized built-in, it returns 0.
+ * @param shell A pointer to the `t_shell` structure.
+ * @return Returns the exit status of the command. Returns 1 on redirection
+ * failure, otherwise returns the exit status from the builtin itself.
  */
 int	exec_builtin(t_shell *shell)
 {
@@ -111,12 +63,21 @@ int	exec_builtin(t_shell *shell)
 	int	original_stdin;
 	int	result;
 
-	if (setup_builtin_redir(shell, &original_stdout, &original_stdin) == ERROR)
+	original_stdout = -1;
+	original_stdin = -1;
+	result = 0;
+	if (shell->command && shell->command->redir)
 	{
-		restore_builtin_fds(original_stdout, original_stdin);
-		return (1);
+		original_stdin = dup(STDIN_FILENO);
+		original_stdout = dup(STDOUT_FILENO);
+		if (setup_redir(shell) == ERROR)
+			result = 1;
 	}
-	result = execute_builtin_command(shell);
-	restore_builtin_fds(original_stdout, original_stdin);
+	if (result == 0)
+		result = execute_builtin_command(shell);
+	if (original_stdin != -1)
+		dup_fd(original_stdin, STDIN_FILENO, "stdin");
+	if (original_stdout != -1)
+		dup_fd(original_stdout, STDOUT_FILENO, "stdout");
 	return (result);
 }
