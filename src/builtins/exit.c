@@ -6,73 +6,71 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:02:32 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 11:06:22 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 16:34:51 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Parses the numeric part of the string, checking for overflow.
+ * @brief Compares a numeric string against long long limits.
  *
- * This is a helper for is_valid_long_long. It iterates through the digits
- * of the string, building the number and continuously checking if adding the
- * next digit would cause an overflow or underflow against long long limits.
+ * This is a helper function that performs the actual comparison of a numeric
+ * string against the string representation of LLONG_MAX or LLONG_MIN's
+ * absolute value.
  *
- * @param str The string containing just the digits.
- * @param sign The sign of the number (1 or -1).
- * @return 1 if the numeric part is valid and within limits, 0 otherwise.
+ * @param num_start Pointer to the start of the digits.
+ * @param len The length of the numeric part.
+ * @param sign The sign of the number (1 for positive, -1 for negative).
+ * @return 1 if the number is within limits, 0 otherwise.
  */
-static int	parse_numeric_part(const char *str, int sign)
+static int	compare_to_limit(const char *num_start, int len, int sign)
 {
-	long long	result;
-	int			i;
+	const char	*limit;
 
-	result = 0;
-	i = 0;
-	if (str[i] == '\0')
+	limit = "9223372036854775807";
+	if (sign == -1)
+		limit = "9223372036854775808";
+	if (len > (int)ft_strlen(limit)
+		|| (len == (int)ft_strlen(limit) && ft_strcmp(num_start, limit) > 0))
 		return (0);
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		if (sign == 1 && result > (LLONG_MAX - (str[i] - '0')) / 10)
-			return (0);
-		if (sign == -1 && result > (LLONG_MAX - (str[i] - '0'))
-			/ 10 + (LLONG_MAX % 10 == 9))
-			return (0);
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
 	return (1);
 }
 
 /**
  * @brief Checks if a string represents a valid long long number.
  *
- * This function validates if a string is a valid number within the range
- * of a long long by checking for an optional sign and then passing the
- * numeric part to a helper function that handles overflow checks.
+ * This function validates if a string is a valid number within the range of a
+ * long long. It parses spaces and signs, then delegates the core comparison
+ * to a helper function.
  *
  * @param str The string to validate.
  * @return 1 if valid, 0 otherwise.
  */
-static int	is_valid_long_long(char *str)
+static int	is_valid_long_long(const char *str)
 {
 	int			i;
 	int			sign;
+	int			len;
+	const char	*num_start;
 
 	i = 0;
 	sign = 1;
 	while (ft_isspace(str[i]))
 		i++;
-	if (str[i] == '-' || str[i] == '+')
+	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
 			sign = -1;
 		i++;
 	}
-	return (parse_numeric_part(str + i, sign));
+	num_start = &str[i];
+	len = 0;
+	while (ft_isdigit(num_start[len]))
+		len++;
+	if (len == 0 || num_start[len] != '\0')
+		return (0);
+	return (compare_to_limit(num_start, len, sign));
 }
 
 /**
@@ -135,7 +133,7 @@ int	builtin_exit(t_shell *shell)
 		return (print_error("exit", NULL, "too many arguments", 1));
 	status_code = shell->exit_status;
 	if (shell->command->argc == 2)
-		status_code = ft_atoi(shell->command->args[1]);
+		status_code = ft_atoll(shell->command->args[1]);
 	free_shell(shell);
 	rl_clear_history();
 	exit(status_code & 0xFF);
