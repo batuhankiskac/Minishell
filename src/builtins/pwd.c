@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/07 19:32:01 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 16:43:46 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * It uses the getcwd system call to retrieve the current directory path.
  * Handles errors if getcwd fails.
  *
- * @return 0 on success, ERROR on failure.
+ * @return 0 on success, 1 on failure.
  */
 int	builtin_pwd(void)
 {
@@ -29,7 +29,7 @@ int	builtin_pwd(void)
 	if (!cwd)
 	{
 		ft_printf(2, "pwd: %s\n", strerror(errno));
-		return (ERROR);
+		return (1);
 	}
 	ft_printf(1, "%s\n", cwd);
 	free(cwd);

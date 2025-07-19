@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/05/30 14:44:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 16:43:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	delete_env(char *key, t_env **env)
  * @param argc The number of arguments passed to the unset command.
  * @param args The array of arguments passed to the unset command.
  * @param env A pointer to the environment list.
- * @return 0 on success, ERROR on failure (e.g., invalid identifier).
+ * @return 0 on success, 1 on failure (e.g., invalid identifier).
  */
 int	builtin_unset(int argc, char **args, t_env **env)
 {
@@ -89,7 +89,7 @@ int	builtin_unset(int argc, char **args, t_env **env)
 		else
 		{
 			ft_printf(2, "unset: not a valid identifier: %s\n", args[i]);
-			return (ERROR);
+			return (1);
 		}
 	}
 	return (0);
