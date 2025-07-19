@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/18 14:37:15 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 07:05:08 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,12 @@ static int	heredoc_parent_process(pid_t pid, int pipe_fd[2], t_redir *redir)
  * @brief Executes a single heredoc redirection.
  *
  * This function handles the execution of a single heredoc redirection by
- * creating
- * a pipe and forking a child process. The child process reads input until the
- * delimiter is encountered, while the parent process waits for the child to
- * complete. If pipe creation or fork fails, appropriate error messages are
- * printed and an error code is returned. The heredoc_fd in the redir structure
- * is initialized to -1 and updated in the parent process if successful.
+ * creating a pipe and forking a child process. The child process reads input
+ * until the delimiter is encountered, while the parent process waits for the
+ * child to complete. If pipe creation or fork fails, appropriate error
+ * messages are printed and an error code is returned. The heredoc_fd in the
+ * redir structure is initialized to -1 and updated in the parent process if
+ * successful.
  *
  * @param shell A pointer to the t_shell structure.
  * @param redir A pointer to the t_redir structure for the heredoc redirection.
@@ -117,14 +117,50 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 }
 
 /**
+ * @brief Helper to process heredocs for a single command's redirection list.
+ *
+ * This function iterates through a given redirection list, executes heredocs,
+ * and cleans up non-final heredoc file descriptors immediately.
+ *
+ * @param shell The main shell structure.
+ * @param redir_list The head of the redirection list to process.
+ * @param last_heredoc A pointer to the last heredoc in the list.
+ * @return 0 on success, 1 on interruption, or ERROR on failure.
+ */
+static int	process_redir_list(t_shell *shell, t_redir *redir_list,
+	t_redir *last_heredoc)
+{
+	int	result;
+
+	while (redir_list)
+	{
+		if (redir_list->type == REDIR_HEREDOC)
+		{
+			result = execute_single_heredoc(shell, redir_list);
+			if (result != 0)
+			{
+				if (result == 1)
+					shell->exit_status = 130;
+				close_heredoc_pipes(shell);
+				return (result);
+			}
+			if (redir_list != last_heredoc && redir_list->heredoc_fd > 2)
+			{
+				close(redir_list->heredoc_fd);
+				redir_list->heredoc_fd = -1;
+			}
+		}
+		redir_list = redir_list->next;
+	}
+	return (0);
+}
+
+/**
  * @brief Handles all heredoc redirections in the command list.
  *
- * This function iterates through all commands and their redirections to find
- * and process heredoc redirections. For each heredoc redirection found, it
- * calls execute_single_heredoc to handle the input. If any heredoc processing
- * fails or is interrupted, the function returns immediately with the appropriate
- * error code. If a heredoc is interrupted by a signal (result == 1), the shell's
- * exit status is set to 130 to indicate interruption by SIGINT.
+ * This function iterates through all commands, finds the last heredoc for each,
+ * and calls a helper function to process the redirections. If any processing
+ * fails or is interrupted, it returns immediately with the appropriate status.
  *
  * @param shell A pointer to the t_shell structure containing the command list.
  * @return Returns 0 on success, ERROR on pipe or fork failure, or 1
@@ -133,27 +169,16 @@ static int	execute_single_heredoc(t_shell *shell, t_redir *redir)
 int	handle_heredoc_redir(t_shell *shell)
 {
 	t_command	*cmd;
-	t_redir		*redir;
+	t_redir		*last_heredoc;
 	int			result;
 
 	cmd = shell->command;
 	while (cmd)
 	{
-		redir = cmd->redir;
-		while (redir)
-		{
-			if (redir->type == REDIR_HEREDOC)
-			{
-				result = execute_single_heredoc(shell, redir);
-				if (result != 0)
-				{
-					if (result == 1)
-						shell->exit_status = 130;
-					return (result);
-				}
-			}
-			redir = redir->next;
-		}
+		last_heredoc = find_last_heredoc(cmd->redir);
+		result = process_redir_list(shell, cmd->redir, last_heredoc);
+		if (result != 0)
+			return (result);
 		cmd = cmd->next;
 	}
 	return (0);

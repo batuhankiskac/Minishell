@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 21:12:59 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 06:58:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
  * @param redir A pointer to the head of the redirection list.
  * @return A pointer to the last heredoc (`t_redir` node), or NULL if none.
  */
-static t_redir	*find_last_heredoc(t_redir *redir)
+t_redir	*find_last_heredoc(t_redir *redir)
 {
 	t_redir	*last_heredoc;
 	t_redir	*temp;

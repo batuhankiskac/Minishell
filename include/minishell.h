@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/17 18:27:54 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/19 06:58:49 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
 void	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd);
+t_redir	*find_last_heredoc(t_redir *redir);
 
 /*
 ** Expander
