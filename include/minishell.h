@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 11:05:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/20 16:48:28 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -139,6 +138,7 @@ void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	pipe_child_process(t_shell *shell,
 			t_command *cmd, int prev_fd, int pipe_fd[2]);
 void	heredoc_read_loop(t_shell *shell, t_redir *redir, int pipe_write_fd);
+void	parent_close_heredoc_fds(t_command *cmd);
 t_redir	*find_last_heredoc(t_redir *redir);
 
 /*
@@ -147,6 +147,7 @@ t_redir	*find_last_heredoc(t_redir *redir);
 int		expand_on_args(t_command *cmd, t_env *env, int exit_status);
 int		expand_on_redirs(t_command *cmd, t_env *env, int exit_status);
 int		expander(t_shell *shell);
+int		rebuild_command_args(t_command *cmd);
 char	*append_variable(char *res, char *s, int *i, t_shell *shell);
 char	*append_literal(char *res, const char *s, int start, int end);
 char	*expand_string(const char *s, t_env *env, int exit_status);
@@ -154,7 +155,6 @@ char	*expand_text_chunk(char *res, const char *s, int *i);
 char	*handle_single_quote(char *res, const char *s, int *i);
 char	*handle_double_quote(char *res, const char *s, int *i,
 			t_shell *shell_context);
-int		rebuild_command_args(t_command *cmd);
 
 /*
 ** Lexer

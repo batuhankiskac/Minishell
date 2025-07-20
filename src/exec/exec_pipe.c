@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 19:21:02 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/20 16:43:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,15 +145,12 @@ static int	wait_for_pipeline(pid_t last_pid)
 /**
  * @brief Executes a pipeline of commands.
  *
- * This function iterates through a list of commands (`shell->command`)
- * and executes them as a pipeline. For each command, it calls
- * `fork_pipeline_command` to set up pipes and fork a child process.
- * Then it waits for all child processes to complete and returns the
- * exit status of the last command in the pipeline.
+ * This function iterates through a list of commands and executes them
+ * as a pipeline. Crucially, after each child is forked, the parent
+ * closes its copies of any heredoc file descriptors passed to that child.
  *
  * @param shell A pointer to the `t_shell` structure.
  * @return Returns the exit status of the last command in the pipeline.
- *         Returns `ERROR` if any part of the pipeline setup fails.
  */
 int	execute_pipe(t_shell *shell)
 {
@@ -174,6 +171,7 @@ int	execute_pipe(t_shell *shell)
 				close(prev_fd);
 			return (ERROR);
 		}
+		parent_close_heredoc_fds(cmd);
 		if (!cmd->next)
 			last_pid = pid;
 		cmd = cmd->next;

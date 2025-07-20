@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 21:02:48 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/20 16:43:26 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,28 @@ int	is_builtin(char *cmd)
 		|| ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);
+}
+
+/**
+ * @brief In the parent process, closes heredoc fds used by a child.
+ *
+ * After forking a child, the parent no longer needs its copy of the read-end
+ * of the heredoc pipes that the child inherited. This function closes them
+ * to prevent leaks and potential deadlocks.
+ *
+ * @param cmd The command whose heredoc file descriptors should be closed.
+ */
+void	parent_close_heredoc_fds(t_command *cmd)
+{
+	t_redir	*redir;
+
+	if (!cmd)
+		return ;
+	redir = cmd->redir;
+	while (redir)
+	{
+		if (redir->type == REDIR_HEREDOC && redir->heredoc_fd > 2)
+			close(redir->heredoc_fd);
+		redir = redir->next;
+	}
 }

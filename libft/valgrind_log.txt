@@ -1,7 +1,0 @@
-==251291== Memcheck, a memory error detector
-==251291== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==251291== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==251291== Command: /bin/sh -c echo\ "Cleaning\ object\ files..."
-==251291== Parent PID: 251279
-==251291== 
-==251291== FATAL: can't open suppressions file "readline.supp"
