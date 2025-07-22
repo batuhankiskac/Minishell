@@ -6,69 +6,21 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 07:24:25 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 07:24:42 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/22 09:15:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Counts the number of non-empty strings in an argument array.
- * @param args The argument array to count.
- * @return The number of non-empty arguments.
- */
-static int	count_non_empty_args(char **args)
-{
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (args && args[i])
-	{
-		if (args[i][0] != '\0')
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-/**
- * @brief Populates a new argument array with non-empty strings from the old one.
+ * @brief Rebuilds the command's argument list to handle leading empty args.
  *
- * It moves the string pointers from the old array to the new one and
- * frees the original empty strings.
- *
- * @param new_args The destination array.
- * @param old_args The source array.
- */
-static void	populate_new_args(char **new_args, char **old_args)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (old_args && old_args[i])
-	{
-		if (old_args[i][0] != '\0')
-		{
-			new_args[j] = old_args[i];
-			j++;
-		}
-		else
-			free(old_args[i]);
-		i++;
-	}
-	new_args[j] = NULL;
-}
-
-/**
- * @brief Rebuilds the command's argument list to remove empty strings.
- *
- * After expansion, some arguments might become empty strings (e.g., from
- * an empty environment variable). This function filters them out, creating
- * a new, clean argument list, and updates the command structure.
+ * After expansion, an unquoted empty variable at the start of a command
+ * (e.g., "$EMPTY echo hi") results in an empty string as the first argument.
+ * This function detects this specific case and shifts the arguments to the
+ * left, making the next argument the actual command. This mimics bash's
+ * behavior of removing null expansions without affecting legitimate quoted
+ * empty strings ("") as arguments to other commands.
  *
  * @param cmd The command to process.
  * @return 1 on success, 0 on failure (malloc error).
@@ -76,23 +28,25 @@ static void	populate_new_args(char **new_args, char **old_args)
 int	rebuild_command_args(t_command *cmd)
 {
 	char	**new_args;
-	int		new_argc;
+	int		i;
 
-	if (!cmd || !cmd->args)
+	if (!cmd || !cmd->args || !cmd->args[0] || cmd->args[0][0] != '\0')
 		return (1);
-	new_argc = count_non_empty_args(cmd->args);
-	if (new_argc == cmd->argc)
+	if (cmd->argc <= 1)
 		return (1);
-	new_args = ft_calloc(new_argc + 1, sizeof(char *));
+	new_args = ft_calloc(cmd->argc, sizeof(char *));
 	if (!new_args)
 		return (print_error(NULL, NULL, strerror(errno), 0));
-	populate_new_args(new_args, cmd->args);
+	i = 0;
+	while (cmd->args[i + 1])
+	{
+		new_args[i] = cmd->args[i + 1];
+		i++;
+	}
+	free(cmd->args[0]);
 	free(cmd->args);
 	cmd->args = new_args;
-	cmd->argc = new_argc;
-	if (cmd->argc > 0)
-		cmd->cmd = cmd->args[0];
-	else
-		cmd->cmd = NULL;
+	cmd->argc = cmd->argc - 1;
+	cmd->cmd = cmd->args[0];
 	return (1);
 }

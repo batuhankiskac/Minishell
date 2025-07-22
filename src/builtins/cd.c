@@ -6,22 +6,24 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/11 11:28:55 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/22 09:08:50 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /**
- * @brief Expands tilde (~) in path to HOME directory.
+ * @brief Expands tilde (~) in path to HOME directory, managing memory safely.
  *
  * @param path The path that may start with ~
  * @param env Environment variables
- * @return Expanded path or NULL on error
+ * @return Expanded path or NULL on error. The returned string is newly
+ * allocated and must be freed by the caller.
  */
 static char	*tilde_expansion(char *path, t_env **env)
 {
 	char	*home;
+	char	*expanded_path;
 
 	if (path[0] != '~')
 		return (ft_strdup(path));
@@ -29,9 +31,14 @@ static char	*tilde_expansion(char *path, t_env **env)
 	if (!home)
 		return (print_error_null("cd", NULL, "HOME not set"));
 	if (path[1] == '\0')
-		return (ft_strdup(home));
+		return (home);
 	if (path[1] == '/')
-		return (ft_strjoin(home, path + 1));
+	{
+		expanded_path = ft_strjoin(home, path + 1);
+		free(home);
+		return (expanded_path);
+	}
+	free(home);
 	return (ft_strdup(path));
 }
 
