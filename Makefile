@@ -43,7 +43,6 @@ SRCS = src/main/main.c \
 	   src/expander/string_expander.c \
 	   src/expander/string_expander_utils.c \
 	   src/expander/expand_on_args.c \
-	   src/expander/rebuild_args.c \
 	   src/expander/expand_on_redirs.c \
 	   src/lexer/check_token.c \
 	   src/lexer/handle_token.c \

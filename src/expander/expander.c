@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 07:26:52 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/22 22:06:02 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ int	expander(t_shell *shell)
 		if (!expand_on_args(cmd, shell->env, shell->exit_status))
 			return (0);
 		if (!expand_on_redirs(cmd, shell->env, shell->exit_status))
-			return (0);
-		if (!rebuild_command_args(cmd))
 			return (0);
 		cmd = cmd->next;
 	}
