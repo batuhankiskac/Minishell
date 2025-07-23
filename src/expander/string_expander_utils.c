@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 15:35:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 22:52:10 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 18:05:09 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,22 +95,54 @@ static char	*process_double_quoted_content(const char *content,
 }
 
 /**
- * @brief      Handles double-quoted strings by processing their content.
- * It extracts the content within the quotes and passes it to a specialized
- * helper function for expansion.
- * @param res  The current result string.
- * @param s    The source string.
- * @param i    A pointer to the current index in the source string.
+ * @brief      Expands the double-quoted content and joins it to the result.
+ *
+ * This helper takes the raw content from within double quotes, calls a
+ * function to expand variables within it, joins the expanded result to the
+ * main result string, and handles all intermediate memory deallocations.
+ *
+ * @param res           The main result string to be appended to.
+ * @param content       The raw string extracted from within the double quotes.
  * @param shell_context Shell context for variable expansion.
- * @return     An updated result string, or NULL on failure.
+ * @return              The new, final result string, or NULL on failure.
+ */
+static char	*expand_and_join_dquote_content(char *res, const char *content,
+		t_shell *shell_context)
+{
+	char	*expanded_content;
+	char	*final_res;
+
+	expanded_content = process_double_quoted_content(content, shell_context);
+	if (!expanded_content)
+	{
+		free(res);
+		return (NULL);
+	}
+	final_res = ft_strjoin(res, expanded_content);
+	free(res);
+	free(expanded_content);
+	return (final_res);
+}
+
+/**
+ * @brief      Handles double-quoted strings by processing their content.
+ *
+ * It extracts the content within the quotes and passes it to a specialized
+ * helper function (`expand_and_join_dquote_content`) to handle the
+ * expansion, joining, and memory management.
+ *
+ * @param res           The current result string.
+ * @param s             The source string.
+ * @param i             A pointer to the current index in the source string.
+ * @param shell_context Shell context for variable expansion.
+ * @return              An updated result string, or NULL on failure.
  */
 char	*handle_double_quote(char *res, const char *s, int *i,
-						t_shell *shell_context)
+		t_shell *shell_context)
 {
 	int		start;
 	int		end;
 	char	*content;
-	char	*expanded_content;
 	char	*final_res;
 
 	start = *i + 1;
@@ -119,14 +151,12 @@ char	*handle_double_quote(char *res, const char *s, int *i,
 		end++;
 	content = ft_substr(s, start, end - start);
 	if (!content)
-		return (free(res), NULL);
-	expanded_content = process_double_quoted_content(content, shell_context);
+	{
+		free(res);
+		return (NULL);
+	}
+	final_res = expand_and_join_dquote_content(res, content, shell_context);
 	free(content);
-	if (!expanded_content)
-		return (free(res), NULL);
-	final_res = ft_strjoin(res, expanded_content);
-	free(res);
-	free(expanded_content);
 	if (s[end])
 		*i = end + 1;
 	else
