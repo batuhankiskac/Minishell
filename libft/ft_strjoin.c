@@ -15,27 +15,24 @@
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
-	int		i;
-	int		j;
+	size_t	s1_len;
+	size_t	s2_len;
 
-	i = -1;
-	j = 0;
-	if (!s1)
-	{
-		s1 = (char *)malloc(sizeof(char) * 1);
-		if (!s1)
-			return (NULL);
-		s1[0] = '\0';
-	}
-	if (!s2)
-		return (NULL);
-	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s1 && !s2)
+		return (ft_strdup(""));
+	s1_len = 0;
+	if (s1)
+		s1_len = ft_strlen(s1);
+	s2_len = 0;
+	if (s2)
+		s2_len = ft_strlen(s2);
+	res = (char *)malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (!res)
 		return (NULL);
-	while (s1[++i])
-		res[i] = s1[i];
-	while (s2[j])
-		res[i++] = s2[j++];
-	res[i] = '\0';
+	if (s1)
+		ft_memcpy(res, s1, s1_len);
+	if (s2)
+		ft_memcpy(res + s1_len, s2, s2_len);
+	res[s1_len + s2_len] = '\0';
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:56:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/23 17:18:12 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 21:28:56 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 /**
  * @brief      Handles errors that occur after execve fails.
- *
- * It checks errno, prints a corresponding error message, and exits the
- * child process with an appropriate status code. It now accepts the
- * original_head of the command list to ensure full cleanup.
  *
  * @param path          The path that was attempted to be executed.
  * @param shell         The main shell structure.
@@ -36,28 +32,24 @@ static void	handle_exec_error(char *path, t_shell *shell, char **env_array,
 }
 
 /**
- * @brief      Finds the command path and executes the command.
+ * @brief      Attempts to execute the command at the given path.
  *
- * This is the core function run within the child process for external
- * commands. It handles path resolution and execution. It takes original_head
- * to ensure that cleanup_child_and_exit can free the entire command list
- * in case of an error.
+ * This function handles the actual `execve` call. If `execve` fails, it
+ * checks for the `ENOEXEC` error (e.g., a script without a shebang) and
+ * attempts to run it with /bin/sh. For other errors, it calls a generic
+ * error handler.
  *
+ * @param path          The full path to the executable.
  * @param shell         The main shell structure.
  * @param env_array     The environment variables for execve.
  * @param original_head The head of the command list for full cleanup.
  */
-void	find_and_exec_command(t_shell *shell, char **env_array,
+static void	try_to_execute(char *path, t_shell *shell, char **env_array,
 	t_command *original_head)
 {
-	char	*path;
 	char	*shell_path;
 	char	*sh_args[3];
 
-	path = find_path(shell->command->cmd, env_array);
-	if (!path)
-		cleanup_child_and_exit(shell, env_array, original_head,
-			print_error(NULL, shell->command->cmd, "command not found", 127));
 	if (execve(path, shell->command->args, env_array) == -1)
 	{
 		if (errno == ENOEXEC)
@@ -73,4 +65,35 @@ void	find_and_exec_command(t_shell *shell, char **env_array,
 	if (ft_strcmp(path, shell->command->cmd) != 0)
 		free(path);
 	exit(0);
+}
+
+/**
+ * @brief      Finds, validates, and executes a command.
+ *
+ * This function orchestrates the process of executing an external command. It
+ * first finds the path, then validates permissions, and finally delegates
+ * the actual execution attempt to the `try_to_execute` helper function. This
+ * separation allows for cleaner, more focused error handling at each stage.
+ *
+ * @param shell         The main shell structure.
+ * @param env_array     The environment variables for execve.
+ * @param original_head The head of the command list for full cleanup.
+ */
+void	find_and_exec_command(t_shell *shell, char **env_array,
+	t_command *original_head)
+{
+	char	*path;
+
+	path = find_path(shell->command->cmd, env_array);
+	if (!path)
+	{
+		cleanup_child_and_exit(shell, env_array, original_head,
+			print_error(NULL, shell->command->cmd, "command not found", 127));
+	}
+	if (access(path, X_OK) != 0)
+	{
+		cleanup_child_and_exit(shell, env_array, original_head,
+			print_error(NULL, path, strerror(errno), 126));
+	}
+	try_to_execute(path, shell, env_array, original_head);
 }
