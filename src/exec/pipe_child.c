@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 23:15:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/16 18:26:43 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:19:07 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,17 @@ static void	handle_data_pump(t_shell *shell, t_command *original_head)
 }
 
 /**
- * @brief Dispatches the command to the appropriate executor (built-in/external).
- * @param shell The shell structure.
- * @param original_head The original command list head for cleanup.
+ * @brief      Dispatches the command to the appropriate executor.
+ *
+ * It correctly handles both built-in and external commands. For external
+ * commands, it now passes the original_head to exec_external_direct to ensure
+ * the entire command list can be freed in case of an error, preventing leaks.
+ *
+ * @param shell         The shell structure.
+ * @param original_head The original command list head for full cleanup.
  */
-static void	dispatch_command_execution(t_shell *shell, t_command *original_head)
+static void	dispatch_command_execution(t_shell *shell,
+	t_command *original_head)
 {
 	char	**env_array;
 	int		exit_status;
@@ -98,7 +104,7 @@ static void	dispatch_command_execution(t_shell *shell, t_command *original_head)
 		env_array = env_list_to_array(shell->env);
 		if (!env_array)
 			cleanup_child_and_exit(shell, NULL, original_head, 1);
-		exec_external_direct(shell, env_array);
+		exec_external_direct(shell, env_array, original_head);
 		cleanup_child_and_exit(shell, env_array, original_head, 1);
 	}
 }

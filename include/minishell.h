@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/22 22:06:13 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:19:44 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,10 @@ int		execute_pipe(t_shell *shell);
 int		apply_redirection(t_redir *redir);
 int		validate_command(t_shell *shell, char **env_array);
 char	*find_path(char *cmd, char *envp[]);
-void	exec_external_direct(t_shell *shell, char **env_array);
-void	find_and_exec_command(t_shell *shell, char **env_array);
+void	find_and_exec_command(t_shell *shell, char **env_array,
+			t_command *original_head);
+void	exec_external_direct(t_shell *shell, char **env_array,
+			t_command *original_head);
 void	run_command(t_shell *shell);
 void	close_pipe_fd(int prev_fd, int pipe_fd[2]);
 void	pipe_child_process(t_shell *shell,

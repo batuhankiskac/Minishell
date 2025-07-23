@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/19 19:23:08 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:18:33 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	execute_child_process(t_shell *shell, char **env_array)
 	reset_signals();
 	if (setup_redir(shell) == ERROR)
 		cleanup_child_and_exit(shell, env_array, NULL, 1);
-	find_and_exec_command(shell, env_array);
+	find_and_exec_command(shell, env_array, shell->command);
 }
 
 /**
@@ -113,22 +113,26 @@ int	exec_external(t_shell *shell)
 }
 
 /**
- * @brief Executes an external command directly without forking.
+ * @brief      Executes an external command directly without forking again.
  *
  * This function is used by pipeline child processes to execute external
- * commands directly using execve without creating another child process.
- * It validates the command, finds the path, and calls execve.
+ * commands directly using execve. It validates the command, finds the
+ * path, and calls find_and_exec_command, passing the original_head to
+ * ensure proper cleanup on failure.
  *
- * @param shell A pointer to the shell structure.
- * @param env_array An array of environment variables for the process.
+ * @param shell         A pointer to the shell structure.
+ * @param env_array     An array of environment variables for the process.
+ * @param original_head The head of the command list for full cleanup.
  */
-void	exec_external_direct(t_shell *shell, char **env_array)
+void	exec_external_direct(t_shell *shell, char **env_array,
+	t_command *original_head)
 {
 	int	validation_result;
 
 	validation_result = validate_command(shell, env_array);
 	if (validation_result != 0)
-		cleanup_child_and_exit(shell, env_array, NULL, validation_result);
-	find_and_exec_command(shell, env_array);
-	cleanup_child_and_exit(shell, env_array, NULL, 1);
+		cleanup_child_and_exit(shell, env_array, original_head,
+			validation_result);
+	find_and_exec_command(shell, env_array, original_head);
+	cleanup_child_and_exit(shell, env_array, original_head, 1);
 }
