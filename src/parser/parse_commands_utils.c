@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:00:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/23 22:10:23 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 22:17:29 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,4 @@ int	populate_args(t_token **t_ptr, t_command *cmd)
 		t = t->next;
 	}
 	return (1);
-}
-
-/**
- * @brief Sets the command name for a command structure.
- *
- * This function sets the command name to the first argument in the
- * argument array, if it exists.
- *
- * @param cmd A pointer to the command structure to update.
- */
-void	set_command_name(t_command *cmd)
-{
-	if (cmd->args[0])
-		cmd->cmd = cmd->args[0];
 }

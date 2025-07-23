@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/23 22:11:24 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 22:17:35 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,6 @@ int		validate_pipe_sequence(t_token *tokens);
 int		set_heredoc_properties(t_redir *r, const char *file);
 int		set_redir_file(t_redir *r, const char *file);
 int		populate_args(t_token **t_ptr, t_command *cmd);
-void	set_command_name(t_command *cmd);
 
 /*
 ** Signal Handling
