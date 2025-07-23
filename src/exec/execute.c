@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 09:58:05 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/12 17:50:40 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 17:57:01 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,15 @@ static int	execute_redir_only(t_shell *shell)
  *
  * This function determines if the command is a redirection-only command,
  * a built-in, or an external command, and calls the appropriate function.
+ * An empty string command ("") is correctly passed to the external command
+ * handler to produce a "command not found" error.
+ *
  * @param shell A pointer to the t_shell structure.
  * @return The exit status of the executed command.
  */
 static int	execute_single_command(t_shell *shell)
 {
-	if (!shell->command->cmd || shell->command->cmd[0] == '\0')
+	if (!shell->command->cmd)
 		return (execute_redir_only(shell));
 	else if (is_builtin(shell->command->cmd))
 		return (exec_builtin(shell));
