@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/22 09:08:50 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 21:11:41 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,35 +45,32 @@ static char	*tilde_expansion(char *path, t_env **env)
 /**
  * @brief Determines the target directory for the cd command.
  *
- * Parses the arguments provided to the cd command to determine the target
- * directory. If no arguments are given, it returns the value of the HOME
- * environment variable. If the argument is "-", it returns the value of
- * the OLDPWD environment variable. Otherwise, it returns a duplicate of
- * the provided argument. Handles cases where HOME or OLDPWD are not set.
+ * This function consistently returns a newly allocated string which the caller
+ * is responsible for freeing. This creates a clear memory ownership contract.
  *
- * @param argc The number of arguments passed to the cd command.
- * @param args The array of arguments passed to the cd command.
+ * @param argc The number of arguments.
+ * @param args The array of arguments.
  * @param env A pointer to the environment list.
- * @return A dynamically allocated string containing the target path, or
- *         NULL if an error occurs or HOME/OLDPWD is not set.
+ * @return A dynamically allocated string containing the target path, or NULL.
  */
 static char	*get_target(int argc, char **args, t_env **env)
 {
-	char	*raw;
+	char	*target_path;
 
 	if (argc < 2 || (args[1] && args[1][0] == '\0'))
 	{
-		raw = get_env_value("HOME", *env);
-		if (!raw)
+		target_path = get_env_value("HOME", *env);
+		if (!target_path)
 			return (print_error_null("cd", NULL, "HOME not set"));
-		return (ft_strdup(raw));
+		return (target_path);
 	}
 	if (ft_strcmp(args[1], "-") == 0)
 	{
-		raw = get_env_value("OLDPWD", *env);
-		if (!raw)
+		target_path = get_env_value("OLDPWD", *env);
+		if (!target_path)
 			return (print_error_null("cd", NULL, "OLDPWD not set"));
-		return (ft_strdup(raw));
+		ft_printf(1, "%s\n", target_path);
+		return (target_path);
 	}
 	return (tilde_expansion(args[1], env));
 }
@@ -81,14 +78,9 @@ static char	*get_target(int argc, char **args, t_env **env)
 /**
  * @brief Changes the current working directory.
  *
- * Uses the chdir system call to change the directory. Updates the new_pwd
- * pointer with the absolute path of the new current working directory
- * using getcwd. Handles errors during chdir and getcwd.
- *
  * @param target The path to the target directory.
- * @param new_pwd A pointer to a char pointer that will store the new
- *                current working directory path.
- * @return 0 on success, ERROR on failure.
+ * @param new_pwd A pointer to a char pointer that will store the new path.
+ * @return 0 on success, 1 on failure.
  */
 static int	change_directory(char *target, char **new_pwd)
 {
@@ -102,32 +94,31 @@ static int	change_directory(char *target, char **new_pwd)
 }
 
 /**
- * @brief Updates environment variables after successful directory change.
- *
- * Updates OLDPWD and PWD environment variables after a successful cd operation.
+ * @brief Updates OLDPWD and PWD environment variables.
  *
  * @param old_pwd The previous working directory path.
  * @param new_pwd The new working directory path.
  * @param env A pointer to the environment list.
- * @return 0 on success, ERROR on failure.
+ * @return 0 on success, 1 on failure.
  */
 static int	update_pwd_env(char *old_pwd, char *new_pwd, t_env **env)
 {
-	if (update_env("OLDPWD", old_pwd, env) == ERROR)
-		return (1);
+	if (old_pwd)
+	{
+		if (update_env("OLDPWD", old_pwd, env) == ERROR)
+			return (1);
+	}
 	if (update_env("PWD", new_pwd, env) == ERROR)
 		return (1);
 	return (0);
 }
 
 /**
- * @brief Implements the built-in cd command.
+ * @brief Implements the built-in cd command with corrected memory management.
  *
- * Handles changing the current directory based on the provided arguments.
- * Supports changing to the HOME directory (no arguments), the previous
- * directory ('-'), or a specified path. Updates the PWD and OLDPWD
- * environment variables accordingly. Handles error cases such as too many
- * arguments, directory not found, or HOME/OLDPWD not set.
+ * This function handles changing the current directory. It ensures that the
+ * 'target' path obtained from get_target is always freed via
+ * cleanup_cd_memory, closing the identified memory leak.
  *
  * @param argc The number of arguments passed to the cd command.
  * @param args The array of arguments passed to the cd command.
@@ -141,20 +132,16 @@ int	builtin_cd(int argc, char **args, t_env **env)
 	char	*target;
 
 	if (argc > 2)
-	{
-		ft_printf(2, "cd: too many arguments\n");
-		return (1);
-	}
+		return (print_error("cd", NULL, "too many arguments", 1));
 	old_pwd = getcwd(NULL, 0);
 	if (!old_pwd && errno != ENOENT)
 		return (print_error("cd", NULL, strerror(errno), 1));
 	target = get_target(argc, args, env);
 	if (!target)
 		return (cleanup_cd_memory(old_pwd, NULL, NULL, 1));
+	new_pwd = NULL;
 	if (change_directory(target, &new_pwd) != 0)
-		return (cleanup_cd_memory(old_pwd, NULL, target, 1));
-	if (argc >= 2 && ft_strcmp(args[1], "-") == 0)
-		ft_printf(1, "%s\n", new_pwd);
+		return (cleanup_cd_memory(old_pwd, new_pwd, target, 1));
 	if (update_pwd_env(old_pwd, new_pwd, env) == 1)
 		return (cleanup_cd_memory(old_pwd, new_pwd, target,
 				print_error("cd", NULL, strerror(errno), 1)));
