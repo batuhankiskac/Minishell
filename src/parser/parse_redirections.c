@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:05:47 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/10 12:26:37 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 15:39:43 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,8 @@ static int	parse_cmd_redirs(t_command *c, t_token **t_ptr)
  * @brief Parses redirections for all commands in the shell.
  *
  * Iterates through the command list and calls parse_cmd_redirs for each
- * command to handle its specific redirections.
+ * command to handle its specific redirections. If any parsing fails, it
+ * immediately cleans up the entire command list to prevent memory leaks.
  *
  * @param shell The main shell structure.
  * @return 1 on success, 0 on failure.
@@ -140,7 +141,11 @@ int	parse_redirections(t_shell *shell)
 	while (c && t)
 	{
 		if (!parse_cmd_redirs(c, &t))
+		{
+			clear_command_list(shell->command);
+			shell->command = NULL;
 			return (0);
+		}
 		if (t && t->type == TOKEN_PIPE)
 			t = t->next;
 		c = c->next;

@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 21:41:18 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/02 21:46:38 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 15:39:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	clear_command_list(t_command *cmd)
 {
 	t_command	*next;
 
+	if (!cmd)
+		return ;
 	while (cmd)
 	{
 		next = cmd->next;
