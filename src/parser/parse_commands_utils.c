@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:00:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/06/10 22:14:49 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/23 22:10:23 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,13 @@ int	count_words_until_pipe(t_token *t)
 }
 
 /**
- * @brief Initializes the argument array for a command.
+ * @brief Initializes the argument array for a command using calloc.
  *
- * This function allocates memory for the command's argument array based
- * on the specified count. The array is initialized to NULL.
+ * This function now uses ft_calloc instead of malloc. This is a critical
+ * safety improvement: calloc initializes the allocated memory to zero (NULL
+ * for pointers), ensuring that the argument array is always NULL-terminated,
+ * even before it's fully populated. This prevents errors in cleanup
+ * functions like ft_free_all if parsing is interrupted by a memory error.
  *
  * @param cmd A pointer to the command structure to initialize.
  * @param count The number of arguments to allocate space for.
@@ -54,7 +57,7 @@ int	count_words_until_pipe(t_token *t)
 int	init_command_args(t_command *cmd, int count)
 {
 	cmd->argc = count;
-	cmd->args = malloc(sizeof(char *) * (count + 1));
+	cmd->args = ft_calloc(count + 1, sizeof(char *));
 	if (!cmd->args)
 	{
 		ft_printf(2, "minishell: malloc error: %s\n", strerror(errno));
@@ -66,15 +69,16 @@ int	init_command_args(t_command *cmd, int count)
 /**
  * @brief Populates the argument array for a command.
  *
- * This function iterates through the token list and copies word tokens
- * into the command's argument array. The token pointer is updated to
- * point to the next unprocessed token.
+ * This function iterates through tokens and copies word tokens into the
+ * command's argument array. It now returns an error code if any memory
+ * allocation fails during the process, allowing the caller to perform
+ * a proper cleanup.
  *
- * @param t_ptr A pointer to the token pointer, which is updated as tokens
- *              are processed.
+ * @param t_ptr A pointer to the token pointer.
  * @param cmd A pointer to the command structure to populate.
+ * @return 1 on success, 0 on memory allocation failure.
  */
-void	populate_args(t_token **t_ptr, t_command *cmd)
+int	populate_args(t_token **t_ptr, t_command *cmd)
 {
 	int		i;
 	t_token	*t;
@@ -84,7 +88,12 @@ void	populate_args(t_token **t_ptr, t_command *cmd)
 	while (t && t->type != TOKEN_PIPE)
 	{
 		if (t->type == TOKEN_WORD)
-			cmd->args[i++] = ft_strdup(t->str);
+		{
+			cmd->args[i] = ft_strdup(t->str);
+			if (!cmd->args[i])
+				return (0);
+			i++;
+		}
 		else if (t->type >= TOKEN_REDIR_IN && t->type <= TOKEN_HEREDOC)
 		{
 			if (t->next && t->next->type == TOKEN_WORD)
@@ -92,8 +101,7 @@ void	populate_args(t_token **t_ptr, t_command *cmd)
 		}
 		t = t->next;
 	}
-	cmd->args[i] = NULL;
-	*t_ptr = t;
+	return (1);
 }
 
 /**
