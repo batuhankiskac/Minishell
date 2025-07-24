@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:56:06 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/23 21:28:56 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/24 11:17:21 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,9 @@ void	find_and_exec_command(t_shell *shell, char **env_array,
 	}
 	if (access(path, X_OK) != 0)
 	{
+		free(path);
 		cleanup_child_and_exit(shell, env_array, original_head,
-			print_error(NULL, path, strerror(errno), 126));
+			print_error(NULL, shell->command->cmd, strerror(errno), 126));
 	}
 	try_to_execute(path, shell, env_array, original_head);
 }
