@@ -6,7 +6,7 @@
 /*   By: bkiskac <bkiskac@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 22:00:00 by bkiskac           #+#    #+#             */
-/*   Updated: 2025/07/23 22:17:29 by bkiskac          ###   ########.fr       */
+/*   Updated: 2025/07/24 11:40:55 by bkiskac          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,6 @@ int	populate_args(t_token **t_ptr, t_command *cmd)
 		}
 		t = t->next;
 	}
+	*t_ptr = t;
 	return (1);
 }
